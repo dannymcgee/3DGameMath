@@ -186,14 +186,14 @@ inline auto Vec<3, T>::operator^=(const Vec& other) -> Vec&
 
 // static Vec::Zero ------------------------------------------------------------
 
-template <> inline const Vec<2, f32> Vec<2, f32>::Zero { 0, 0 };
-template <> inline const Vec<2, f64> Vec<2, f64>::Zero { 0, 0 };
+template <> inline const auto Vec<2, f32>::Zero = Vec{ 0, 0 };
+template <> inline const auto Vec<2, f64>::Zero = Vec{ 0, 0 };
 
-template <> inline const Vec<3, f32> Vec<3, f32>::Zero { 0, 0, 0 };
-template <> inline const Vec<3, f64> Vec<3, f64>::Zero { 0, 0, 0 };
+template <> inline const auto Vec<3, f32>::Zero = Vec{ 0, 0, 0 };
+template <> inline const auto Vec<3, f64>::Zero = Vec{ 0, 0, 0 };
 
-template <> inline const Vec<4, f32> Vec<4, f32>::Zero { 0, 0, 0, 0 };
-template <> inline const Vec<4, f64> Vec<4, f64>::Zero { 0, 0, 0, 0 };
+template <> inline const auto Vec<4, f32>::Zero = Vec{ 0, 0, 0, 0 };
+template <> inline const auto Vec<4, f64>::Zero = Vec{ 0, 0, 0, 0 };
 
 
 // static Vec::All() -----------------------------------------------------------
