@@ -229,7 +229,7 @@ TEST_CASE("math::Vec", "[vector]") {
 			REQUIRE(Vec3::Zero.Length() == 0.f);
 
 			// Vector length is always non-negative
-			REQUIRE(Vec3{-1.f,-2.f,-3.f}.Length() > 0.f);
+			REQUIRE(Vec3{ -1.f, -2.f, -3.f }.Length() > 0.f);
 		}
 		SECTION("can calculate its unit-length direction") {
 			auto vec = Vec3{ 12.f, -5.f, 0.f };

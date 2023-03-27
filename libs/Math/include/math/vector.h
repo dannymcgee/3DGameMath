@@ -49,15 +49,11 @@ struct Vec<3, T> {
 	};
 
 	/** Calculate the cross-product of two vectors. */
-	inline auto Cross(Vec&& other) const -> Vec;
-	/** Calculate the cross-product of two vectors. */
 	inline auto Cross(const Vec& other) const -> Vec;
-	/** Calculate the cross-product of two vectors. */
-	inline auto operator^(Vec&& other) const -> Vec;
+
 	/** Calculate the cross-product of two vectors. */
 	inline auto operator^(const Vec& other) const -> Vec;
-	/** Cross this vector with another in-place. */
-	inline auto operator^=(Vec&& other) -> Vec&;
+
 	/** Cross this vector with another in-place. */
 	inline auto operator^=(const Vec& other) -> Vec&;
 };
@@ -103,15 +99,11 @@ public:
 	inline auto operator-() const -> Vec;
 
 	// Vector addition
-	inline auto operator+(Vec&& other) const -> Vec;
 	inline auto operator+(const Vec& other) const -> Vec;
-	inline auto operator+=(Vec&& other) -> Vec&;
 	inline auto operator+=(const Vec& other) -> Vec&;
 
 	// Vector subtraction
-	inline auto operator-(Vec&& other) const -> Vec;
 	inline auto operator-(const Vec& other) const -> Vec;
-	inline auto operator-=(Vec&& other) -> Vec&;
 	inline auto operator-=(const Vec& other) -> Vec&;
 
 	// Scalar multiplication
@@ -123,11 +115,9 @@ public:
 	inline auto operator/=(T magnitude) -> Vec&;
 
 	// Equality comparison
-	inline auto operator==(Vec&& other) const -> bool;
 	inline auto operator==(const Vec& other) const -> bool;
 
 	// Not-equal comparison
-	inline auto operator!=(Vec&& other) const -> bool;
 	inline auto operator!=(const Vec& other) const -> bool;
 
 	/** Calculate the length (magnitude) of the vector. */
@@ -145,26 +135,14 @@ public:
 	inline void Normalize();
 
 	/** Calculate the distance between two points. */
-	inline auto Dist(Vec&& other) const -> T;
-	/** Calculate the distance between two points. */
 	inline auto Dist(const Vec& other) const -> T;
 	/** Calculate the distance between two points. */
-	static inline auto Dist(Vec&& lhs, Vec&& rhs) -> T;
-	/** Calculate the distance between two points. */
 	static inline auto Dist(const Vec& lhs, const Vec& rhs) -> T;
-	/** Calculate the distance between two points. */
-	static inline auto Dist(const Vec& lhs, Vec&& rhs) -> T;
-	/** Calculate the distance between two points. */
-	static inline auto Dist(Vec&& lhs, const Vec& rhs) -> T;
 
-	/** Calculate the dot-product of two vectors. */
-	inline auto Dot(Vec&& other) const -> T;
 	/** Calculate the dot-product of two vectors. */
 	inline auto Dot(const Vec& other) const -> T;
 	/** Calculate the dot-product of two vectors. */
 	inline auto operator|(const Vec& other) const -> T;
-	/** Calculate the dot-product of two vectors. */
-	inline auto operator|(Vec&& other) const -> T;
 };
 
 
@@ -175,7 +153,7 @@ public:
 namespace internal {
 
 template <typename T>
-inline auto Vec<3, T>::Cross(Vec&& other) const -> Vec
+inline auto Vec<3, T>::Cross(const Vec& other) const -> Vec
 {
 	return Vec{
 		y * other.z - z * other.y,
@@ -185,25 +163,13 @@ inline auto Vec<3, T>::Cross(Vec&& other) const -> Vec
 }
 
 template <typename T>
-inline auto Vec<3, T>::Cross(const Vec& other) const -> Vec
-{
-	return Cross(Vec{ other });
-}
-
-template <typename T>
-inline auto Vec<3, T>::operator^(Vec&& other) const -> Vec
+inline auto Vec<3, T>::operator^(const Vec& other) const -> Vec
 {
 	return Cross(other);
 }
 
 template <typename T>
-inline auto Vec<3, T>::operator^(const Vec& other) const -> Vec
-{
-	return Cross(Vec{ other });
-}
-
-template <typename T>
-inline auto Vec<3, T>::operator^=(Vec&& other) -> Vec&
+inline auto Vec<3, T>::operator^=(const Vec& other) -> Vec&
 {
 	auto temp_x = x;
 	auto temp_y = y;
@@ -212,13 +178,6 @@ inline auto Vec<3, T>::operator^=(Vec&& other) -> Vec&
 	y = z * other.x - temp_x * other.z;
 	z = temp_x * other.y - temp_y * other.x;
 
-	return *this;
-}
-
-template <typename T>
-inline auto Vec<3, T>::operator^=(const Vec& other) -> Vec&
-{
-	*this ^= Vec{ other };
 	return *this;
 }
 
@@ -266,7 +225,7 @@ inline auto Vec<D, T>::operator-() const -> Vec
 // Vector addition -------------------------------------------------------------
 
 template <size_t D, typename T>
-inline auto Vec<D, T>::operator+(Vec&& other) const -> Vec
+inline auto Vec<D, T>::operator+(const Vec& other) const -> Vec
 {
 	auto result = *this;
 	for (auto i = 0; i < D; ++i)
@@ -276,13 +235,7 @@ inline auto Vec<D, T>::operator+(Vec&& other) const -> Vec
 }
 
 template <size_t D, typename T>
-inline auto Vec<D, T>::operator+(const Vec& other) const -> Vec
-{
-	return *this + Vec{ other };
-}
-
-template <size_t D, typename T>
-inline auto Vec<D, T>::operator+=(Vec&& other) -> Vec&
+inline auto Vec<D, T>::operator+=(const Vec& other) -> Vec&
 {
 	for (auto i = 0; i < D; ++i)
 		components[i] += other.components[i];
@@ -290,18 +243,11 @@ inline auto Vec<D, T>::operator+=(Vec&& other) -> Vec&
 	return *this;
 }
 
-template <size_t D, typename T>
-inline auto Vec<D, T>::operator+=(const Vec& other) -> Vec&
-{
-	*this += Vec{ other };
-	return *this;
-}
-
 
 // Vector subtraction ----------------------------------------------------------
 
 template <size_t D, typename T>
-inline auto Vec<D, T>::operator-(Vec&& other) const -> Vec
+inline auto Vec<D, T>::operator-(const Vec& other) const -> Vec
 {
 	auto result = *this;
 	for (auto i = 0; i < D; ++i)
@@ -311,24 +257,11 @@ inline auto Vec<D, T>::operator-(Vec&& other) const -> Vec
 }
 
 template <size_t D, typename T>
-inline auto Vec<D, T>::operator-(const Vec& other) const -> Vec
-{
-	return *this - Vec{ other };
-}
-
-template <size_t D, typename T>
-inline auto Vec<D, T>::operator-=(Vec&& other) -> Vec&
+inline auto Vec<D, T>::operator-=(const Vec& other) -> Vec&
 {
 	for (auto i = 0; i < D; ++i)
 		components[i] -= other.components[i];
 
-	return *this;
-}
-
-template <size_t D, typename T>
-inline auto Vec<D, T>::operator-=(const Vec& other) -> Vec&
-{
-	*this -= Vec{ other };
 	return *this;
 }
 
@@ -357,12 +290,6 @@ inline auto Vec<D, T>::operator*=(T magnitude) -> Vec&
 
 template <size_t D, typename T>
 inline auto operator*(T lhs, const math::Vec<D, T>& rhs) -> math::Vec<D, T>
-{
-	return rhs * lhs;
-}
-
-template <size_t D, typename T>
-inline auto operator*(T lhs, math::Vec<D, T>&& rhs) -> math::Vec<D, T>
 {
 	return rhs * lhs;
 }
@@ -405,8 +332,11 @@ inline auto Vec<D, T>::operator/=(T magnitude) -> Vec&
 // Equality comparison ---------------------------------------------------------
 
 template <size_t D, typename T>
-inline auto Vec<D, T>::operator==(Vec&& other) const -> bool
+inline auto Vec<D, T>::operator==(const Vec& other) const -> bool
 {
+	if (this == &other)
+		return true;
+
 	for (auto i = 0; i < D; ++i)
 		if (std::abs(components[i] - other.components[i]) > std::numeric_limits<T>::epsilon())
 			return false;
@@ -414,31 +344,20 @@ inline auto Vec<D, T>::operator==(Vec&& other) const -> bool
 	return true;
 }
 
-template <size_t D, typename T>
-inline auto Vec<D, T>::operator==(const Vec& other) const -> bool
-{
-	if (this == &other) return true;
-	return *this == Vec{ other };
-}
-
 
 // Not-equal comparison --------------------------------------------------------
 
 template <size_t D, typename T>
-inline auto Vec<D, T>::operator!=(Vec&& other) const -> bool
+inline auto Vec<D, T>::operator!=(const Vec& other) const -> bool
 {
+	if (this == &other)
+		return false;
+
 	for (auto i = 0; i < D; ++i)
 		if (std::abs(components[i] - other.components[i]) > std::numeric_limits<T>::epsilon())
 			return true;
 
 	return false;
-}
-
-template <size_t D, typename T>
-inline auto Vec<D, T>::operator!=(const Vec& other) const -> bool
-{
-	if (this == &other) return false;
-	return *this != Vec{ other };
 }
 
 
@@ -491,7 +410,7 @@ inline void Vec<D, T>::Normalize()
 // Distance --------------------------------------------------------------------
 
 template <size_t D, typename T>
-inline auto Vec<D, T>::Dist(Vec&& other) const -> T
+inline auto Vec<D, T>::Dist(const Vec& other) const -> T
 {
 	T result = 0;
 	for (auto i = 0; i < D; ++i) {
@@ -503,31 +422,7 @@ inline auto Vec<D, T>::Dist(Vec&& other) const -> T
 }
 
 template <size_t D, typename T>
-inline auto Vec<D, T>::Dist(const Vec& other) const -> T
-{
-	return Dist(Vec{ other });
-}
-
-template <size_t D, typename T>
-inline auto Vec<D, T>::Dist(Vec&& lhs, Vec&& rhs) -> T
-{
-	return lhs.Dist(rhs);
-}
-
-template <size_t D, typename T>
 inline auto Vec<D, T>::Dist(const Vec& lhs, const Vec& rhs) -> T
-{
-	return lhs.Dist(rhs);
-}
-
-template <size_t D, typename T>
-inline auto Vec<D, T>::Dist(const Vec& lhs, Vec&& rhs) -> T
-{
-	return lhs.Dist(rhs);
-}
-
-template <size_t D, typename T>
-inline auto Vec<D, T>::Dist(Vec&& lhs, const Vec& rhs) -> T
 {
 	return lhs.Dist(rhs);
 }
@@ -536,7 +431,7 @@ inline auto Vec<D, T>::Dist(Vec&& lhs, const Vec& rhs) -> T
 // Dot-product -----------------------------------------------------------------
 
 template <size_t D, typename T>
-inline auto Vec<D, T>::Dot(Vec&& other) const -> T
+inline auto Vec<D, T>::Dot(const Vec& other) const -> T
 {
 	T result = 0;
 	for (auto i = 0; i < D; ++i)
@@ -546,19 +441,7 @@ inline auto Vec<D, T>::Dot(Vec&& other) const -> T
 }
 
 template <size_t D, typename T>
-inline auto Vec<D, T>::Dot(const Vec& other) const -> T
-{
-	return Dot(Vec{ other });
-}
-
-template <size_t D, typename T>
 inline auto Vec<D, T>::operator|(const Vec& other) const -> T
-{
-	return Dot(other);
-}
-
-template <size_t D, typename T>
-inline auto Vec<D, T>::operator|(Vec&& other) const -> T
 {
 	return Dot(other);
 }

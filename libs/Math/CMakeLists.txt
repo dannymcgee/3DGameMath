@@ -17,3 +17,16 @@ set_target_properties(
 		PROPERTIES
 			LINKER_LANGUAGE CXX
 )
+
+target_compile_options(
+	Math
+		INTERFACE
+			-Wunused
+			-Wcast-align
+			-Wconversion
+			-Wnull-dereference
+			-Wnon-virtual-dtor
+			-Woverloaded-virtual
+			-Weffc++
+			-Wno-missing-braces
+)

@@ -28,7 +28,16 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(Catch2)
 
+set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "Disable benchmark tests" FORCE)
+FetchContent_Declare(
+	benchmark
+	GIT_REPOSITORY https://github.com/google/benchmark.git
+	GIT_TAG v1.7.1
+)
+FetchContent_MakeAvailable(benchmark)
+
 add_subdirectory("libs/Sized")
 add_subdirectory("libs/Math")
 add_subdirectory("apps/Main")
 add_subdirectory("apps/Test")
+add_subdirectory("apps/Bench")
