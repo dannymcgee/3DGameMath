@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace Sized {
+namespace sized {
 
 using i8 = int8_t;
 using u8 = uint8_t;

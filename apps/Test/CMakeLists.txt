@@ -1,18 +1,19 @@
 add_executable(
-	Main
-		"src/main.cc"
+	Test
+		"src/test.cc"
 )
 
 target_link_libraries(
-	Main
-		PUBLIC
-			fmt::fmt
+	Test
+		PRIVATE
 			Sized
 			Math
+			fmt::fmt
+			Catch2::Catch2WithMain
 )
 
 target_compile_options(
-	Main
+	Test
 		PRIVATE
 			-Wunused
 			-Wcast-align
