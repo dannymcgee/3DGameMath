@@ -25,7 +25,7 @@ namespace internal {
  * template instances without needing to redeclare all methods for every
  * specialization.
  */
-template <size_t D, typename T>
+template <usize D, typename T>
 struct Vec {
 // NOLINTBEGIN(*-avoid-c-arrays)
 	union {
@@ -78,7 +78,7 @@ struct Vec<4, T> {
  * @tparam D The dimensionality of the vector. Full support for `2`, `3`, or `4`.
  * @tparam T The scalar type of the components. Full support for `float` or `double`.
  */
-template <size_t D, typename T>
+template <usize D, typename T>
 struct Vec : public internal::Vec<D, T> {
 private:
 	using internal::Vec<D, T>::components;
@@ -90,10 +90,10 @@ public:
 	static auto All(T value) -> Vec;
 
 	// Structured binding support
-	template <size_t Index> inline auto get() &       { return components[Index]; }
-	template <size_t Index> inline auto get() const&  { return components[Index]; }
-	template <size_t Index> inline auto get() &&      { return components[Index]; }
-	template <size_t Index> inline auto get() const&& { return components[Index]; }
+	template <usize Index> inline auto get() &       { return components[Index]; }
+	template <usize Index> inline auto get() const&  { return components[Index]; }
+	template <usize Index> inline auto get() &&      { return components[Index]; }
+	template <usize Index> inline auto get() const&& { return components[Index]; }
 
 	// Unary negation
 	inline auto operator-() const -> Vec;
@@ -198,7 +198,7 @@ template <> inline const Vec<4, f64> Vec<4, f64>::Zero { 0, 0, 0, 0 };
 
 // static Vec::All() -----------------------------------------------------------
 
-template <size_t D, typename T>
+template <usize D, typename T>
 inline auto Vec<D, T>::All(T value) -> Vec
 {
 	Vec result;
@@ -211,7 +211,7 @@ inline auto Vec<D, T>::All(T value) -> Vec
 
 // Unary negation --------------------------------------------------------------
 
-template <size_t D, typename T>
+template <usize D, typename T>
 inline auto Vec<D, T>::operator-() const -> Vec
 {
 	auto result = *this;
@@ -224,7 +224,7 @@ inline auto Vec<D, T>::operator-() const -> Vec
 
 // Vector addition -------------------------------------------------------------
 
-template <size_t D, typename T>
+template <usize D, typename T>
 inline auto Vec<D, T>::operator+(const Vec& other) const -> Vec
 {
 	auto result = *this;
@@ -234,7 +234,7 @@ inline auto Vec<D, T>::operator+(const Vec& other) const -> Vec
 	return result;
 }
 
-template <size_t D, typename T>
+template <usize D, typename T>
 inline auto Vec<D, T>::operator+=(const Vec& other) -> Vec&
 {
 	for (auto i = 0; i < D; ++i)
@@ -246,7 +246,7 @@ inline auto Vec<D, T>::operator+=(const Vec& other) -> Vec&
 
 // Vector subtraction ----------------------------------------------------------
 
-template <size_t D, typename T>
+template <usize D, typename T>
 inline auto Vec<D, T>::operator-(const Vec& other) const -> Vec
 {
 	auto result = *this;
@@ -256,7 +256,7 @@ inline auto Vec<D, T>::operator-(const Vec& other) const -> Vec
 	return result;
 }
 
-template <size_t D, typename T>
+template <usize D, typename T>
 inline auto Vec<D, T>::operator-=(const Vec& other) -> Vec&
 {
 	for (auto i = 0; i < D; ++i)
@@ -268,7 +268,7 @@ inline auto Vec<D, T>::operator-=(const Vec& other) -> Vec&
 
 // Scalar multiplication -------------------------------------------------------
 
-template <size_t D, typename T>
+template <usize D, typename T>
 inline auto Vec<D, T>::operator*(T magnitude) const -> Vec
 {
 	auto result = *this;
@@ -278,7 +278,7 @@ inline auto Vec<D, T>::operator*(T magnitude) const -> Vec
 	return result;
 }
 
-template <size_t D, typename T>
+template <usize D, typename T>
 inline auto Vec<D, T>::operator*=(T magnitude) -> Vec&
 {
 	for (auto i = 0; i < D; ++i)
@@ -288,7 +288,7 @@ inline auto Vec<D, T>::operator*=(T magnitude) -> Vec&
 }
 } // namespace math
 
-template <size_t D, typename T>
+template <sized::usize D, typename T>
 inline auto operator*(T lhs, const math::Vec<D, T>& rhs) -> math::Vec<D, T>
 {
 	return rhs * lhs;
@@ -299,7 +299,7 @@ namespace math {
 
 // Scalar division -------------------------------------------------------------
 
-template <size_t D, typename T>
+template <usize D, typename T>
 inline auto Vec<D, T>::operator/(T magnitude) const -> Vec
 {
 	if (std::abs(magnitude - 0) < std::numeric_limits<T>::epsilon())
@@ -312,7 +312,7 @@ inline auto Vec<D, T>::operator/(T magnitude) const -> Vec
 	return result;
 }
 
-template <size_t D, typename T>
+template <usize D, typename T>
 inline auto Vec<D, T>::operator/=(T magnitude) -> Vec&
 {
 	if (std::abs(magnitude - 0) < std::numeric_limits<T>::epsilon()) {
@@ -331,7 +331,7 @@ inline auto Vec<D, T>::operator/=(T magnitude) -> Vec&
 
 // Equality comparison ---------------------------------------------------------
 
-template <size_t D, typename T>
+template <usize D, typename T>
 inline auto Vec<D, T>::operator==(const Vec& other) const -> bool
 {
 	if (this == &other)
@@ -347,7 +347,7 @@ inline auto Vec<D, T>::operator==(const Vec& other) const -> bool
 
 // Not-equal comparison --------------------------------------------------------
 
-template <size_t D, typename T>
+template <usize D, typename T>
 inline auto Vec<D, T>::operator!=(const Vec& other) const -> bool
 {
 	if (this == &other)
@@ -363,7 +363,7 @@ inline auto Vec<D, T>::operator!=(const Vec& other) const -> bool
 
 // Length / Magnitude ----------------------------------------------------------
 
-template <size_t D, typename T>
+template <usize D, typename T>
 inline auto Vec<D, T>::Length() const -> T
 {
 	T result = 0;
@@ -373,7 +373,7 @@ inline auto Vec<D, T>::Length() const -> T
 	return std::sqrt(result);
 }
 
-template <size_t D, typename T>
+template <usize D, typename T>
 inline auto Vec<D, T>::Magnitude() const -> T
 {
 	return Length();
@@ -382,25 +382,25 @@ inline auto Vec<D, T>::Magnitude() const -> T
 
 // Unit-Length Direction -------------------------------------------------------
 
-template <size_t D, typename T>
+template <usize D, typename T>
 inline auto Vec<D, T>::Unit() const -> Vec
 {
 	return *this / Length();
 }
 
-template <size_t D, typename T>
+template <usize D, typename T>
 inline auto Vec<D, T>::Direction() const -> Vec
 {
 	return Unit();
 }
 
-template <size_t D, typename T>
+template <usize D, typename T>
 inline auto Vec<D, T>::Normal() const -> Vec
 {
 	return Unit();
 }
 
-template <size_t D, typename T>
+template <usize D, typename T>
 inline void Vec<D, T>::Normalize()
 {
 	*this /= Length();
@@ -409,7 +409,7 @@ inline void Vec<D, T>::Normalize()
 
 // Distance --------------------------------------------------------------------
 
-template <size_t D, typename T>
+template <usize D, typename T>
 inline auto Vec<D, T>::Dist(const Vec& other) const -> T
 {
 	T result = 0;
@@ -421,7 +421,7 @@ inline auto Vec<D, T>::Dist(const Vec& other) const -> T
 	return std::sqrt(result);
 }
 
-template <size_t D, typename T>
+template <usize D, typename T>
 inline auto Vec<D, T>::Dist(const Vec& lhs, const Vec& rhs) -> T
 {
 	return lhs.Dist(rhs);
@@ -430,7 +430,7 @@ inline auto Vec<D, T>::Dist(const Vec& lhs, const Vec& rhs) -> T
 
 // Dot-product -----------------------------------------------------------------
 
-template <size_t D, typename T>
+template <usize D, typename T>
 inline auto Vec<D, T>::Dot(const Vec& other) const -> T
 {
 	T result = 0;
@@ -440,7 +440,7 @@ inline auto Vec<D, T>::Dot(const Vec& other) const -> T
 	return result;
 }
 
-template <size_t D, typename T>
+template <usize D, typename T>
 inline auto Vec<D, T>::operator|(const Vec& other) const -> T
 {
 	return Dot(other);
