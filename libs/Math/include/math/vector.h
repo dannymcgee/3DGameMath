@@ -10,7 +10,7 @@
 
 namespace math {
 
-using namespace sized; // NOLINT
+using namespace sized; // NOLINT(*-using-namespace)
 
 
 // Declarations ////////////////////////////////////////////////////////////////
@@ -39,6 +39,9 @@ struct Vec<2, T> {
 		T components[2];
 		struct { T x, y; };
 	};
+
+	inline static const Vec UnitX { 1, 0 };
+	inline static const Vec UnitY { 0, 1 };
 };
 
 template <typename T>
@@ -47,6 +50,10 @@ struct Vec<3, T> {
 		T components[3];
 		struct { T x, y, z; };
 	};
+
+	inline static const Vec UnitX { 1, 0, 0 };
+	inline static const Vec UnitY { 0, 1, 0 };
+	inline static const Vec UnitZ { 0, 0, 1 };
 
 	/** Calculate the cross-product of two vectors. */
 	inline auto Cross(const Vec& other) const -> Vec;
@@ -64,6 +71,11 @@ struct Vec<4, T> {
 		T components[4];
 		struct { T x, y, z, w; };
 	};
+
+	inline static const Vec UnitX { 1, 0, 0, 0 };
+	inline static const Vec UnitY { 0, 1, 0, 0 };
+	inline static const Vec UnitZ { 0, 0, 1, 0 };
+	inline static const Vec UnitW { 0, 0, 0, 1 };
 // NOLINTEND(*-avoid-c-arrays)
 };
 }
@@ -84,7 +96,7 @@ private:
 	using internal::Vec<D, T>::components;
 
 public:
-	static const Vec<D, T> Zero;
+	inline static const Vec Zero {};
 
 	/** Create a vector where all components have the same value. */
 	static auto All(T value) -> Vec;
@@ -148,9 +160,11 @@ public:
 
 // Definitions /////////////////////////////////////////////////////////////////
 
-// internal::Vec<3, T>::Cross --------------------------------------------------
+// math::internal::Vec<3, T> ===================================================
 
 namespace internal {
+
+// Cross-Product ---------------------------------------------------------------
 
 template <typename T>
 inline auto Vec<3, T>::Cross(const Vec& other) const -> Vec
@@ -183,20 +197,9 @@ inline auto Vec<3, T>::operator^=(const Vec& other) -> Vec&
 
 }
 
+// math::Vec<D, T> =============================================================
 
-// static Vec::Zero ------------------------------------------------------------
-
-template <> inline const auto Vec<2, f32>::Zero = Vec{ 0, 0 };
-template <> inline const auto Vec<2, f64>::Zero = Vec{ 0, 0 };
-
-template <> inline const auto Vec<3, f32>::Zero = Vec{ 0, 0, 0 };
-template <> inline const auto Vec<3, f64>::Zero = Vec{ 0, 0, 0 };
-
-template <> inline const auto Vec<4, f32>::Zero = Vec{ 0, 0, 0, 0 };
-template <> inline const auto Vec<4, f64>::Zero = Vec{ 0, 0, 0, 0 };
-
-
-// static Vec::All() -----------------------------------------------------------
+// Static All(T) ---------------------------------------------------------------
 
 template <usize D, typename T>
 inline auto Vec<D, T>::All(T value) -> Vec

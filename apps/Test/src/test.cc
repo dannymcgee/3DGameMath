@@ -37,6 +37,27 @@ TEST_CASE("math::Vec", "[vector]") {
 			REQUIRE(vec.y == 0.f);
 			REQUIRE(vec.z == 0.f);
 		}
+		SECTION("has a ::UnitX const static member") {
+			auto vec = Vec3::UnitX;
+
+			REQUIRE(vec.x == 1.f);
+			REQUIRE(vec.y == 0.f);
+			REQUIRE(vec.z == 0.f);
+		}
+		SECTION("has a ::UnitY const static member") {
+			auto vec = Vec3::UnitY;
+
+			REQUIRE(vec.x == 0.f);
+			REQUIRE(vec.y == 1.f);
+			REQUIRE(vec.z == 0.f);
+		}
+		SECTION("has a ::UnitZ const static member") {
+			auto vec = Vec3::UnitZ;
+
+			REQUIRE(vec.x == 0.f);
+			REQUIRE(vec.y == 0.f);
+			REQUIRE(vec.z == 1.f);
+		}
 		SECTION("support unary negation operator") {
 			auto pos = Vec3{ 1.f, 2.f, 3.f };
 			auto neg = -pos;
