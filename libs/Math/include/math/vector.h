@@ -36,24 +36,17 @@ struct Vec {
 template <typename T>
 struct Vec<2, T> {
 	union {
-		T components[2];
+		T components[2] { 0, 0 };
 		struct { T x, y; };
 	};
-
-	inline static const Vec UnitX { 1, 0 };
-	inline static const Vec UnitY { 0, 1 };
 };
 
 template <typename T>
 struct Vec<3, T> {
 	union {
-		T components[3];
+		T components[3] { 0, 0, 0 };
 		struct { T x, y, z; };
 	};
-
-	inline static const Vec UnitX { 1, 0, 0 };
-	inline static const Vec UnitY { 0, 1, 0 };
-	inline static const Vec UnitZ { 0, 0, 1 };
 
 	/** Calculate the cross-product of two vectors. */
 	inline auto Cross(const Vec& other) const -> Vec;
@@ -68,14 +61,9 @@ struct Vec<3, T> {
 template <typename T>
 struct Vec<4, T> {
 	union {
-		T components[4];
+		T components[4] { 0, 0, 0, 0 };
 		struct { T x, y, z, w; };
 	};
-
-	inline static const Vec UnitX { 1, 0, 0, 0 };
-	inline static const Vec UnitY { 0, 1, 0, 0 };
-	inline static const Vec UnitZ { 0, 0, 1, 0 };
-	inline static const Vec UnitW { 0, 0, 0, 1 };
 // NOLINTEND(*-avoid-c-arrays)
 };
 }
