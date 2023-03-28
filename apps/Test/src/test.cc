@@ -215,53 +215,53 @@ TEST_CASE("math::Vec", "[vector]") {
 			auto vec = Vec3{ 1.5f, 2.25f, 3.34f };
 			auto expected = 4.29745f;
 
-			auto length = vec.Length();
-			auto magnitude = vec.Magnitude();
+			auto length = vec.length();
+			auto magnitude = vec.magnitude();
 
 			REQUIRE(std::abs(length - expected) < epsilon_practical);
 			REQUIRE(std::abs(magnitude - expected) < epsilon_practical);
 
 			// Unit vector length == 1
 			auto up = Vec3{ 0.f, 1.f, 0.f };
-			REQUIRE(up.Length() == 1.f);
+			REQUIRE(up.length() == 1.f);
 
 			// Zero Vector length == 0
-			REQUIRE(Vec3::Zero.Length() == 0.f);
+			REQUIRE(Vec3::Zero.length() == 0.f);
 
 			// Vector length is always non-negative
-			REQUIRE(Vec3{ -1.f, -2.f, -3.f }.Length() > 0.f);
+			REQUIRE(Vec3{ -1.f, -2.f, -3.f }.length() > 0.f);
 		}
 		SECTION("can calculate its unit-length direction") {
 			auto vec = Vec3{ 12.f, -5.f, 0.f };
 			auto expected = Vec3{ 0.92308f, -0.38462f, 0.f };
 
 			// `Unit()`
-			auto unit = vec.Unit();
+			auto unit = vec.unit();
 			REQUIRE(std::abs(unit.x - expected.x) < epsilon_practical);
 			REQUIRE(std::abs(unit.y - expected.y) < epsilon_practical);
 			REQUIRE(std::abs(unit.z - expected.z) < epsilon_practical);
 
 			// `Normal()` alias
-			auto norm = vec.Normal();
+			auto norm = vec.normal();
 			REQUIRE(std::abs(norm.x - unit.x) < epsilon_machine);
 			REQUIRE(std::abs(norm.y - unit.y) < epsilon_machine);
 			REQUIRE(std::abs(norm.z - unit.z) < epsilon_machine);
 
 			// `Direction()` alias
-			auto dir = vec.Direction();
+			auto dir = vec.direction();
 			REQUIRE(std::abs(dir.x - unit.x) < epsilon_machine);
 			REQUIRE(std::abs(dir.y - unit.y) < epsilon_machine);
 			REQUIRE(std::abs(dir.z - unit.z) < epsilon_machine);
 
 			SECTION("in-place") {
-				vec.Normalize();
+				vec.normalize();
 				REQUIRE(std::abs(vec.x - unit.x) < epsilon_machine);
 				REQUIRE(std::abs(vec.y - unit.y) < epsilon_machine);
 				REQUIRE(std::abs(vec.z - unit.z) < epsilon_machine);
 			}
 
 			SECTION("avoids NaN") {
-				auto impossible = Vec3::Zero.Unit();
+				auto impossible = Vec3::Zero.unit();
 				REQUIRE(!std::isnan(impossible.x));
 				REQUIRE(!std::isnan(impossible.y));
 				REQUIRE(!std::isnan(impossible.z));
@@ -272,26 +272,26 @@ TEST_CASE("math::Vec", "[vector]") {
 
 			SECTION("static method") {
 				SECTION("rvalue, rvalue") {
-					auto result = Vec3::Dist({ 1, 2, 3 }, { 3, 2, 1 });
+					auto result = Vec3::dist({ 1, 2, 3 }, { 3, 2, 1 });
 
 					REQUIRE(std::abs(result - expected) < epsilon_practical);
 				}
 				SECTION("lvalue, lvalue") {
 					auto vec1 = Vec3{ 1, 2, 3 };
 					auto vec2 = Vec3{ 3, 2, 1 };
-					auto result = Vec3::Dist(vec1, vec2);
+					auto result = Vec3::dist(vec1, vec2);
 
 					REQUIRE(std::abs(result - expected) < epsilon_practical);
 				}
 				SECTION("lvalue, rvalue") {
 					auto vec1 = Vec3{ 1, 2, 3 };
-					auto result = Vec3::Dist(vec1, { 3, 2, 1 });
+					auto result = Vec3::dist(vec1, { 3, 2, 1 });
 
 					REQUIRE(std::abs(result - expected) < epsilon_practical);
 				}
 				SECTION("rvalue, lvalue") {
 					auto vec2 = Vec3{ 3, 2, 1 };
-					auto result = Vec3::Dist({ 1, 2, 3 }, vec2);
+					auto result = Vec3::dist({ 1, 2, 3 }, vec2);
 
 					REQUIRE(std::abs(result - expected) < epsilon_practical);
 				}
@@ -301,12 +301,12 @@ TEST_CASE("math::Vec", "[vector]") {
 
 				SECTION("lvalue arg") {
 					auto vec2 = Vec3{ 3, 2, 1 };
-					auto result = vec1.Dist(vec2);
+					auto result = vec1.dist(vec2);
 
 					REQUIRE(std::abs(result - expected) < epsilon_practical);
 				}
 				SECTION("rvalue arg") {
-					auto result = vec1.Dist({ 3, 2, 1 });
+					auto result = vec1.dist({ 3, 2, 1 });
 
 					REQUIRE(std::abs(result - expected) < epsilon_practical);
 				}
@@ -318,11 +318,11 @@ TEST_CASE("math::Vec", "[vector]") {
 			auto expected = -15.f;
 
 			SECTION("rvalue rhs") {
-				REQUIRE(vec1.Dot({ 0.f, 4.f, -1.f }) == expected);
+				REQUIRE(vec1.dot({ 0.f, 4.f, -1.f }) == expected);
 				REQUIRE((vec1 | Vec3{ 0.f, 4.f, -1.f }) == expected);
 			}
 			SECTION("lvalue rhs") {
-				REQUIRE(vec1.Dot(vec2) == expected);
+				REQUIRE(vec1.dot(vec2) == expected);
 				REQUIRE((vec1 | vec2) == expected);
 			}
 		}
@@ -332,14 +332,14 @@ TEST_CASE("math::Vec", "[vector]") {
 			auto expected = Vec3{ 44.f, 0.f, -11.f };
 
 			SECTION("named method with rvalue arg") {
-				auto result = vec1.Cross({ 2.f, -5.f, 8.f });
+				auto result = vec1.cross({ 2.f, -5.f, 8.f });
 
 				REQUIRE(result.x == expected.x);
 				REQUIRE(result.y == expected.y);
 				REQUIRE(result.z == expected.z);
 			}
 			SECTION("named method with lvalue arg") {
-				auto result = vec1.Cross(vec2);
+				auto result = vec1.cross(vec2);
 
 				REQUIRE(result.x == expected.x);
 				REQUIRE(result.y == expected.y);

@@ -22,7 +22,7 @@ static void BM_CrossProduct(State& state)
 	for (auto _ : state) {
 		auto a = Vec<3, f32>{ 1.f, 3.f, 4.f };
 		auto b = Vec<3, f32>{ 2.f, -5.f, 8.f };
-		auto result = a.Cross(b);
+		auto result = a.cross(b);
 	}
 }
 BENCHMARK(BM_CrossProduct); // NOLINT
@@ -34,7 +34,7 @@ static void BM_DotProduct(State& state)
 	for (auto _ : state) {
 		auto a = Vec<3, f32>{ 1.f, 3.f, 4.f };
 		auto b = Vec<3, f32>{ 2.f, -5.f, 8.f };
-		auto result = a.Dot(b);
+		auto result = a.dot(b);
 	}
 }
 BENCHMARK(BM_DotProduct); // NOLINT
@@ -46,7 +46,7 @@ static void BM_Distance(State& state)
 	for (auto _ : state) {
 		auto a = Vec<3, f32>{ 1.f, 3.f, 4.f };
 		auto b = Vec<3, f32>{ 2.f, -5.f, 8.f };
-		auto result = Vec<3, f32>::Dist(a, b);
+		auto result = Vec<3, f32>::dist(a, b);
 	}
 }
 BENCHMARK(BM_Distance); // NOLINT

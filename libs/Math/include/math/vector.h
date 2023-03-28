@@ -49,7 +49,7 @@ struct Vec<3, T> {
 	};
 
 	/** Calculate the cross-product of two vectors. */
-	inline auto Cross(const Vec& other) const -> Vec;
+	inline auto cross(const Vec& other) const -> Vec;
 
 	/** Calculate the cross-product of two vectors. */
 	inline auto operator^(const Vec& other) const -> Vec;
@@ -87,7 +87,7 @@ public:
 	inline static const Vec Zero {};
 
 	/** Create a vector where all components have the same value. */
-	static auto All(T value) -> Vec;
+	static auto all(T value) -> Vec;
 
 	// Structured binding support
 	template <usize Index> inline auto get() &       { return components[Index]; }
@@ -121,26 +121,26 @@ public:
 	inline auto operator!=(const Vec& other) const -> bool;
 
 	/** Calculate the length (magnitude) of the vector. */
-	inline auto Length() const -> T;
+	inline auto length() const -> T;
 	/** Calculate the length (magnitude) of the vector. */
-	inline auto Magnitude() const -> T;
+	inline auto magnitude() const -> T;
 
 	/** Calculate the unit-length direction of the vector. */
-	inline auto Unit() const -> Vec;
+	inline auto unit() const -> Vec;
 	/** Calculate the unit-length direction of the vector. */
-	inline auto Direction() const -> Vec;
+	inline auto direction() const -> Vec;
 	/** Calculate the unit-length direction of the vector. */
-	inline auto Normal() const -> Vec;
+	inline auto normal() const -> Vec;
 	/** Normalize the vector in place. */
-	inline void Normalize();
+	inline void normalize();
 
 	/** Calculate the distance between two points. */
-	inline auto Dist(const Vec& other) const -> T;
+	inline auto dist(const Vec& other) const -> T;
 	/** Calculate the distance between two points. */
-	static inline auto Dist(const Vec& lhs, const Vec& rhs) -> T;
+	static inline auto dist(const Vec& lhs, const Vec& rhs) -> T;
 
 	/** Calculate the dot-product of two vectors. */
-	inline auto Dot(const Vec& other) const -> T;
+	inline auto dot(const Vec& other) const -> T;
 	/** Calculate the dot-product of two vectors. */
 	inline auto operator|(const Vec& other) const -> T;
 };
@@ -155,7 +155,7 @@ namespace internal {
 // Cross-Product ---------------------------------------------------------------
 
 template <typename T>
-inline auto Vec<3, T>::Cross(const Vec& other) const -> Vec
+inline auto Vec<3, T>::cross(const Vec& other) const -> Vec
 {
 	return Vec{
 		y * other.z - z * other.y,
@@ -167,7 +167,7 @@ inline auto Vec<3, T>::Cross(const Vec& other) const -> Vec
 template <typename T>
 inline auto Vec<3, T>::operator^(const Vec& other) const -> Vec
 {
-	return Cross(other);
+	return cross(other);
 }
 
 template <typename T>
@@ -190,7 +190,7 @@ inline auto Vec<3, T>::operator^=(const Vec& other) -> Vec&
 // Static All(T) ---------------------------------------------------------------
 
 template <usize D, typename T>
-inline auto Vec<D, T>::All(T value) -> Vec
+inline auto Vec<D, T>::all(T value) -> Vec
 {
 	Vec result;
 	for (auto i = 0; i < D; ++i)
@@ -294,7 +294,7 @@ template <usize D, typename T>
 inline auto Vec<D, T>::operator/(T magnitude) const -> Vec
 {
 	if (std::abs(magnitude - 0) < std::numeric_limits<T>::epsilon())
-		return Vec::All(0);
+		return Vec::all(0);
 
 	auto result = *this;
 	for (auto i = 0; i < D; ++i)
@@ -355,7 +355,7 @@ inline auto Vec<D, T>::operator!=(const Vec& other) const -> bool
 // Length / Magnitude ----------------------------------------------------------
 
 template <usize D, typename T>
-inline auto Vec<D, T>::Length() const -> T
+inline auto Vec<D, T>::length() const -> T
 {
 	T result = 0;
 	for (auto i = 0; i < D; ++i)
@@ -365,43 +365,43 @@ inline auto Vec<D, T>::Length() const -> T
 }
 
 template <usize D, typename T>
-inline auto Vec<D, T>::Magnitude() const -> T
+inline auto Vec<D, T>::magnitude() const -> T
 {
-	return Length();
+	return length();
 }
 
 
 // Unit-Length Direction -------------------------------------------------------
 
 template <usize D, typename T>
-inline auto Vec<D, T>::Unit() const -> Vec
+inline auto Vec<D, T>::unit() const -> Vec
 {
-	return *this / Length();
+	return *this / length();
 }
 
 template <usize D, typename T>
-inline auto Vec<D, T>::Direction() const -> Vec
+inline auto Vec<D, T>::direction() const -> Vec
 {
-	return Unit();
+	return unit();
 }
 
 template <usize D, typename T>
-inline auto Vec<D, T>::Normal() const -> Vec
+inline auto Vec<D, T>::normal() const -> Vec
 {
-	return Unit();
+	return unit();
 }
 
 template <usize D, typename T>
-inline void Vec<D, T>::Normalize()
+inline void Vec<D, T>::normalize()
 {
-	*this /= Length();
+	*this /= length();
 }
 
 
 // Distance --------------------------------------------------------------------
 
 template <usize D, typename T>
-inline auto Vec<D, T>::Dist(const Vec& other) const -> T
+inline auto Vec<D, T>::dist(const Vec& other) const -> T
 {
 	T result = 0;
 	for (auto i = 0; i < D; ++i) {
@@ -413,16 +413,16 @@ inline auto Vec<D, T>::Dist(const Vec& other) const -> T
 }
 
 template <usize D, typename T>
-inline auto Vec<D, T>::Dist(const Vec& lhs, const Vec& rhs) -> T
+inline auto Vec<D, T>::dist(const Vec& lhs, const Vec& rhs) -> T
 {
-	return lhs.Dist(rhs);
+	return lhs.dist(rhs);
 }
 
 
 // Dot-product -----------------------------------------------------------------
 
 template <usize D, typename T>
-inline auto Vec<D, T>::Dot(const Vec& other) const -> T
+inline auto Vec<D, T>::dot(const Vec& other) const -> T
 {
 	T result = 0;
 	for (auto i = 0; i < D; ++i)
@@ -434,7 +434,7 @@ inline auto Vec<D, T>::Dot(const Vec& other) const -> T
 template <usize D, typename T>
 inline auto Vec<D, T>::operator|(const Vec& other) const -> T
 {
-	return Dot(other);
+	return dot(other);
 }
 
 }
