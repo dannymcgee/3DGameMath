@@ -2,6 +2,7 @@ add_library(
 	Math
 		INTERFACE
 			"include/math/vector.h"
+			"include/math/matrix.h"
 )
 
 include_directories("./include")

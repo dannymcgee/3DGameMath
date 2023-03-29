@@ -1,12 +1,15 @@
+#include <array>
 #include <iostream>
 
 #include <fmt/format.h>
 
+#include <math/matrix.h>
 #include <math/vector.h>
 #include <sized.h>
 
 using namespace sized; // NOLINT;
 using math::Vec;
+using math::Mat;
 
 void vector_exercises()
 {
@@ -57,7 +60,20 @@ void vector_exercises()
 	}
 }
 
+
+void matrix()
+{
+	using Mat4x3 = Mat<4,3>;
+
+	auto mat = Mat4x3{
+		{ 0, 0, 0 },
+		{ 1, 0, 0 },
+		{ 0, 1, 0 },
+		{ 0, 0, 1 },
+	};
+}
+
 auto main() -> int
 {
-	vector_exercises();
+	matrix();
 }
