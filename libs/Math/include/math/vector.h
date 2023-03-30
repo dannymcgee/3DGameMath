@@ -210,7 +210,7 @@ template <usize D, typename T>
 inline auto Vec<D, T>::all(T value) -> Vec
 {
 	Vec result;
-	for (auto i = 0; i < D; ++i)
+	for (usize i = 0; i < D; ++i)
 		result.components[i] = value;
 
 	return result;
@@ -253,7 +253,7 @@ template <usize D, typename T>
 inline auto Vec<D, T>::operator-() const -> Vec
 {
 	auto result = *this;
-	for (auto i = 0; i < D; ++i)
+	for (usize i = 0; i < D; ++i)
 		result.components[i] *= -1;
 
 	return result;
@@ -266,7 +266,7 @@ template <usize D, typename T>
 inline auto Vec<D, T>::operator+(const Vec& other) const -> Vec
 {
 	auto result = *this;
-	for (auto i = 0; i < D; ++i)
+	for (usize i = 0; i < D; ++i)
 		result.components[i] += other.components[i];
 
 	return result;
@@ -275,7 +275,7 @@ inline auto Vec<D, T>::operator+(const Vec& other) const -> Vec
 template <usize D, typename T>
 inline auto Vec<D, T>::operator+=(const Vec& other) -> Vec&
 {
-	for (auto i = 0; i < D; ++i)
+	for (usize i = 0; i < D; ++i)
 		components[i] += other.components[i];
 
 	return *this;
@@ -288,7 +288,7 @@ template <usize D, typename T>
 inline auto Vec<D, T>::operator-(const Vec& other) const -> Vec
 {
 	auto result = *this;
-	for (auto i = 0; i < D; ++i)
+	for (usize i = 0; i < D; ++i)
 		result.components[i] -= other.components[i];
 
 	return result;
@@ -297,7 +297,7 @@ inline auto Vec<D, T>::operator-(const Vec& other) const -> Vec
 template <usize D, typename T>
 inline auto Vec<D, T>::operator-=(const Vec& other) -> Vec&
 {
-	for (auto i = 0; i < D; ++i)
+	for (usize i = 0; i < D; ++i)
 		components[i] -= other.components[i];
 
 	return *this;
@@ -310,7 +310,7 @@ template <usize D, typename T>
 inline auto Vec<D, T>::operator*(T magnitude) const -> Vec
 {
 	auto result = *this;
-	for (auto i = 0; i < D; ++i)
+	for (usize i = 0; i < D; ++i)
 		result.components[i] *= magnitude;
 
 	return result;
@@ -319,7 +319,7 @@ inline auto Vec<D, T>::operator*(T magnitude) const -> Vec
 template <usize D, typename T>
 inline auto Vec<D, T>::operator*=(T magnitude) -> Vec&
 {
-	for (auto i = 0; i < D; ++i)
+	for (usize i = 0; i < D; ++i)
 		components[i] *= magnitude;
 
 	return *this;
@@ -344,7 +344,7 @@ inline auto Vec<D, T>::operator/(T magnitude) const -> Vec
 		return Vec::all(0);
 
 	auto result = *this;
-	for (auto i = 0; i < D; ++i)
+	for (usize i = 0; i < D; ++i)
 		result.components[i] /= magnitude;
 
 	return result;
@@ -354,13 +354,13 @@ template <usize D, typename T>
 inline auto Vec<D, T>::operator/=(T magnitude) -> Vec&
 {
 	if (nearly_equal<T>(magnitude, 0)) {
-		for (auto i = 0; i < D; ++i)
+		for (usize i = 0; i < D; ++i)
 			components[i] = 0;
 
 		return *this;
 	}
 
-	for (auto i = 0; i < D; ++i)
+	for (usize i = 0; i < D; ++i)
 		components[i] /= magnitude;
 
 	return *this;
@@ -375,7 +375,7 @@ inline auto Vec<D, T>::operator==(const Vec& other) const -> bool
 	if (this == &other)
 		return true;
 
-	for (auto i = 0; i < D; ++i)
+	for (usize i = 0; i < D; ++i)
 		if (!nearly_equal<T>(components[i], other.components[i]))
 			return false;
 
@@ -391,7 +391,7 @@ inline auto Vec<D, T>::operator!=(const Vec& other) const -> bool
 	if (this == &other)
 		return false;
 
-	for (auto i = 0; i < D; ++i)
+	for (usize i = 0; i < D; ++i)
 		if (!nearly_equal<T>(components[i], other.components[i]))
 			return true;
 
@@ -405,7 +405,7 @@ template <usize D, typename T>
 inline auto Vec<D, T>::length() const -> T
 {
 	T result = 0;
-	for (auto i = 0; i < D; ++i)
+	for (usize i = 0; i < D; ++i)
 		result += components[i] * components[i];
 
 	return std::sqrt(result);
@@ -451,7 +451,7 @@ template <usize D, typename T>
 inline auto Vec<D, T>::dist(const Vec& other) const -> T
 {
 	T result = 0;
-	for (auto i = 0; i < D; ++i) {
+	for (usize i = 0; i < D; ++i) {
 		auto diff = other.components[i] - components[i];
 		result += diff * diff;
 	}
@@ -472,7 +472,7 @@ template <usize D, typename T>
 inline auto Vec<D, T>::dot(const Vec& other) const -> T
 {
 	T result = 0;
-	for (auto i = 0; i < D; ++i)
+	for (usize i = 0; i < D; ++i)
 		result += components[i] * other.components[i];
 
 	return result;
