@@ -28,7 +28,7 @@ namespace detail {
  * template instances without needing to redeclare all methods for every
  * specialization.
  */
-template <usize D, typename T>
+template <usize D, typename T = f64>
 struct Vec {
 // NOLINTBEGIN(*-avoid-c-arrays)
 	union {
@@ -81,7 +81,7 @@ struct Vec<4, T> {
  * @tparam D The dimensionality of the vector. Full support for `2`, `3`, or `4`.
  * @tparam T The scalar type of the components. Full support for `float` or `double`.
  */
-template <usize D, typename T>
+template <usize D, typename T = f64>
 struct Vec : public detail::Vec<D, T> {
 private:
 	using detail::Vec<D, T>::components;
