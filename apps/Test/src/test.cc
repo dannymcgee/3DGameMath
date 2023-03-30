@@ -379,55 +379,64 @@ TEST_CASE("math::Vec", "[vector]") {
 	}
 }
 
-TEST_CASE("math::Mat", "[matrix]") {
+TEST_CASE("math::Mat<R,C,T>", "[matrix]") {
 	using namespace sized; // NOLINT
 
-	SECTION("Mat<4,3,f64>") {
+	SECTION("Mat<R=4, C=3, T=f64>") {
 		using Mat4x3 = math::Mat<4,3, f64>;
 
-		SECTION("supports construction with initializer list and member access with 2D index") {
-			auto mat = Mat4x3{
-				{ 11, 12, 13 },
-				{ 21, 22, 23 },
-				{ 31, 32, 33 },
-				{ 41, 42, 43 },
-			};
+		auto mat4x3_labeled = Mat4x3{
+			{ 11, 12, 13 },
+			{ 21, 22, 23 },
+			{ 31, 32, 33 },
+			{ 41, 42, 43 },
+		};
 
-			REQUIRE(math::nearly_equal(mat.m<11>(), 11.0));
-			REQUIRE(math::nearly_equal(mat.m<12>(), 12.0));
-			REQUIRE(math::nearly_equal(mat.m<13>(), 13.0));
-			
-			REQUIRE(math::nearly_equal(mat.m<21>(), 21.0));
-			REQUIRE(math::nearly_equal(mat.m<22>(), 22.0));
-			REQUIRE(math::nearly_equal(mat.m<23>(), 23.0));
-			
-			REQUIRE(math::nearly_equal(mat.m<31>(), 31.0));
-			REQUIRE(math::nearly_equal(mat.m<32>(), 32.0));
-			REQUIRE(math::nearly_equal(mat.m<33>(), 33.0));
-			
-			REQUIRE(math::nearly_equal(mat.m<41>(), 41.0));
-			REQUIRE(math::nearly_equal(mat.m<42>(), 42.0));
-			REQUIRE(math::nearly_equal(mat.m<43>(), 43.0));
+		SECTION("supports member access with 2D index") {
+			REQUIRE(math::nearly_equal(mat4x3_labeled.m<11>(), 11.0));
+			REQUIRE(math::nearly_equal(mat4x3_labeled.m<12>(), 12.0));
+			REQUIRE(math::nearly_equal(mat4x3_labeled.m<13>(), 13.0));
+
+			REQUIRE(math::nearly_equal(mat4x3_labeled.m<21>(), 21.0));
+			REQUIRE(math::nearly_equal(mat4x3_labeled.m<22>(), 22.0));
+			REQUIRE(math::nearly_equal(mat4x3_labeled.m<23>(), 23.0));
+
+			REQUIRE(math::nearly_equal(mat4x3_labeled.m<31>(), 31.0));
+			REQUIRE(math::nearly_equal(mat4x3_labeled.m<32>(), 32.0));
+			REQUIRE(math::nearly_equal(mat4x3_labeled.m<33>(), 33.0));
+
+			REQUIRE(math::nearly_equal(mat4x3_labeled.m<41>(), 41.0));
+			REQUIRE(math::nearly_equal(mat4x3_labeled.m<42>(), 42.0));
+			REQUIRE(math::nearly_equal(mat4x3_labeled.m<43>(), 43.0));
+		}
+		SECTION("supports getting an individual row as a math::Vec<C>") {
+			auto row2 = mat4x3_labeled.row<2>();
+
+			REQUIRE(math::nearly_equal(row2.x, 21.0));
+			REQUIRE(math::nearly_equal(row2.y, 22.0));
+			REQUIRE(math::nearly_equal(row2.z, 23.0));
+		}
+		SECTION("supports getting an individual column as a math::Vec<R>") {
+			auto col2 = mat4x3_labeled.col<2>();
+
+			REQUIRE(math::nearly_equal(col2.x, 12.0));
+			REQUIRE(math::nearly_equal(col2.y, 22.0));
+			REQUIRE(math::nearly_equal(col2.z, 32.0));
+			REQUIRE(math::nearly_equal(col2.w, 42.0));
 		}
 		SECTION("supports matrix transposition") {
-			auto mat4x3 = Mat4x3{
-				{ 11, 12, 13 },
-				{ 21, 22, 23 },
-				{ 31, 32, 33 },
-				{ 41, 42, 43 },
-			};
-			auto mat3x4 = mat4x3.transpose();
+			auto mat3x4 = mat4x3_labeled.transpose();
 
 			REQUIRE(math::nearly_equal(mat3x4.m<11>(), 11.0));
 			REQUIRE(math::nearly_equal(mat3x4.m<12>(), 21.0));
 			REQUIRE(math::nearly_equal(mat3x4.m<13>(), 31.0));
 			REQUIRE(math::nearly_equal(mat3x4.m<14>(), 41.0));
-			
+
 			REQUIRE(math::nearly_equal(mat3x4.m<21>(), 12.0));
 			REQUIRE(math::nearly_equal(mat3x4.m<22>(), 22.0));
 			REQUIRE(math::nearly_equal(mat3x4.m<23>(), 32.0));
 			REQUIRE(math::nearly_equal(mat3x4.m<24>(), 42.0));
-			
+
 			REQUIRE(math::nearly_equal(mat3x4.m<31>(), 13.0));
 			REQUIRE(math::nearly_equal(mat3x4.m<32>(), 23.0));
 			REQUIRE(math::nearly_equal(mat3x4.m<33>(), 33.0));
@@ -447,15 +456,15 @@ TEST_CASE("math::Mat", "[matrix]") {
 				REQUIRE(math::nearly_equal(result.m<11>(), 2.0));
 				REQUIRE(math::nearly_equal(result.m<12>(), 4.0));
 				REQUIRE(math::nearly_equal(result.m<13>(), 6.0));
-				
+
 				REQUIRE(math::nearly_equal(result.m<21>(), 8.0));
 				REQUIRE(math::nearly_equal(result.m<22>(), 10.0));
 				REQUIRE(math::nearly_equal(result.m<23>(), 12.0));
-				
+
 				REQUIRE(math::nearly_equal(result.m<31>(), 14.0));
 				REQUIRE(math::nearly_equal(result.m<32>(), 16.0));
 				REQUIRE(math::nearly_equal(result.m<33>(), 18.0));
-				
+
 				REQUIRE(math::nearly_equal(result.m<41>(), 20.0));
 				REQUIRE(math::nearly_equal(result.m<42>(), 22.0));
 				REQUIRE(math::nearly_equal(result.m<43>(), 24.0));
@@ -466,15 +475,15 @@ TEST_CASE("math::Mat", "[matrix]") {
 				REQUIRE(math::nearly_equal(result.m<11>(), 2.0));
 				REQUIRE(math::nearly_equal(result.m<12>(), 4.0));
 				REQUIRE(math::nearly_equal(result.m<13>(), 6.0));
-				
+
 				REQUIRE(math::nearly_equal(result.m<21>(), 8.0));
 				REQUIRE(math::nearly_equal(result.m<22>(), 10.0));
 				REQUIRE(math::nearly_equal(result.m<23>(), 12.0));
-				
+
 				REQUIRE(math::nearly_equal(result.m<31>(), 14.0));
 				REQUIRE(math::nearly_equal(result.m<32>(), 16.0));
 				REQUIRE(math::nearly_equal(result.m<33>(), 18.0));
-				
+
 				REQUIRE(math::nearly_equal(result.m<41>(), 20.0));
 				REQUIRE(math::nearly_equal(result.m<42>(), 22.0));
 				REQUIRE(math::nearly_equal(result.m<43>(), 24.0));
@@ -486,19 +495,40 @@ TEST_CASE("math::Mat", "[matrix]") {
 				REQUIRE(math::nearly_equal(result.m<11>(), 2.0));
 				REQUIRE(math::nearly_equal(result.m<12>(), 4.0));
 				REQUIRE(math::nearly_equal(result.m<13>(), 6.0));
-				
+
 				REQUIRE(math::nearly_equal(result.m<21>(), 8.0));
 				REQUIRE(math::nearly_equal(result.m<22>(), 10.0));
 				REQUIRE(math::nearly_equal(result.m<23>(), 12.0));
-				
+
 				REQUIRE(math::nearly_equal(result.m<31>(), 14.0));
 				REQUIRE(math::nearly_equal(result.m<32>(), 16.0));
 				REQUIRE(math::nearly_equal(result.m<33>(), 18.0));
-				
+
 				REQUIRE(math::nearly_equal(result.m<41>(), 20.0));
 				REQUIRE(math::nearly_equal(result.m<42>(), 22.0));
 				REQUIRE(math::nearly_equal(result.m<43>(), 24.0));
 			}
+		}
+	}
+	SECTION("Mat<R=2, C=2, T=f64>") {
+		using Mat2x2 = math::Mat<2,2, f64>;
+
+		SECTION("supports matrix multiplication") {
+			auto a = Mat2x2{
+				{ -3.0, 0.0 },
+				{  5.0, 0.5 },
+			};
+			auto b = Mat2x2{
+				{ -7.0, 2.0 },
+				{  4.0, 6.0 },
+			};
+
+			auto ab = a * b;
+
+			REQUIRE(math::nearly_equal(ab.m<11>(), 21.0));
+			REQUIRE(math::nearly_equal(ab.m<12>(), -6.0));
+			REQUIRE(math::nearly_equal(ab.m<21>(), -33.0));
+			REQUIRE(math::nearly_equal(ab.m<22>(), 13.0));
 		}
 	}
 }
