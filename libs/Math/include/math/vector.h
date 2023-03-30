@@ -18,10 +18,10 @@ using namespace sized; // NOLINT(*-using-namespace)
 
 // Declarations ////////////////////////////////////////////////////////////////
 
-namespace internal {
+namespace detail {
 
 
-// math::internal::Vec ---------------------------------------------------------
+// math::detail::Vec -----------------------------------------------------------
 
 /**
  * Helper base struct to allow for specializing struct members for specific
@@ -82,9 +82,9 @@ struct Vec<4, T> {
  * @tparam T The scalar type of the components. Full support for `float` or `double`.
  */
 template <usize D, typename T>
-struct Vec : public internal::Vec<D, T> {
+struct Vec : public detail::Vec<D, T> {
 private:
-	using internal::Vec<D, T>::components;
+	using detail::Vec<D, T>::components;
 
 public:
 	static const Vec Zero;
@@ -154,9 +154,9 @@ public:
 
 // Definitions /////////////////////////////////////////////////////////////////
 
-// math::internal::Vec<3, T> ===================================================
+// math::detail::Vec<3, T> =====================================================
 
-namespace internal {
+namespace detail {
 
 // Cross-Product ---------------------------------------------------------------
 
