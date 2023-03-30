@@ -100,6 +100,7 @@ public:
 
 	// Subscript operator
 	inline auto operator[](usize idx) -> T&;
+	inline auto operator[](usize idx) const -> T;
 
 	// Unary negation
 	inline auto operator-() const -> Vec;
@@ -149,6 +150,9 @@ public:
 	inline auto dot(const Vec& other) const -> T;
 	/** Calculate the dot-product of two vectors. */
 	inline auto operator|(const Vec& other) const -> T;
+
+private:
+	inline void validate_index(usize idx) const;
 };
 
 
@@ -218,6 +222,20 @@ inline auto Vec<D, T>::all(T value) -> Vec
 template <usize D, typename T>
 inline auto Vec<D, T>::operator[](usize idx) -> T&
 {
+	validate_index(idx);
+	return components[idx];
+}
+
+template <usize D, typename T>
+inline auto Vec<D, T>::operator[](usize idx) const -> T
+{
+	validate_index(idx);
+	return components[idx];
+}
+
+template <usize D, typename T>
+inline void Vec<D, T>::validate_index(usize idx) const
+{
 	if (idx > D) {
 		auto err_msg = fmt::format(
 			"Index out of range for Vec<{}>: Expected < {}, received {}",
@@ -226,8 +244,6 @@ inline auto Vec<D, T>::operator[](usize idx) -> T&
 
 		throw std::exception{ err_msg.c_str(), 1 };
 	}
-
-	return components[idx];
 }
 
 
