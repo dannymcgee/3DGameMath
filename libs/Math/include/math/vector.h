@@ -2,10 +2,11 @@
 
 #include <cmath>
 #include <cstdlib>
-#include <limits>
+#include <exception>
 #include <type_traits>
 #include <utility>
 
+#include <fmt/format.h>
 #include <sized.h>
 
 #include "math/utility.h"
@@ -96,6 +97,9 @@ public:
 	template <usize Index> inline auto get() const&  { return components[Index]; }
 	template <usize Index> inline auto get() &&      { return components[Index]; }
 	template <usize Index> inline auto get() const&& { return components[Index]; }
+
+	// Subscript operator
+	inline auto operator[](usize idx) -> T&;
 
 	// Unary negation
 	inline auto operator-() const -> Vec;
@@ -206,6 +210,24 @@ inline auto Vec<D, T>::all(T value) -> Vec
 		result.components[i] = value;
 
 	return result;
+}
+
+
+// Subscript operator ----------------------------------------------------------
+
+template <usize D, typename T>
+inline auto Vec<D, T>::operator[](usize idx) -> T&
+{
+	if (idx > D) {
+		auto err_msg = fmt::format(
+			"Index out of range for Vec<{}>: Expected < {}, received {}",
+			D, D, idx
+		);
+
+		throw std::exception{ err_msg.c_str(), 1 };
+	}
+
+	return components[idx];
 }
 
 
