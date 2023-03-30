@@ -13,8 +13,7 @@ TEST_CASE("math::Vec", "[vector]") {
 	SECTION("Vec<3, f32>") {
 		using Vec3 = math::Vec<3, f32>;
 
-		const static auto epsilon_practical = 0.00001f;
-		const static auto epsilon_machine = std::numeric_limits<f32>::epsilon();
+		static constexpr auto epsilon_practical = 0.00001f;
 
 		SECTION("supports construction with initializer list") {
 			auto vec = Vec3{ 1.f, 2.f, 3.f };
@@ -41,9 +40,9 @@ TEST_CASE("math::Vec", "[vector]") {
 			auto pos = Vec3{ 1.f, 2.f, 3.f };
 			auto neg = -pos;
 
-			REQUIRE(neg.x == -1.f);
-			REQUIRE(neg.y == -2.f);
-			REQUIRE(neg.z == -3.f);
+			REQUIRE(math::nearly_equal<f32>(neg.x, -1.f));
+			REQUIRE(math::nearly_equal<f32>(neg.y, -2.f));
+			REQUIRE(math::nearly_equal<f32>(neg.z, -3.f));
 		}
 		SECTION("supports Vec + Vec operator...") {
 			auto lhs = Vec3{ 1.f, 2.f, 3.f };
@@ -90,7 +89,7 @@ TEST_CASE("math::Vec", "[vector]") {
 				auto rhs = Vec3{ 3.f, 2.f, 1.f };
 				auto result = lhs - rhs;
 
-				REQUIRE(result.x == -2.f);
+				REQUIRE(math::nearly_equal<f32>(result.x, -2.f));
 				REQUIRE(result.y == 0.f);
 				REQUIRE(result.z == 2.f);
 			}
@@ -98,7 +97,7 @@ TEST_CASE("math::Vec", "[vector]") {
 			SECTION("...with rvalue rhs") {
 				auto result = lhs - Vec3{ 3.f, 2.f, 1.f };
 
-				REQUIRE(result.x == -2.f);
+				REQUIRE(math::nearly_equal<f32>(result.x, -2.f));
 				REQUIRE(result.y == 0.f);
 				REQUIRE(result.z == 2.f);
 			}
@@ -110,14 +109,14 @@ TEST_CASE("math::Vec", "[vector]") {
 				auto rhs = Vec3{ 3.f, 2.f, 1.f };
 				result -= rhs;
 
-				REQUIRE(result.x == -2.f);
+				REQUIRE(math::nearly_equal<f32>(result.x, -2.f));
 				REQUIRE(result.y == 0.f);
 				REQUIRE(result.z == 2.f);
 			}
 			SECTION("...with rvalue rhs") {
 				result -= Vec3{ 3.f, 2.f, 1.f };
 
-				REQUIRE(result.x == -2.f);
+				REQUIRE(math::nearly_equal<f32>(result.x, -2.f));
 				REQUIRE(result.y == 0.f);
 				REQUIRE(result.z == 2.f);
 			}
@@ -218,8 +217,8 @@ TEST_CASE("math::Vec", "[vector]") {
 			auto length = vec.length();
 			auto magnitude = vec.magnitude();
 
-			REQUIRE(std::abs(length - expected) < epsilon_practical);
-			REQUIRE(std::abs(magnitude - expected) < epsilon_practical);
+			REQUIRE(math::nearly_equal<f32>(length, expected, epsilon_practical));
+			REQUIRE(math::nearly_equal<f32>(magnitude, expected, epsilon_practical));
 
 			// Unit vector length == 1
 			auto up = Vec3{ 0.f, 1.f, 0.f };
@@ -237,27 +236,27 @@ TEST_CASE("math::Vec", "[vector]") {
 
 			// `Unit()`
 			auto unit = vec.unit();
-			REQUIRE(std::abs(unit.x - expected.x) < epsilon_practical);
-			REQUIRE(std::abs(unit.y - expected.y) < epsilon_practical);
-			REQUIRE(std::abs(unit.z - expected.z) < epsilon_practical);
+			REQUIRE(math::nearly_equal<f32>(unit.x, expected.x, epsilon_practical));
+			REQUIRE(math::nearly_equal<f32>(unit.y, expected.y, epsilon_practical));
+			REQUIRE(math::nearly_equal<f32>(unit.z, expected.z, epsilon_practical));
 
 			// `Normal()` alias
 			auto norm = vec.normal();
-			REQUIRE(std::abs(norm.x - unit.x) < epsilon_machine);
-			REQUIRE(std::abs(norm.y - unit.y) < epsilon_machine);
-			REQUIRE(std::abs(norm.z - unit.z) < epsilon_machine);
+			REQUIRE(math::nearly_equal<f32>(norm.x, unit.x));
+			REQUIRE(math::nearly_equal<f32>(norm.y, unit.y));
+			REQUIRE(math::nearly_equal<f32>(norm.z, unit.z));
 
 			// `Direction()` alias
 			auto dir = vec.direction();
-			REQUIRE(std::abs(dir.x - unit.x) < epsilon_machine);
-			REQUIRE(std::abs(dir.y - unit.y) < epsilon_machine);
-			REQUIRE(std::abs(dir.z - unit.z) < epsilon_machine);
+			REQUIRE(math::nearly_equal<f32>(dir.x, unit.x));
+			REQUIRE(math::nearly_equal<f32>(dir.y, unit.y));
+			REQUIRE(math::nearly_equal<f32>(dir.z, unit.z));
 
 			SECTION("in-place") {
 				vec.normalize();
-				REQUIRE(std::abs(vec.x - unit.x) < epsilon_machine);
-				REQUIRE(std::abs(vec.y - unit.y) < epsilon_machine);
-				REQUIRE(std::abs(vec.z - unit.z) < epsilon_machine);
+				REQUIRE(math::nearly_equal<f32>(vec.x, unit.x));
+				REQUIRE(math::nearly_equal<f32>(vec.y, unit.y));
+				REQUIRE(math::nearly_equal<f32>(vec.z, unit.z));
 			}
 
 			SECTION("avoids NaN") {
@@ -274,26 +273,26 @@ TEST_CASE("math::Vec", "[vector]") {
 				SECTION("rvalue, rvalue") {
 					auto result = Vec3::dist({ 1, 2, 3 }, { 3, 2, 1 });
 
-					REQUIRE(std::abs(result - expected) < epsilon_practical);
+					REQUIRE(math::nearly_equal<f32>(result, expected, epsilon_practical));
 				}
 				SECTION("lvalue, lvalue") {
 					auto vec1 = Vec3{ 1, 2, 3 };
 					auto vec2 = Vec3{ 3, 2, 1 };
 					auto result = Vec3::dist(vec1, vec2);
 
-					REQUIRE(std::abs(result - expected) < epsilon_practical);
+					REQUIRE(math::nearly_equal<f32>(result, expected, epsilon_practical));
 				}
 				SECTION("lvalue, rvalue") {
 					auto vec1 = Vec3{ 1, 2, 3 };
 					auto result = Vec3::dist(vec1, { 3, 2, 1 });
 
-					REQUIRE(std::abs(result - expected) < epsilon_practical);
+					REQUIRE(math::nearly_equal<f32>(result, expected, epsilon_practical));
 				}
 				SECTION("rvalue, lvalue") {
 					auto vec2 = Vec3{ 3, 2, 1 };
 					auto result = Vec3::dist({ 1, 2, 3 }, vec2);
 
-					REQUIRE(std::abs(result - expected) < epsilon_practical);
+					REQUIRE(math::nearly_equal<f32>(result, expected, epsilon_practical));
 				}
 			}
 			SECTION("instance method") {
@@ -303,12 +302,12 @@ TEST_CASE("math::Vec", "[vector]") {
 					auto vec2 = Vec3{ 3, 2, 1 };
 					auto result = vec1.dist(vec2);
 
-					REQUIRE(std::abs(result - expected) < epsilon_practical);
+					REQUIRE(math::nearly_equal<f32>(result, expected, epsilon_practical));
 				}
 				SECTION("rvalue arg") {
 					auto result = vec1.dist({ 3, 2, 1 });
 
-					REQUIRE(std::abs(result - expected) < epsilon_practical);
+					REQUIRE(math::nearly_equal<f32>(result, expected, epsilon_practical));
 				}
 			}
 		}
@@ -318,12 +317,12 @@ TEST_CASE("math::Vec", "[vector]") {
 			auto expected = -15.f;
 
 			SECTION("rvalue rhs") {
-				REQUIRE(vec1.dot({ 0.f, 4.f, -1.f }) == expected);
-				REQUIRE((vec1 | Vec3{ 0.f, 4.f, -1.f }) == expected);
+				REQUIRE(math::nearly_equal<f32>(vec1.dot({ 0.f, 4.f, -1.f }), expected));
+				REQUIRE(math::nearly_equal<f32>((vec1 | Vec3{ 0.f, 4.f, -1.f }), expected));
 			}
 			SECTION("lvalue rhs") {
-				REQUIRE(vec1.dot(vec2) == expected);
-				REQUIRE((vec1 | vec2) == expected);
+				REQUIRE(math::nearly_equal<f32>(vec1.dot(vec2), expected));
+				REQUIRE(math::nearly_equal<f32>((vec1 | vec2), expected));
 			}
 		}
 		SECTION("can calculate the cross-product with another vector") {
@@ -334,46 +333,46 @@ TEST_CASE("math::Vec", "[vector]") {
 			SECTION("named method with rvalue arg") {
 				auto result = vec1.cross({ 2.f, -5.f, 8.f });
 
-				REQUIRE(result.x == expected.x);
-				REQUIRE(result.y == expected.y);
-				REQUIRE(result.z == expected.z);
+				REQUIRE(math::nearly_equal<f32>(result.x, expected.x));
+				REQUIRE(math::nearly_equal<f32>(result.y, expected.y));
+				REQUIRE(math::nearly_equal<f32>(result.z, expected.z));
 			}
 			SECTION("named method with lvalue arg") {
 				auto result = vec1.cross(vec2);
 
-				REQUIRE(result.x == expected.x);
-				REQUIRE(result.y == expected.y);
-				REQUIRE(result.z == expected.z);
+				REQUIRE(math::nearly_equal<f32>(result.x, expected.x));
+				REQUIRE(math::nearly_equal<f32>(result.y, expected.y));
+				REQUIRE(math::nearly_equal<f32>(result.z, expected.z));
 			}
 			SECTION("^ operator with rvalue rhs") {
 				auto result = vec1 ^ Vec3{ 2.f, -5.f, 8.f };
 
-				REQUIRE(result.x == expected.x);
-				REQUIRE(result.y == expected.y);
-				REQUIRE(result.z == expected.z);
+				REQUIRE(math::nearly_equal<f32>(result.x, expected.x));
+				REQUIRE(math::nearly_equal<f32>(result.y, expected.y));
+				REQUIRE(math::nearly_equal<f32>(result.z, expected.z));
 			}
 			SECTION("^ operator with lvalue rhs") {
 				auto result = vec1 ^ vec2;
 
-				REQUIRE(result.x == expected.x);
-				REQUIRE(result.y == expected.y);
-				REQUIRE(result.z == expected.z);
+				REQUIRE(math::nearly_equal<f32>(result.x, expected.x));
+				REQUIRE(math::nearly_equal<f32>(result.y, expected.y));
+				REQUIRE(math::nearly_equal<f32>(result.z, expected.z));
 			}
 			SECTION("^= operator with rvalue rhs") {
 				auto result = vec1;
 				result ^= Vec3{ 2.f, -5.f, 8.f };
 
-				REQUIRE(result.x == expected.x);
-				REQUIRE(result.y == expected.y);
-				REQUIRE(result.z == expected.z);
+				REQUIRE(math::nearly_equal<f32>(result.x, expected.x));
+				REQUIRE(math::nearly_equal<f32>(result.y, expected.y));
+				REQUIRE(math::nearly_equal<f32>(result.z, expected.z));
 			}
 			SECTION("^= operator with lvalue rhs") {
 				auto result = vec1;
 				result ^= vec2;
 
-				REQUIRE(result.x == expected.x);
-				REQUIRE(result.y == expected.y);
-				REQUIRE(result.z == expected.z);
+				REQUIRE(math::nearly_equal<f32>(result.x, expected.x));
+				REQUIRE(math::nearly_equal<f32>(result.y, expected.y));
+				REQUIRE(math::nearly_equal<f32>(result.z, expected.z));
 			}
 		}
 	}

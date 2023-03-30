@@ -8,6 +8,8 @@
 
 #include <sized.h>
 
+#include "math/utility.h"
+
 namespace math {
 
 using namespace sized; // NOLINT(*-using-namespace)
@@ -293,7 +295,7 @@ namespace math {
 template <usize D, typename T>
 inline auto Vec<D, T>::operator/(T magnitude) const -> Vec
 {
-	if (std::abs(magnitude - 0) < std::numeric_limits<T>::epsilon())
+	if (nearly_equal<T>(magnitude, 0))
 		return Vec::all(0);
 
 	auto result = *this;
@@ -306,7 +308,7 @@ inline auto Vec<D, T>::operator/(T magnitude) const -> Vec
 template <usize D, typename T>
 inline auto Vec<D, T>::operator/=(T magnitude) -> Vec&
 {
-	if (std::abs(magnitude - 0) < std::numeric_limits<T>::epsilon()) {
+	if (nearly_equal<T>(magnitude, 0)) {
 		for (auto i = 0; i < D; ++i)
 			components[i] = 0;
 
@@ -329,7 +331,7 @@ inline auto Vec<D, T>::operator==(const Vec& other) const -> bool
 		return true;
 
 	for (auto i = 0; i < D; ++i)
-		if (std::abs(components[i] - other.components[i]) > std::numeric_limits<T>::epsilon())
+		if (!nearly_equal<T>(components[i], other.components[i]))
 			return false;
 
 	return true;
@@ -345,7 +347,7 @@ inline auto Vec<D, T>::operator!=(const Vec& other) const -> bool
 		return false;
 
 	for (auto i = 0; i < D; ++i)
-		if (std::abs(components[i] - other.components[i]) > std::numeric_limits<T>::epsilon())
+		if (!nearly_equal<T>(components[i], other.components[i]))
 			return true;
 
 	return false;

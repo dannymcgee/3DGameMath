@@ -1,8 +1,8 @@
 add_library(
-	Math
-		INTERFACE
-			"include/math/vector.h"
-			"include/math/matrix.h"
+	Math INTERFACE
+		"include/math/utility.h"
+		"include/math/vector.h"
+		"include/math/matrix.h"
 )
 
 target_include_directories(
