@@ -3,7 +3,6 @@
 #include <cmath>
 #include <cstdlib>
 #include <exception>
-#include <type_traits>
 #include <utility>
 
 #include <fmt/format.h>
