@@ -86,7 +86,7 @@ private:
 	using internal::Vec<D, T>::components;
 
 public:
-	inline static const Vec Zero {};
+	static const Vec Zero;
 
 	/** Create a vector where all components have the same value. */
 	static auto all(T value) -> Vec;
@@ -188,6 +188,13 @@ inline auto Vec<3, T>::operator^=(const Vec& other) -> Vec&
 }
 
 // math::Vec<D, T> =============================================================
+
+
+// Static Zero -----------------------------------------------------------------
+
+template <usize D, typename T>
+const Vec<D, T> Vec<D, T>::Zero {};
+
 
 // Static All(T) ---------------------------------------------------------------
 
