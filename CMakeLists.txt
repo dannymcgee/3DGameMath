@@ -9,6 +9,7 @@ project(
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
@@ -20,6 +21,10 @@ FetchContent_Declare(
 	GIT_TAG 9.1.0
 )
 FetchContent_MakeAvailable(fmt)
+set_target_properties(
+	fmt PROPERTIES
+		FOLDER "External"
+)
 
 FetchContent_Declare(
 	Catch2
@@ -27,6 +32,14 @@ FetchContent_Declare(
 	GIT_TAG v3.3.2
 )
 FetchContent_MakeAvailable(Catch2)
+set_target_properties(
+	Catch2 PROPERTIES
+		FOLDER "External"
+)
+set_target_properties(
+	Catch2WithMain PROPERTIES
+		FOLDER "External"
+)
 
 set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "Disable benchmark tests" FORCE)
 FetchContent_Declare(
@@ -35,6 +48,14 @@ FetchContent_Declare(
 	GIT_TAG v1.7.1
 )
 FetchContent_MakeAvailable(benchmark)
+set_target_properties(
+	benchmark PROPERTIES
+		FOLDER "External"
+)
+set_target_properties(
+	benchmark_main PROPERTIES
+		FOLDER "External"
+)
 
 add_subdirectory("libs/Sized")
 add_subdirectory("libs/Math")

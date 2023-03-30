@@ -12,15 +12,21 @@ target_link_libraries(
 			Catch2::Catch2WithMain
 )
 
-target_compile_options(
-	Test
-		PRIVATE
-			-Wunused
-			-Wcast-align
-			-Wconversion
-			-Wnull-dereference
-			-Wnon-virtual-dtor
-			-Woverloaded-virtual
-			-Weffc++
-			-Wno-missing-braces
+set_target_properties(
+	Test PROPERTIES
+		FOLDER "Apps"
 )
+
+# FIXME: Warnings for MSVC
+# target_compile_options(
+# 	Test
+# 		PRIVATE
+# 			-Wunused
+# 			-Wcast-align
+# 			-Wconversion
+# 			-Wnull-dereference
+# 			-Wnon-virtual-dtor
+# 			-Woverloaded-virtual
+# 			-Weffc++
+# 			-Wno-missing-braces
+# )
