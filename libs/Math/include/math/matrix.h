@@ -285,6 +285,37 @@ inline auto operator*(
 	return result;
 }
 
+template <sized::usize R, sized::usize C, typename T>
+inline auto operator*(
+	//    math::Mat<1,R,T>& lhs,
+	const math::Vec<R,T>& lhs,
+	const math::Mat<R,C,T>& rhs
+) -> math::Vec<C,T>
+{
+	math::Vec<C,T> result;
+	auto rhs_cols = rhs.transpose();
+
+	for (sized::usize c = 0; c < C; ++c)
+		result[c] = lhs | rhs_cols[c];
+
+	return result;
+}
+
+template <sized::usize R, sized::usize C, typename T>
+inline auto operator*(
+	const math::Mat<R,C,T>& lhs,
+	//    math::Mat<C,1,T>& rhs,
+	const math::Vec<C,T>& rhs
+) -> math::Vec<R,T>
+{
+	math::Vec<R,T> result;
+
+	for (sized::usize r = 0; r < R; ++r)
+		result[r] = lhs[r] | rhs;
+
+	return result;
+}
+
 
 namespace math {
 

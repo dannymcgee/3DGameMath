@@ -509,6 +509,34 @@ TEST_CASE("math::Mat<R,C,T>", "[matrix]") {
 				REQUIRE(math::nearly_equal(result.m<43>(), 24.0));
 			}
 		}
+		SECTION("supports vector multiplication") {
+			SECTION("Vec<4>(as Mat1x4) * Mat4x3") {
+				auto result = math::Vec<4>{ 1.0, 2.0, 3.0, 4.0 } * mat4x3_labeled;
+				auto expected = math::Vec<3>{
+					1*11 + 2*21 + 3*31 + 4*41,
+					1*12 + 2*22 + 3*32 + 4*42,
+					1*13 + 2*23 + 3*33 + 4*43,
+				};
+
+				REQUIRE(math::nearly_equal(result.x, expected.x));
+				REQUIRE(math::nearly_equal(result.y, expected.y));
+				REQUIRE(math::nearly_equal(result.z, expected.z));
+			}
+			SECTION("Mat4x3 * Vec<3>(as Mat3x1)") {
+				auto result = mat4x3_labeled * math::Vec<3>{ 1.0, 2.0, 3.0 };
+				auto expected = math::Vec<4>{
+					1*11 + 2*12 + 3*13,
+					1*21 + 2*22 + 3*23,
+					1*31 + 2*32 + 3*33,
+					1*41 + 2*42 + 3*43,
+				};
+
+				REQUIRE(math::nearly_equal(result.x, expected.x));
+				REQUIRE(math::nearly_equal(result.y, expected.y));
+				REQUIRE(math::nearly_equal(result.z, expected.z));
+				REQUIRE(math::nearly_equal(result.w, expected.w));
+			}
+		}
 	}
 	SECTION("Mat<R=2, C=2, T=f64>") {
 		using Mat2x2 = math::Mat<2,2, f64>;
