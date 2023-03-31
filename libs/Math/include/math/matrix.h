@@ -285,6 +285,19 @@ inline auto operator*(
 	return result;
 }
 
+/**
+ * Multiply a row-vector by a matrix.
+ *
+ * @param lhs
+ * The row-vector, interpreted as a Mat1xN, where N must match the number of
+ * rows in `rhs`.
+ *
+ * @param rhs
+ * The matrix, where the number of rows must match the number of elements in
+ * `lhs`.
+ *
+ * @return The result, as a row-vector.
+ */
 template <sized::usize R, sized::usize C, typename T>
 inline auto operator*(
 	//    math::Mat<1,R,T>& lhs,
@@ -301,6 +314,19 @@ inline auto operator*(
 	return result;
 }
 
+/**
+ * Multiply a matrix by a column-vector.
+ *
+ * @param lhs
+ * The matrix, where the number of columns must match the number of elements in
+ * `rhs`.
+ *
+ * @param rhs
+ * The column-vector, interpreted as a MatNx1, where N must match the number of
+ * columns in `lhs`.
+ *
+ * @return The result, as a column-vector.
+ */
 template <sized::usize R, sized::usize C, typename T>
 inline auto operator*(
 	const math::Mat<R,C,T>& lhs,
