@@ -30,7 +30,7 @@ The coordinates of basis vectors are measured in terms of a reference frame that
 
 The numeric coordinates of a vector with respect to a given basis are the coefficients in the expansion of that vector as a linear combination of the basis vectors. For example:
 
-> **a** = _a<sub>x</sub>_**p** + _a<sub>y</sub>_**q** + _a<sub>z</sub>_**r**
+> **v** = _v<sub>x</sub>_**p** + _v<sub>y</sub>_**q** + _v<sub>z</sub>_**r**
 
 When the basis vectors are **orthogonal** (mutually perpendicular), the coordinates are uncoupled. Any given coordinate of a vector **v** can be determined solely from **v** and the corresponding basis vector. For example, we can compute _v<sub>x</sub>_ knowing only **p**, provided that the other basis vectors are perpendicular to **p**.
 
