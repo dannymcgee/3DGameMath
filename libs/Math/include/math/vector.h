@@ -28,15 +28,15 @@ namespace detail {
  * specialization.
  */
 template <usize D, typename T = f64>
-struct Vec {
-// NOLINTBEGIN(*-avoid-c-arrays)
+struct Vector {
+// NOLINTBEGIN(*-avoid-c-arrays, *-pro-type-member-init)
 	union {
 		T components[D];
 	};
 };
 
 template <typename T>
-struct Vec<2, T> {
+struct Vector<2, T> {
 	union {
 		T components[2] { 0, 0 };
 		struct { T x, y; };
@@ -44,29 +44,29 @@ struct Vec<2, T> {
 };
 
 template <typename T>
-struct Vec<3, T> {
+struct Vector<3, T> {
 	union {
 		T components[3] { 0, 0, 0 };
 		struct { T x, y, z; };
 	};
 
 	/** Calculate the cross-product of two vectors. */
-	inline auto cross(const Vec& other) const -> Vec;
+	inline auto cross(const Vector& other) const -> Vector;
 
 	/** Calculate the cross-product of two vectors. */
-	inline auto operator^(const Vec& other) const -> Vec;
+	inline auto operator^(const Vector& other) const -> Vector;
 
 	/** Cross this vector with another in-place. */
-	inline auto operator^=(const Vec& other) -> Vec&;
+	inline auto operator^=(const Vector& other) -> Vector&;
 };
 
 template <typename T>
-struct Vec<4, T> {
+struct Vector<4, T> {
 	union {
 		T components[4] { 0, 0, 0, 0 };
 		struct { T x, y, z, w; };
 	};
-// NOLINTEND(*-avoid-c-arrays)
+// NOLINTEND(*-avoid-c-arrays, *-pro-type-member-init)
 };
 }
 
@@ -81,15 +81,15 @@ struct Vec<4, T> {
  * @tparam T The scalar type of the components. Full support for `float` or `double`.
  */
 template <usize D, typename T = f64>
-struct Vec : public detail::Vec<D, T> {
+struct Vector : public detail::Vector<D,T> {
 private:
-	using detail::Vec<D, T>::components;
+	using detail::Vector<D,T>::components;
 
 public:
-	static const Vec Zero;
+	static const Vector Zero;
 
 	/** Create a vector where all components have the same value. */
-	static auto all(T value) -> Vec;
+	static auto all(T value) -> Vector;
 
 	// Structured binding support
 	template <usize Index> inline auto get() &       { return components[Index]; }
@@ -102,29 +102,29 @@ public:
 	inline auto operator[](usize idx) const -> T;
 
 	// Unary negation
-	inline auto operator-() const -> Vec;
+	inline auto operator-() const -> Vector;
 
 	// Vector addition
-	inline auto operator+(const Vec& other) const -> Vec;
-	inline auto operator+=(const Vec& other) -> Vec&;
+	inline auto operator+(const Vector& other) const -> Vector;
+	inline auto operator+=(const Vector& other) -> Vector&;
 
 	// Vector subtraction
-	inline auto operator-(const Vec& other) const -> Vec;
-	inline auto operator-=(const Vec& other) -> Vec&;
+	inline auto operator-(const Vector& other) const -> Vector;
+	inline auto operator-=(const Vector& other) -> Vector&;
 
 	// Scalar multiplication
-	inline auto operator*(T magnitude) const -> Vec;
-	inline auto operator*=(T magnitude) -> Vec&;
+	inline auto operator*(T magnitude) const -> Vector;
+	inline auto operator*=(T magnitude) -> Vector&;
 
 	// Scalar division
-	inline auto operator/(T magnitude) const -> Vec;
-	inline auto operator/=(T magnitude) -> Vec&;
+	inline auto operator/(T magnitude) const -> Vector;
+	inline auto operator/=(T magnitude) -> Vector&;
 
 	// Equality comparison
-	inline auto operator==(const Vec& other) const -> bool;
+	inline auto operator==(const Vector& other) const -> bool;
 
 	// Not-equal comparison
-	inline auto operator!=(const Vec& other) const -> bool;
+	inline auto operator!=(const Vector& other) const -> bool;
 
 	/** Calculate the length (magnitude) of the vector. */
 	inline auto length() const -> T;
@@ -132,23 +132,23 @@ public:
 	inline auto magnitude() const -> T;
 
 	/** Calculate the unit-length direction of the vector. */
-	inline auto unit() const -> Vec;
+	inline auto unit() const -> Vector;
 	/** Calculate the unit-length direction of the vector. */
-	inline auto direction() const -> Vec;
+	inline auto direction() const -> Vector;
 	/** Calculate the unit-length direction of the vector. */
-	inline auto normal() const -> Vec;
+	inline auto normal() const -> Vector;
 	/** Normalize the vector in place. */
 	inline void normalize();
 
 	/** Calculate the distance between two points. */
-	inline auto dist(const Vec& other) const -> T;
+	inline auto dist(const Vector& other) const -> T;
 	/** Calculate the distance between two points. */
-	static inline auto dist(const Vec& lhs, const Vec& rhs) -> T;
+	static inline auto dist(const Vector& lhs, const Vector& rhs) -> T;
 
 	/** Calculate the dot-product of two vectors. */
-	inline auto dot(const Vec& other) const -> T;
+	inline auto dot(const Vector& other) const -> T;
 	/** Calculate the dot-product of two vectors. */
-	inline auto operator|(const Vec& other) const -> T;
+	inline auto operator|(const Vector& other) const -> T;
 
 private:
 	inline void validate_index(usize idx) const;
@@ -164,9 +164,9 @@ namespace detail {
 // Cross-Product ---------------------------------------------------------------
 
 template <typename T>
-inline auto Vec<3, T>::cross(const Vec& other) const -> Vec
+inline auto Vector<3, T>::cross(const Vector& other) const -> Vector
 {
-	return Vec{
+	return Vector{
 		y * other.z - z * other.y,
 		z * other.x - x * other.z,
 		x * other.y - y * other.x,
@@ -174,13 +174,13 @@ inline auto Vec<3, T>::cross(const Vec& other) const -> Vec
 }
 
 template <typename T>
-inline auto Vec<3, T>::operator^(const Vec& other) const -> Vec
+inline auto Vector<3, T>::operator^(const Vector& other) const -> Vector
 {
 	return cross(other);
 }
 
 template <typename T>
-inline auto Vec<3, T>::operator^=(const Vec& other) -> Vec&
+inline auto Vector<3, T>::operator^=(const Vector& other) -> Vector&
 {
 	auto temp_x = x;
 	auto temp_y = y;
@@ -200,15 +200,15 @@ inline auto Vec<3, T>::operator^=(const Vec& other) -> Vec&
 // Static Zero -----------------------------------------------------------------
 
 template <usize D, typename T>
-const Vec<D, T> Vec<D, T>::Zero {};
+const Vector<D,T> Vector<D,T>::Zero {};
 
 
 // Static All(T) ---------------------------------------------------------------
 
 template <usize D, typename T>
-inline auto Vec<D, T>::all(T value) -> Vec
+inline auto Vector<D,T>::all(T value) -> Vector
 {
-	Vec result;
+	Vector result;
 	for (usize i = 0; i < D; ++i)
 		result.components[i] = value;
 
@@ -219,21 +219,21 @@ inline auto Vec<D, T>::all(T value) -> Vec
 // Subscript operator ----------------------------------------------------------
 
 template <usize D, typename T>
-inline auto Vec<D, T>::operator[](usize idx) -> T&
+inline auto Vector<D,T>::operator[](usize idx) -> T&
 {
 	validate_index(idx);
 	return components[idx];
 }
 
 template <usize D, typename T>
-inline auto Vec<D, T>::operator[](usize idx) const -> T
+inline auto Vector<D,T>::operator[](usize idx) const -> T
 {
 	validate_index(idx);
 	return components[idx];
 }
 
 template <usize D, typename T>
-inline void Vec<D, T>::validate_index(usize idx) const
+inline void Vector<D,T>::validate_index(usize idx) const
 {
 	if (idx > D) {
 		auto err_msg = fmt::format(
@@ -249,7 +249,7 @@ inline void Vec<D, T>::validate_index(usize idx) const
 // Unary negation --------------------------------------------------------------
 
 template <usize D, typename T>
-inline auto Vec<D, T>::operator-() const -> Vec
+inline auto Vector<D,T>::operator-() const -> Vector
 {
 	auto result = *this;
 	for (usize i = 0; i < D; ++i)
@@ -262,7 +262,7 @@ inline auto Vec<D, T>::operator-() const -> Vec
 // Vector addition -------------------------------------------------------------
 
 template <usize D, typename T>
-inline auto Vec<D, T>::operator+(const Vec& other) const -> Vec
+inline auto Vector<D,T>::operator+(const Vector& other) const -> Vector
 {
 	auto result = *this;
 	for (usize i = 0; i < D; ++i)
@@ -272,7 +272,7 @@ inline auto Vec<D, T>::operator+(const Vec& other) const -> Vec
 }
 
 template <usize D, typename T>
-inline auto Vec<D, T>::operator+=(const Vec& other) -> Vec&
+inline auto Vector<D,T>::operator+=(const Vector& other) -> Vector&
 {
 	for (usize i = 0; i < D; ++i)
 		components[i] += other.components[i];
@@ -284,7 +284,7 @@ inline auto Vec<D, T>::operator+=(const Vec& other) -> Vec&
 // Vector subtraction ----------------------------------------------------------
 
 template <usize D, typename T>
-inline auto Vec<D, T>::operator-(const Vec& other) const -> Vec
+inline auto Vector<D,T>::operator-(const Vector& other) const -> Vector
 {
 	auto result = *this;
 	for (usize i = 0; i < D; ++i)
@@ -294,7 +294,7 @@ inline auto Vec<D, T>::operator-(const Vec& other) const -> Vec
 }
 
 template <usize D, typename T>
-inline auto Vec<D, T>::operator-=(const Vec& other) -> Vec&
+inline auto Vector<D,T>::operator-=(const Vector& other) -> Vector&
 {
 	for (usize i = 0; i < D; ++i)
 		components[i] -= other.components[i];
@@ -306,7 +306,7 @@ inline auto Vec<D, T>::operator-=(const Vec& other) -> Vec&
 // Scalar multiplication -------------------------------------------------------
 
 template <usize D, typename T>
-inline auto Vec<D, T>::operator*(T magnitude) const -> Vec
+inline auto Vector<D,T>::operator*(T magnitude) const -> Vector
 {
 	auto result = *this;
 	for (usize i = 0; i < D; ++i)
@@ -316,7 +316,7 @@ inline auto Vec<D, T>::operator*(T magnitude) const -> Vec
 }
 
 template <usize D, typename T>
-inline auto Vec<D, T>::operator*=(T magnitude) -> Vec&
+inline auto Vector<D,T>::operator*=(T magnitude) -> Vector&
 {
 	for (usize i = 0; i < D; ++i)
 		components[i] *= magnitude;
@@ -326,7 +326,7 @@ inline auto Vec<D, T>::operator*=(T magnitude) -> Vec&
 } // namespace math
 
 template <sized::usize D, typename T>
-inline auto operator*(T lhs, const math::Vec<D, T>& rhs) -> math::Vec<D, T>
+inline auto operator*(T lhs, const math::Vector<D,T>& rhs) -> math::Vector<D,T>
 {
 	return rhs * lhs;
 }
@@ -337,10 +337,10 @@ namespace math {
 // Scalar division -------------------------------------------------------------
 
 template <usize D, typename T>
-inline auto Vec<D, T>::operator/(T magnitude) const -> Vec
+inline auto Vector<D,T>::operator/(T magnitude) const -> Vector
 {
 	if (nearly_equal<T>(magnitude, 0))
-		return Vec::all(0);
+		return Vector::all(0);
 
 	auto result = *this;
 	for (usize i = 0; i < D; ++i)
@@ -350,7 +350,7 @@ inline auto Vec<D, T>::operator/(T magnitude) const -> Vec
 }
 
 template <usize D, typename T>
-inline auto Vec<D, T>::operator/=(T magnitude) -> Vec&
+inline auto Vector<D,T>::operator/=(T magnitude) -> Vector&
 {
 	if (nearly_equal<T>(magnitude, 0)) {
 		for (usize i = 0; i < D; ++i)
@@ -369,7 +369,7 @@ inline auto Vec<D, T>::operator/=(T magnitude) -> Vec&
 // Equality comparison ---------------------------------------------------------
 
 template <usize D, typename T>
-inline auto Vec<D, T>::operator==(const Vec& other) const -> bool
+inline auto Vector<D,T>::operator==(const Vector& other) const -> bool
 {
 	if (this == &other)
 		return true;
@@ -385,7 +385,7 @@ inline auto Vec<D, T>::operator==(const Vec& other) const -> bool
 // Not-equal comparison --------------------------------------------------------
 
 template <usize D, typename T>
-inline auto Vec<D, T>::operator!=(const Vec& other) const -> bool
+inline auto Vector<D,T>::operator!=(const Vector& other) const -> bool
 {
 	if (this == &other)
 		return false;
@@ -401,7 +401,7 @@ inline auto Vec<D, T>::operator!=(const Vec& other) const -> bool
 // Length / Magnitude ----------------------------------------------------------
 
 template <usize D, typename T>
-inline auto Vec<D, T>::length() const -> T
+inline auto Vector<D,T>::length() const -> T
 {
 	T result = 0;
 	for (usize i = 0; i < D; ++i)
@@ -411,7 +411,7 @@ inline auto Vec<D, T>::length() const -> T
 }
 
 template <usize D, typename T>
-inline auto Vec<D, T>::magnitude() const -> T
+inline auto Vector<D,T>::magnitude() const -> T
 {
 	return length();
 }
@@ -420,25 +420,25 @@ inline auto Vec<D, T>::magnitude() const -> T
 // Unit-Length Direction -------------------------------------------------------
 
 template <usize D, typename T>
-inline auto Vec<D, T>::unit() const -> Vec
+inline auto Vector<D,T>::unit() const -> Vector
 {
 	return *this / length();
 }
 
 template <usize D, typename T>
-inline auto Vec<D, T>::direction() const -> Vec
+inline auto Vector<D,T>::direction() const -> Vector
 {
 	return unit();
 }
 
 template <usize D, typename T>
-inline auto Vec<D, T>::normal() const -> Vec
+inline auto Vector<D,T>::normal() const -> Vector
 {
 	return unit();
 }
 
 template <usize D, typename T>
-inline void Vec<D, T>::normalize()
+inline void Vector<D,T>::normalize()
 {
 	*this /= length();
 }
@@ -447,7 +447,7 @@ inline void Vec<D, T>::normalize()
 // Distance --------------------------------------------------------------------
 
 template <usize D, typename T>
-inline auto Vec<D, T>::dist(const Vec& other) const -> T
+inline auto Vector<D,T>::dist(const Vector& other) const -> T
 {
 	T result = 0;
 	for (usize i = 0; i < D; ++i) {
@@ -459,7 +459,7 @@ inline auto Vec<D, T>::dist(const Vec& other) const -> T
 }
 
 template <usize D, typename T>
-inline auto Vec<D, T>::dist(const Vec& lhs, const Vec& rhs) -> T
+inline auto Vector<D,T>::dist(const Vector& lhs, const Vector& rhs) -> T
 {
 	return lhs.dist(rhs);
 }
@@ -468,7 +468,7 @@ inline auto Vec<D, T>::dist(const Vec& lhs, const Vec& rhs) -> T
 // Dot-product -----------------------------------------------------------------
 
 template <usize D, typename T>
-inline auto Vec<D, T>::dot(const Vec& other) const -> T
+inline auto Vector<D,T>::dot(const Vector& other) const -> T
 {
 	T result = 0;
 	for (usize i = 0; i < D; ++i)
@@ -478,7 +478,7 @@ inline auto Vec<D, T>::dot(const Vec& other) const -> T
 }
 
 template <usize D, typename T>
-inline auto Vec<D, T>::operator|(const Vec& other) const -> T
+inline auto Vector<D,T>::operator|(const Vector& other) const -> T
 {
 	return dot(other);
 }
@@ -498,12 +498,12 @@ namespace std {
 // is templated, the parser is unable to correctly identify what we're doing.
 
 template <size_t D, typename T>
-struct tuple_size<::math::Vec<D, T>> {
+struct tuple_size<::math::Vector<D,T>> {
 	static constexpr size_t value = D;
 };
 
 template <size_t Index, size_t D, typename T>
-struct tuple_element<Index, ::math::Vec<D, T>> {
+struct tuple_element<Index, ::math::Vector<D,T>> {
 	static_assert(Index < D, "Index out of range");
 	using type = T;
 };

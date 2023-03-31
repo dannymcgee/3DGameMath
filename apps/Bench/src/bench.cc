@@ -5,13 +5,14 @@
 
 using namespace sized; // NOLINT
 using benchmark::State;
-using math::Vec;
+
+using Vec3 = math::Vector<3, f32>;
 
 // Constructor (sanity check)
 static void BM_Ctor(State& state)
 {
 	for (auto _ : state)
-		auto _vec = Vec<3, f32>{ 1, 2, 3 };
+		auto _vec = Vec3{ 1, 2, 3 };
 }
 BENCHMARK(BM_Ctor); // NOLINT
 
@@ -20,8 +21,8 @@ BENCHMARK(BM_Ctor); // NOLINT
 static void BM_CrossProduct(State& state)
 {
 	for (auto _ : state) {
-		auto a = Vec<3, f32>{ 1.f, 3.f, 4.f };
-		auto b = Vec<3, f32>{ 2.f, -5.f, 8.f };
+		auto a = Vec3{ 1.f, 3.f, 4.f };
+		auto b = Vec3{ 2.f, -5.f, 8.f };
 		auto result = a.cross(b);
 	}
 }
@@ -32,8 +33,8 @@ BENCHMARK(BM_CrossProduct); // NOLINT
 static void BM_DotProduct(State& state)
 {
 	for (auto _ : state) {
-		auto a = Vec<3, f32>{ 1.f, 3.f, 4.f };
-		auto b = Vec<3, f32>{ 2.f, -5.f, 8.f };
+		auto a = Vec3{ 1.f, 3.f, 4.f };
+		auto b = Vec3{ 2.f, -5.f, 8.f };
 		auto result = a.dot(b);
 	}
 }
@@ -44,9 +45,9 @@ BENCHMARK(BM_DotProduct); // NOLINT
 static void BM_Distance(State& state)
 {
 	for (auto _ : state) {
-		auto a = Vec<3, f32>{ 1.f, 3.f, 4.f };
-		auto b = Vec<3, f32>{ 2.f, -5.f, 8.f };
-		auto result = Vec<3, f32>::dist(a, b);
+		auto a = Vec3{ 1.f, 3.f, 4.f };
+		auto b = Vec3{ 2.f, -5.f, 8.f };
+		auto result = Vec3::dist(a, b);
 	}
 }
 BENCHMARK(BM_Distance); // NOLINT

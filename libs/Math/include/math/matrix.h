@@ -16,15 +16,15 @@ using namespace sized; // NOLINT(*-using-namespace)
 // Declarations ////////////////////////////////////////////////////////////////
 
 template <usize Rows, usize Cols, typename T = f64>
-class Mat {
+class Matrix {
 public:
-	using Row = Vec<Cols, T>;
-	using Col = Vec<Rows, T>;
+	using Row = Vector<Cols, T>;
+	using Col = Vector<Rows, T>;
 
 	// Constructors
-	Mat() = default;
-	Mat(std::initializer_list<Row> rows);
-	explicit Mat(std::array<Row, Rows> data);
+	Matrix() = default;
+	Matrix(std::initializer_list<Row> rows);
+	explicit Matrix(std::array<Row, Rows> data);
 
 	// Member access
 	/**
@@ -102,11 +102,11 @@ public:
 	inline auto operator[](usize idx) const -> const Row&;
 
 	// Matrix transposition
-	auto transpose() const -> Mat<Cols, Rows, T>;
+	auto transpose() const -> Matrix<Cols, Rows, T>;
 
 	// Scalar multiplication
-	inline auto operator*(T value) const -> Mat;
-	inline auto operator*=(T value) -> Mat&;
+	inline auto operator*(T value) const -> Matrix;
+	inline auto operator*=(T value) -> Matrix&;
 
 	// Misc / Utility
 	auto to_string() const -> std::string;
@@ -121,7 +121,7 @@ private:
 // Constructors ----------------------------------------------------------------
 
 template <usize R, usize C, typename T>
-Mat<R,C,T>::Mat(std::initializer_list<Row> rows)
+Matrix<R,C,T>::Matrix(std::initializer_list<Row> rows)
 {
 	if (rows.size() > R) {
 		auto err_msg = fmt::format(
@@ -141,7 +141,7 @@ Mat<R,C,T>::Mat(std::initializer_list<Row> rows)
 }
 
 template <usize R, usize C, typename T>
-Mat<R,C,T>::Mat(std::array<Row, R> data)
+Matrix<R,C,T>::Matrix(std::array<Row, R> data)
 	: m_data(data)
 {}
 
@@ -149,15 +149,15 @@ Mat<R,C,T>::Mat(std::array<Row, R> data)
 // Member access ---------------------------------------------------------------
 
 #define VALIDATE_INDEX_2D(index, rows, cols) \
-static_assert(((index) % 100) / 10 > 0 && ((index) % 100) / 10 <= (rows)); \
-static_assert((index) % 10 > 0 && (index) % 10 <= (cols))
+	static_assert(((index) % 100) / 10 > 0 && ((index) % 100) / 10 <= (rows)); \
+	static_assert((index) % 10 > 0 && (index) % 10 <= (cols))
 
 #define EXPAND_INDEX_2D(index) \
-((index) % 100) / 10 - 1][((index) % 10) - 1
+	((index) % 100) / 10 - 1][((index) % 10) - 1
 
 template <usize R, usize C, typename T>
 template <usize Index2D>
-inline auto Mat<R,C,T>::m() const -> T
+inline auto Matrix<R,C,T>::m() const -> T
 {
 	VALIDATE_INDEX_2D(Index2D, R, C);
 	return m_data[EXPAND_INDEX_2D(Index2D)];
@@ -165,7 +165,7 @@ inline auto Mat<R,C,T>::m() const -> T
 
 template <usize R, usize C, typename T>
 template <usize Index2D>
-inline auto Mat<R,C,T>::m() -> T&
+inline auto Matrix<R,C,T>::m() -> T&
 {
 	VALIDATE_INDEX_2D(Index2D, R, C);
 	return m_data[EXPAND_INDEX_2D(Index2D)];
@@ -176,7 +176,7 @@ inline auto Mat<R,C,T>::m() -> T&
 
 template <usize R, usize C, typename T>
 template <usize Index>
-inline auto Mat<R,C,T>::row() const -> Row
+inline auto Matrix<R,C,T>::row() const -> Row
 {
 	static_assert(Index > 0 && Index <= R);
 	return m_data[Index - 1];
@@ -184,7 +184,7 @@ inline auto Mat<R,C,T>::row() const -> Row
 
 template <usize R, usize C, typename T>
 template <usize Index>
-inline auto Mat<R,C,T>::col() const -> Col
+inline auto Matrix<R,C,T>::col() const -> Col
 {
 	Col result;
 	for (usize r = 0; r < R; ++r)
@@ -194,13 +194,13 @@ inline auto Mat<R,C,T>::col() const -> Col
 }
 
 template <usize R, usize C, typename T>
-inline auto Mat<R,C,T>::row(usize idx) const -> Row
+inline auto Matrix<R,C,T>::row(usize idx) const -> Row
 {
 	return m_data[idx-1];
 }
 
 template <usize R, usize C, typename T>
-inline auto Mat<R,C,T>::col(usize idx) const -> Col
+inline auto Matrix<R,C,T>::col(usize idx) const -> Col
 {
 	Col result;
 	for (usize r = 0; r < R; ++r)
@@ -210,13 +210,13 @@ inline auto Mat<R,C,T>::col(usize idx) const -> Col
 }
 
 template <usize R, usize C, typename T>
-inline auto Mat<R,C,T>::operator[](usize idx) -> Row&
+inline auto Matrix<R,C,T>::operator[](usize idx) -> Row&
 {
 	return m_data[idx];
 }
 
 template <usize R, usize C, typename T>
-inline auto Mat<R,C,T>::operator[](usize idx) const -> const Row&
+inline auto Matrix<R,C,T>::operator[](usize idx) const -> const Row&
 {
 	return m_data[idx];
 }
@@ -225,9 +225,9 @@ inline auto Mat<R,C,T>::operator[](usize idx) const -> const Row&
 // Matrix transposition --------------------------------------------------------
 
 template <usize R, usize C, typename T>
-auto Mat<R,C,T>::transpose() const -> Mat<C,R,T>
+auto Matrix<R,C,T>::transpose() const -> Matrix<C,R,T>
 {
-	Mat<C,R,T> result;
+	Matrix<C,R,T> result;
 	for (usize r = 0; r < C; ++r)
 		for (usize c = 0; c < R; ++c)
 			result[r][c] = m_data[c][r];
@@ -239,7 +239,7 @@ auto Mat<R,C,T>::transpose() const -> Mat<C,R,T>
 // Scalar multiplication -------------------------------------------------------
 
 template <usize R, usize C, typename T>
-inline auto Mat<R,C,T>::operator*(T value) const -> Mat
+inline auto Matrix<R,C,T>::operator*(T value) const -> Matrix
 {
 	auto result = *this;
 	for (usize r = 0; r < R; ++r)
@@ -250,7 +250,7 @@ inline auto Mat<R,C,T>::operator*(T value) const -> Mat
 }
 
 template <usize R, usize C, typename T>
-inline auto Mat<R,C,T>::operator*=(T value) -> Mat&
+inline auto Matrix<R,C,T>::operator*=(T value) -> Matrix&
 {
 	for (usize r = 0; r < R; ++r)
 		for (usize c = 0; c < C; ++c)
@@ -261,7 +261,7 @@ inline auto Mat<R,C,T>::operator*=(T value) -> Mat&
 } // namespace math
 
 template <sized::usize R, sized::usize C, typename T>
-inline auto operator*(T lhs, const math::Mat<R,C,T>& rhs) -> math::Mat<R,C,T>
+inline auto operator*(T lhs, const math::Matrix<R,C,T>& rhs) -> math::Matrix<R,C,T>
 {
 	return rhs * lhs;
 }
@@ -271,11 +271,11 @@ inline auto operator*(T lhs, const math::Mat<R,C,T>& rhs) -> math::Mat<R,C,T>
 
 template <sized::usize R, sized::usize N, sized::usize C, typename T>
 inline auto operator*(
-	const math::Mat<R,N,T>& lhs,
-	const math::Mat<N,C,T>& rhs
-) -> math::Mat<R,C,T>
+	const math::Matrix<R,N,T>& lhs,
+	const math::Matrix<N,C,T>& rhs
+) -> math::Matrix<R,C,T>
 {
-	math::Mat<R,C,T> result;
+	math::Matrix<R,C,T> result;
 	auto rhs_cols = rhs.transpose();
 
 	for (sized::usize r = 0; r < R; ++r)
@@ -300,12 +300,12 @@ inline auto operator*(
  */
 template <sized::usize R, sized::usize C, typename T>
 inline auto operator*(
-	//    math::Mat<1,R,T>& lhs,
-	const math::Vec<R,T>& lhs,
-	const math::Mat<R,C,T>& rhs
-) -> math::Vec<C,T>
+	const math::Vector<R,T>& lhs,
+	//    math::Matrix<1,R,T>& lhs,
+	const math::Matrix<R,C,T>& rhs
+) -> math::Vector<C,T>
 {
-	math::Vec<C,T> result;
+	math::Vector<C,T> result;
 	auto rhs_cols = rhs.transpose();
 
 	for (sized::usize c = 0; c < C; ++c)
@@ -329,12 +329,12 @@ inline auto operator*(
  */
 template <sized::usize R, sized::usize C, typename T>
 inline auto operator*(
-	const math::Mat<R,C,T>& lhs,
-	//    math::Mat<C,1,T>& rhs,
-	const math::Vec<C,T>& rhs
-) -> math::Vec<R,T>
+	const math::Matrix<R,C,T>& lhs,
+	//    math::Matrix<C,1,T>& rhs,
+	const math::Vector<C,T>& rhs
+) -> math::Vector<R,T>
 {
-	math::Vec<R,T> result;
+	math::Vector<R,T> result;
 
 	for (sized::usize r = 0; r < R; ++r)
 		result[r] = lhs[r] | rhs;
@@ -348,7 +348,7 @@ namespace math {
 // Misc / Utility --------------------------------------------------------------
 
 template <usize R, usize C, typename T>
-auto Mat<R,C,T>::to_string() const -> std::string
+auto Matrix<R,C,T>::to_string() const -> std::string
 {
 	std::string result = "{\n";
 	for (usize r = 0; r < R; ++r) {

@@ -8,11 +8,11 @@
 #include <math/matrix.h>
 #include <sized.h>
 
-TEST_CASE("math::Vec", "[vector]") {
+TEST_CASE("math::Vector", "[vector]") {
 	using namespace sized; // NOLINT
 
-	SECTION("Vec<3, f32>") {
-		using Vec3 = math::Vec<3, f32>;
+	SECTION("Vector<3, f32>") {
+		using Vec3 = math::Vector<3, f32>;
 
 		static constexpr auto epsilon_practical = 0.00001f;
 
@@ -379,11 +379,11 @@ TEST_CASE("math::Vec", "[vector]") {
 	}
 }
 
-TEST_CASE("math::Mat<R,C,T>", "[matrix]") {
+TEST_CASE("math::Matrix<R,C,T>", "[matrix]") {
 	using namespace sized; // NOLINT
 
-	SECTION("Mat<R=4, C=3, T=f64>") {
-		using Mat4x3 = math::Mat<4,3, f64>;
+	SECTION("Mat4x3") {
+		using Mat4x3 = math::Matrix<4,3, f64>;
 
 		auto mat4x3_labeled = Mat4x3{
 			{ 11, 12, 13 },
@@ -510,9 +510,9 @@ TEST_CASE("math::Mat<R,C,T>", "[matrix]") {
 			}
 		}
 		SECTION("supports vector multiplication") {
-			SECTION("Vec<4>(as Mat1x4) * Mat4x3") {
-				auto result = math::Vec<4>{ 1.0, 2.0, 3.0, 4.0 } * mat4x3_labeled;
-				auto expected = math::Vec<3>{
+			SECTION("Vec4 [Mat1x4] * Mat4x3") {
+				auto result = math::Vector<4>{ 1.0, 2.0, 3.0, 4.0 } * mat4x3_labeled;
+				auto expected = math::Vector<3>{
 					1*11 + 2*21 + 3*31 + 4*41,
 					1*12 + 2*22 + 3*32 + 4*42,
 					1*13 + 2*23 + 3*33 + 4*43,
@@ -522,9 +522,9 @@ TEST_CASE("math::Mat<R,C,T>", "[matrix]") {
 				REQUIRE(math::nearly_equal(result.y, expected.y));
 				REQUIRE(math::nearly_equal(result.z, expected.z));
 			}
-			SECTION("Mat4x3 * Vec<3>(as Mat3x1)") {
-				auto result = mat4x3_labeled * math::Vec<3>{ 1.0, 2.0, 3.0 };
-				auto expected = math::Vec<4>{
+			SECTION("Mat4x3 * [Mat3x1] Vec3") {
+				auto result = mat4x3_labeled * math::Vector<3>{ 1.0, 2.0, 3.0 };
+				auto expected = math::Vector<4>{
 					1*11 + 2*12 + 3*13,
 					1*21 + 2*22 + 3*23,
 					1*31 + 2*32 + 3*33,
@@ -538,8 +538,8 @@ TEST_CASE("math::Mat<R,C,T>", "[matrix]") {
 			}
 		}
 	}
-	SECTION("Mat<R=2, C=2, T=f64>") {
-		using Mat2x2 = math::Mat<2,2, f64>;
+	SECTION("Mat2x2") {
+		using Mat2x2 = math::Matrix<2,2, f64>;
 
 		SECTION("supports matrix multiplication") {
 			auto a = Mat2x2{
