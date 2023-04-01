@@ -1,8 +1,9 @@
 add_library(
 	Math INTERFACE
+		"include/math/fmt.h"
+		"include/math/matrix.h"
 		"include/math/utility.h"
 		"include/math/vector.h"
-		"include/math/matrix.h"
 )
 
 target_include_directories(

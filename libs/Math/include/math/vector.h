@@ -9,6 +9,7 @@
 #include <fmt/format.h>
 #include <sized.h>
 
+#include "math/fmt.h"
 #include "math/utility.h"
 
 namespace math {
@@ -161,6 +162,10 @@ public:
 	/** Calculate the dot-product of two vectors. */
 	inline auto operator|(const Vector& other) const -> T;
 
+	// Misc / Utility
+	auto to_string(usize precision = 3) const -> std::string;
+	inline auto to_string(const fmt::AlignedValues& formatter) const -> std::string;
+
 private:
 	inline void validate_index(usize idx) const;
 };
@@ -247,7 +252,7 @@ template <usize D, typename T>
 inline void Vector<D,T>::validate_index(usize idx) const
 {
 	if (idx > D) {
-		auto err_msg = fmt::format(
+		auto err_msg = ::fmt::format(
 			"Index out of range for Vec<{}>: Expected < {}, received {}",
 			D, D, idx
 		);
@@ -529,7 +534,32 @@ inline auto Vector<D,T>::operator|(const Vector& other) const -> T
 	return dot(other);
 }
 
+
+// Misc / Utility --------------------------------------------------------------
+
+template <usize D, typename T>
+auto Vector<D,T>::to_string(usize precision) const -> std::string
+{
+	auto formatter = fmt::AlignedValues(components.begin(), components.end(), precision);
+	return to_string(formatter);
 }
+
+template <usize D, typename T>
+inline auto Vector<D,T>::to_string(const fmt::AlignedValues& formatter) const -> std::string
+{
+	std::string result = "[ ";
+	for (usize i = 0; i < D; ++i) {
+		result += formatter.format(components[i]);
+
+		if (i < D - 1)
+			result += "  ";
+	}
+	result += " ]";
+
+	return result;
+}
+
+} // namespace math
 
 
 // Structured binding support --------------------------------------------------

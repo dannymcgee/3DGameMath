@@ -9,6 +9,7 @@
 #include <fmt/format.h>
 #include <sized.h>
 
+#include "math/fmt.h"
 #include "math/vector.h"
 
 namespace math {
@@ -113,7 +114,7 @@ public:
 	inline auto operator*=(T value) -> Matrix&;
 
 	// Misc / Utility
-	auto to_string() const -> std::string;
+	auto to_string(usize precision = 3) const -> std::string;
 
 private:
 	std::array<Row, Rows> m_data;
@@ -128,7 +129,7 @@ template <usize R, usize C, typename T>
 Matrix<R,C,T>::Matrix(std::initializer_list<Row> rows)
 {
 	if (rows.size() > R) {
-		auto err_msg = fmt::format(
+		auto err_msg = ::fmt::format(
 			"Too many arguments for Mat<{},{}>: Expected {}, received {}",
 			R, C,
 			R, rows.size()
@@ -365,19 +366,23 @@ namespace math {
 // Misc / Utility --------------------------------------------------------------
 
 template <usize R, usize C, typename T>
-auto Matrix<R,C,T>::to_string() const -> std::string
+auto Matrix<R,C,T>::to_string(usize precision) const -> std::string
 {
-	std::string result = "{\n";
+	auto begin = m_data[0].begin();
+	auto end = m_data[R-1].end();
+	auto formatter = fmt::AlignedValues(begin, end, precision);
+
+	std::string result;
 	for (usize r = 0; r < R; ++r) {
-		result += "\t{ ";
+		result += "| ";
 		for (usize c = 0; c < C; ++c) {
-			result += fmt::format("{}", m_data[r][c]);
-			if (c < C-1)
-				result += ", ";
+			result += formatter.format(m_data[r][c]);
+
+			if (c < C - 1)
+				result += "  ";
 		}
-		result += " }\n";
+		result += " |\n";
 	}
-	result += "},";
 
 	return result;
 }
