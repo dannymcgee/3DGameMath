@@ -10,6 +10,7 @@ namespace math {
 
 using namespace sized; // NOLINT(*-using-namespace)
 
+constexpr f64 pi = 3.141592653589793;
 
 /**
  * Compare the equality of floating-point values within a specified tolerance.
@@ -21,6 +22,19 @@ inline auto nearly_equal(T lhs, T rhs, T tolerance = std::numeric_limits<T>::eps
 	return std::abs(lhs - rhs) < tolerance;
 }
 
+/** Convert degrees to radians. */
+template <typename T = f64>
+inline constexpr auto deg2rad(T deg) -> T
+{
+	return deg * static_cast<T>(pi) / static_cast<T>(180);
+}
+
+/** Convert radians to degrees. */
+template <typename T = f64>
+inline constexpr auto rad2deg(T rad) -> T
+{
+	return rad * static_cast<T>(180) / static_cast<T>(pi);
+}
 
 /** Get the number of non-fractional digits in a number. */
 template <typename T>
