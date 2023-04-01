@@ -20,7 +20,7 @@ using namespace sized; // NOLINT(*-using-namespace)
 namespace detail {
 
 
-// math::detail::Vec -----------------------------------------------------------
+// math::detail::Vector ========================================================
 
 /**
  * Helper base struct to allow for specializing struct members for specific
@@ -71,7 +71,7 @@ struct Vector<4, T> {
 }
 
 
-// math::Vec -------------------------------------------------------------------
+// math::Vector ================================================================
 
 /**
  * A simple data structure that can be used to represent a geometric point or
@@ -157,7 +157,7 @@ private:
 
 // Definitions /////////////////////////////////////////////////////////////////
 
-// math::detail::Vec<3, T> =====================================================
+// math::detail::Vector<3, T> ==================================================
 
 namespace detail {
 
@@ -194,8 +194,8 @@ inline auto Vector<3, T>::operator^=(const Vector& other) -> Vector&
 
 }
 
-// math::Vec<D, T> =============================================================
 
+// math::Vector<D,T> ===========================================================
 
 // Static Zero -----------------------------------------------------------------
 
