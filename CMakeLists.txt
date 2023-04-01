@@ -59,6 +59,6 @@ set_target_properties(
 
 add_subdirectory("libs/Sized")
 add_subdirectory("libs/Math")
-add_subdirectory("apps/Main")
+add_subdirectory("apps/Sandbox")
 add_subdirectory("apps/Test")
 add_subdirectory("apps/Bench")

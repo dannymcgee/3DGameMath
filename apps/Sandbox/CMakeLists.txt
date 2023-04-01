@@ -1,10 +1,10 @@
 add_executable(
-	Main
+	Sandbox
 		"src/main.cc"
 )
 
 target_link_libraries(
-	Main
+	Sandbox
 		PUBLIC
 			fmt::fmt
 			Sized
@@ -12,7 +12,7 @@ target_link_libraries(
 )
 
 set_target_properties(
-	Main PROPERTIES
+	Sandbox PROPERTIES
 		FOLDER "Apps"
 )
 
