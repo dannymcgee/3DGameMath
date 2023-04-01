@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <cmath>
 #include <cstdlib>
 #include <exception>
@@ -29,16 +30,16 @@ namespace detail {
  */
 template <usize D, typename T = f64>
 struct Vector {
-// NOLINTBEGIN(*-avoid-c-arrays, *-pro-type-member-init)
+// NOLINTBEGIN(*-pro-type-member-init)
 	union {
-		T components[D];
+		std::array<T,D> components;
 	};
 };
 
 template <typename T>
 struct Vector<2, T> {
 	union {
-		T components[2] { 0, 0 };
+		std::array<T,2> components { 0, 0 };
 		struct { T x, y; };
 	};
 };
@@ -46,7 +47,7 @@ struct Vector<2, T> {
 template <typename T>
 struct Vector<3, T> {
 	union {
-		T components[3] { 0, 0, 0 };
+		std::array<T,3> components { 0, 0, 0 };
 		struct { T x, y, z; };
 	};
 
@@ -63,10 +64,10 @@ struct Vector<3, T> {
 template <typename T>
 struct Vector<4, T> {
 	union {
-		T components[4] { 0, 0, 0, 0 };
+		std::array<T,4> components { 0, 0, 0, 0 };
 		struct { T x, y, z, w; };
 	};
-// NOLINTEND(*-avoid-c-arrays, *-pro-type-member-init)
+// NOLINTEND(*-pro-type-member-init)
 };
 }
 
@@ -96,6 +97,10 @@ public:
 	template <usize Index> inline auto get() const&  { return components[Index]; }
 	template <usize Index> inline auto get() &&      { return components[Index]; }
 	template <usize Index> inline auto get() const&& { return components[Index]; }
+
+	// Iterator support
+	inline auto begin() const { return components.begin(); }
+	inline auto end() const { return components.end(); }
 
 	// Subscript operator
 	inline auto operator[](usize idx) -> T&;
