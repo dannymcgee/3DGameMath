@@ -6,6 +6,7 @@
 
 #include <math/vector.h>
 #include <math/matrix.h>
+#include <math/utility.h>
 #include <sized.h>
 
 TEST_CASE("math::Vector", "[vector]") {
@@ -265,7 +266,22 @@ TEST_CASE("math::Vector", "[vector]") {
 				REQUIRE(!std::isnan(impossible.x));
 				REQUIRE(!std::isnan(impossible.y));
 				REQUIRE(!std::isnan(impossible.z));
+
+				auto in_place = Vec3::Zero;
+				in_place.normalize();
+				REQUIRE(!std::isnan(in_place.x));
+				REQUIRE(!std::isnan(in_place.y));
+				REQUIRE(!std::isnan(in_place.z));
 			}
+		}
+		SECTION("can calculate the length and direction as a single operation") {
+			auto vec = Vec3{ 0.f, 10.f, 0.f };
+			auto [length, direction] = vec.length_and_direction();
+
+			REQUIRE(math::nearly_equal<f32>(length, 10.f));
+			REQUIRE(math::nearly_equal<f32>(direction.x, 0.f));
+			REQUIRE(math::nearly_equal<f32>(direction.y, 1.f));
+			REQUIRE(math::nearly_equal<f32>(direction.z, 0.f));
 		}
 		SECTION("can calculate the distance to another point") {
 			auto expected = 2.828427f;
