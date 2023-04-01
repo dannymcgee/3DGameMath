@@ -116,8 +116,8 @@ public:
 	// Misc / Utility
 	auto to_string(usize precision = 3) const -> std::string;
 
-private:
-	std::array<Row, Rows> m_data;
+protected:
+	std::array<Row, Rows> m_data; // NOLINT(*-non-private-member-*)
 };
 
 

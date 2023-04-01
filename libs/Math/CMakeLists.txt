@@ -2,6 +2,8 @@ add_library(
 	Math INTERFACE
 		"include/math/fmt.h"
 		"include/math/matrix.h"
+		"include/math/matrix/rotation.h"
+		"include/math/matrix/scale.h"
 		"include/math/utility.h"
 		"include/math/vector.h"
 )
