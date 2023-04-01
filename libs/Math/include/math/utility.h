@@ -70,8 +70,8 @@ inline constexpr auto num_decimal_places(T value, usize max = 20) -> usize
 		return 0;
 
 	usize count = 0;
-	for (auto n = static_cast<f64>(std::abs(value));
-		static_cast<int>(n) != n && count <= max;
+	for (T n = std::abs(value);
+		static_cast<i64>(n) != n && count <= max;
 		n *= 10.0, ++count);
 
 	return count;

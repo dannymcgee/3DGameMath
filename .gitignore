@@ -1,5 +1,7 @@
 .cdb-gen
 .cache
 .idea
+.ninja
+.rider
 build
 resources

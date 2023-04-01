@@ -10,6 +10,7 @@ Checks: >
   performance-*,
   readability-*,
   -*-braces-around-statements,
+  -*-readability-todo,
   -bugprone-easily-swappable-parameters,
   -cert-err58-cpp,
   -cppcoreguidelines-avoid-magic-numbers,

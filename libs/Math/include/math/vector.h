@@ -540,7 +540,7 @@ inline auto Vector<D,T>::operator|(const Vector& other) const -> T
 template <usize D, typename T>
 auto Vector<D,T>::to_string(usize precision) const -> std::string
 {
-	auto formatter = fmt::AlignedValues(components.begin(), components.end(), precision);
+	auto formatter = fmt::AlignedValues(begin(), end(), precision);
 	return to_string(formatter);
 }
 
