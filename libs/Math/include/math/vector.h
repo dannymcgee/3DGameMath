@@ -140,6 +140,12 @@ public:
 	/** Normalize the vector in place. */
 	inline void normalize();
 
+	/**
+	 * Calculate the magnitude and unit-length direction of the vector in a
+	 * single operation.
+	 */
+	inline auto length_and_direction() const -> std::tuple<T, Vector>;
+
 	/** Calculate the distance between two points. */
 	inline auto dist(const Vector& other) const -> T;
 	/** Calculate the distance between two points. */
@@ -420,27 +426,62 @@ inline auto Vector<D,T>::magnitude() const -> T
 // Unit-Length Direction -------------------------------------------------------
 
 template <usize D, typename T>
-inline auto Vector<D,T>::unit() const -> Vector
+inline auto Vector<D,T>::normal() const -> Vector
 {
-	return *this / length();
+	Vector result;
+	auto len = length();
+
+	if (nearly_equal<T>(len, 0))
+		return Zero;
+
+	for (usize i = 0; i < D; ++i)
+		result.components[i] = components[i] / len;
+
+	return result;
 }
 
 template <usize D, typename T>
 inline auto Vector<D,T>::direction() const -> Vector
 {
-	return unit();
+	return normal();
 }
 
 template <usize D, typename T>
-inline auto Vector<D,T>::normal() const -> Vector
+inline auto Vector<D,T>::unit() const -> Vector
 {
-	return unit();
+	return normal();
 }
 
 template <usize D, typename T>
 inline void Vector<D,T>::normalize()
 {
-	*this /= length();
+	auto len = length();
+
+	if (nearly_equal<T>(len, 0)) {
+		*this = Zero;
+		return;
+	}
+
+	for (usize i = 0; i < D; ++i)
+		components[i] /= len;
+}
+
+
+// Length and Direction --------------------------------------------------------
+
+template <usize D, typename T>
+inline auto Vector<D,T>::length_and_direction() const -> std::tuple<T, Vector>
+{
+	Vector normal;
+	auto len = length();
+
+	if (nearly_equal<T>(len, 0))
+		return { len, Zero };
+
+	for (usize i = 0; i < D; ++i)
+		normal.components[i] = components[i] / len;
+
+	return { len, normal };
 }
 
 
