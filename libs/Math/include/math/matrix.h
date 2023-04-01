@@ -1,5 +1,7 @@
 #pragma once
 
+#include <algorithm>
+#include <array>
 #include <exception>
 #include <initializer_list>
 #include <string>
@@ -25,6 +27,8 @@ public:
 	Matrix() = default;
 	Matrix(std::initializer_list<Row> rows);
 	explicit Matrix(std::array<Row, Rows> data);
+
+	static constexpr auto identity() -> Matrix;
 
 	// Member access
 	/**
@@ -134,8 +138,8 @@ Matrix<R,C,T>::Matrix(std::initializer_list<Row> rows)
 	}
 
 	usize i = 0;
-	for (auto row : rows) {
-		m_data[i] = row;
+	for (auto& row : rows) {
+		m_data[i] = std::move(row);
 		++i;
 	}
 }
@@ -144,6 +148,19 @@ template <usize R, usize C, typename T>
 Matrix<R,C,T>::Matrix(std::array<Row, R> data)
 	: m_data(data)
 {}
+
+template <usize R, usize C, typename T>
+constexpr auto Matrix<R,C,T>::identity() -> Matrix<R,C,T>
+{
+	static_assert(R == C, "Identity matrix must be square");
+
+	Matrix<R,C,T> result;
+	for (usize r = 0; r < R; ++r)
+		for (usize c = 0; c < C; ++c)
+			result[r][c] = r == c ? 1 : 0;
+
+	return result;
+}
 
 
 // Member access ---------------------------------------------------------------
