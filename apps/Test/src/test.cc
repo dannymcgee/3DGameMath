@@ -398,6 +398,53 @@ TEST_CASE("math::Vector", "[vector]") {
 TEST_CASE("math::Matrix<R,C,T>", "[matrix]") {
 	using namespace sized; // NOLINT
 
+	SECTION("Mat2x2") {
+		using Mat2x2 = math::Matrix<2,2, f64>;
+
+		SECTION("supports matrix multiplication") {
+			auto a = Mat2x2{
+				{ -3.0, 0.0 },
+				{  5.0, 0.5 },
+			};
+			auto b = Mat2x2{
+				{ -7.0, 2.0 },
+				{  4.0, 6.0 },
+			};
+
+			auto ab = a * b;
+
+			REQUIRE(math::nearly_equal(ab.m<11>(), 21.0));
+			REQUIRE(math::nearly_equal(ab.m<12>(), -6.0));
+			REQUIRE(math::nearly_equal(ab.m<21>(), -33.0));
+			REQUIRE(math::nearly_equal(ab.m<22>(), 13.0));
+		}
+		SECTION("can compute the determinant") {
+			auto a = Mat2x2{
+				{  2, 1 },
+				{ -1, 2 },
+			};
+			auto b = Mat2x2{
+				{ -3, 4 },
+				{  2, 5 },
+			};
+
+			REQUIRE(math::nearly_equal(a.determinant(), 5.0));
+			REQUIRE(math::nearly_equal(b.determinant(), -23.0));
+		}
+	}
+	SECTION("Mat3x3") {
+		using Mat3x3 = math::Matrix<3,3,f64>;
+
+		SECTION("can compute the determinant") {
+			auto mat = Mat3x3{
+				{ -4, -3,  3 },
+				{  0,  2, -2 },
+				{  1,  4, -1 },
+			};
+
+			REQUIRE(math::nearly_equal(mat.determinant(), -24.0));
+		}
+	}
 	SECTION("Mat4x3") {
 		using Mat4x3 = math::Matrix<4,3, f64>;
 
@@ -552,27 +599,6 @@ TEST_CASE("math::Matrix<R,C,T>", "[matrix]") {
 				REQUIRE(math::nearly_equal(result.z, expected.z));
 				REQUIRE(math::nearly_equal(result.w, expected.w));
 			}
-		}
-	}
-	SECTION("Mat2x2") {
-		using Mat2x2 = math::Matrix<2,2, f64>;
-
-		SECTION("supports matrix multiplication") {
-			auto a = Mat2x2{
-				{ -3.0, 0.0 },
-				{  5.0, 0.5 },
-			};
-			auto b = Mat2x2{
-				{ -7.0, 2.0 },
-				{  4.0, 6.0 },
-			};
-
-			auto ab = a * b;
-
-			REQUIRE(math::nearly_equal(ab.m<11>(), 21.0));
-			REQUIRE(math::nearly_equal(ab.m<12>(), -6.0));
-			REQUIRE(math::nearly_equal(ab.m<21>(), -33.0));
-			REQUIRE(math::nearly_equal(ab.m<22>(), 13.0));
 		}
 	}
 }

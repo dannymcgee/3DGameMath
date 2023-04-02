@@ -51,15 +51,6 @@ struct Vector<3, T> {
 		T components[3] { 0, 0, 0 };
 		struct { T x, y, z; };
 	};
-
-	/** Calculate the cross-product of two vectors. */
-	inline auto cross(const Vector& other) const -> Vector;
-
-	/** Calculate the cross-product of two vectors. */
-	inline auto operator^(const Vector& other) const -> Vector;
-
-	/** Cross this vector with another in-place. */
-	inline auto operator^=(const Vector& other) -> Vector&;
 };
 
 template <typename T>
@@ -165,6 +156,13 @@ public:
 	/** Calculate the dot-product of two vectors. */
 	inline auto operator|(const Vector& other) const -> T;
 
+	/** Calculate the cross-product of two vectors. */
+	inline auto cross(const Vector& other) const -> Vector;
+	/** Calculate the cross-product of two vectors. */
+	inline auto operator^(const Vector& other) const -> Vector;
+	/** Cross this vector with another in-place. */
+	inline auto operator^=(const Vector& other) -> Vector&;
+
 	// Misc / Utility
 	auto to_string(usize precision = 3) const -> std::string;
 	inline auto to_string(const fmt::AlignedValues& formatter) const -> std::string;
@@ -175,44 +173,6 @@ private:
 
 
 // Definitions /////////////////////////////////////////////////////////////////
-
-// math::detail::Vector<3, T> ==================================================
-
-namespace detail {
-
-// Cross-Product ---------------------------------------------------------------
-
-template <typename T>
-inline auto Vector<3, T>::cross(const Vector& other) const -> Vector
-{
-	return Vector{
-		y * other.z - z * other.y,
-		z * other.x - x * other.z,
-		x * other.y - y * other.x,
-	};
-}
-
-template <typename T>
-inline auto Vector<3, T>::operator^(const Vector& other) const -> Vector
-{
-	return cross(other);
-}
-
-template <typename T>
-inline auto Vector<3, T>::operator^=(const Vector& other) -> Vector&
-{
-	auto temp_x = x;
-	auto temp_y = y;
-
-	x = y * other.z - z * other.y;
-	y = z * other.x - temp_x * other.z;
-	z = temp_x * other.y - temp_y * other.x;
-
-	return *this;
-}
-
-}
-
 
 // math::Vector<D,T> ===========================================================
 
@@ -562,6 +522,44 @@ template <usize D, typename T>
 inline auto Vector<D,T>::operator|(const Vector& other) const -> T
 {
 	return dot(other);
+}
+
+
+// Cross-product ---------------------------------------------------------------
+
+template <usize D, typename T>
+inline auto Vector<D,T>::cross(const Vector& other) const -> Vector
+{
+	static_assert(D == 3, "Cross-product is only valid for 3-dimensional vectors.");
+
+	return Vector{
+		this->y * other.z - this->z * other.y,
+		this->z * other.x - this->x * other.z,
+		this->x * other.y - this->y * other.x,
+	};
+}
+
+template <usize D, typename T>
+inline auto Vector<D,T>::operator^(const Vector& other) const -> Vector
+{
+	static_assert(D == 3, "Cross-product is only valid for 3-dimensional vectors.");
+
+	return cross(other);
+}
+
+template <usize D, typename T>
+inline auto Vector<D,T>::operator^=(const Vector& other) -> Vector&
+{
+	static_assert(D == 3, "Cross-product is only valid for 3-dimensional vectors.");
+
+	T temp_x = this->x;
+	T temp_y = this->y;
+
+	this->x = this->y * other.z - this->z * other.y;
+	this->y = this->z * other.x - temp_x * other.z;
+	this->z = temp_x * other.y - temp_y * other.x;
+
+	return *this;
 }
 
 

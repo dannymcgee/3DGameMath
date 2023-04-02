@@ -121,6 +121,9 @@ public:
 	inline auto operator*(T value) const -> Matrix;
 	inline auto operator*=(T value) -> Matrix&;
 
+	/** Calculate the determinant of the matrix. */
+	auto determinant() const -> T;
+
 	// Misc / Utility
 	auto to_string(usize precision = 3) const -> std::string;
 
@@ -397,6 +400,34 @@ inline auto operator*(
 
 
 namespace math {
+
+// Determinant -----------------------------------------------------------------
+
+// TODO: Why can't I partially specialize for `<typename T> Mat<2,2,T>`, etc.??
+template <>
+inline auto Matrix<2,2,f64>::determinant() const -> f64
+{
+	return m<11>() * m<22>() - m<12>() * m<21>();
+}
+
+template <>
+inline auto Matrix<2,2,f32>::determinant() const -> f32
+{
+	return m<11>() * m<22>() - m<12>() * m<21>();
+}
+
+template <>
+inline auto Matrix<3,3,f64>::determinant() const -> f64
+{
+	return (row<1>() ^ row<2>()) | row<3>();
+}
+
+template <>
+inline auto Matrix<3,3,f32>::determinant() const -> f32
+{
+	return (row<1>() ^ row<2>()) | row<3>();
+}
+
 
 // Misc / Utility --------------------------------------------------------------
 
