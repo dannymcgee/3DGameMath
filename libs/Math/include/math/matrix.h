@@ -33,11 +33,11 @@ public:
 	static constexpr auto identity() -> Matrix;
 
 	// Iterator support
-	inline auto begin() -> detail::RawIterator<T>;
-	inline auto begin() const -> detail::RawConstIterator<T>;
+	auto begin() -> detail::RawIterator<T>;
+	auto begin() const -> detail::RawConstIterator<T>;
 
-	inline auto end() -> detail::RawIterator<T>;
-	inline auto end() const -> detail::RawConstIterator<T>;
+	auto end() -> detail::RawIterator<T>;
+	auto end() const -> detail::RawConstIterator<T>;
 
 	// Member access
 	/**
@@ -62,7 +62,8 @@ public:
 	 * }
 	 * @endcode
 	 */
-	template <usize Index2D> inline auto m() const -> T;
+	template <usize Index2D>
+	auto m() const -> T;
 	/**
 	 * Get a mutable reference to the matrix value at the 1-based two-dimensional
 	 * index indicated by the template argument.
@@ -85,65 +86,68 @@ public:
 	 * }
 	 * @endcode
 	 */
-	template <usize Index2D> inline auto m() -> T&;
+	template <usize Index2D>
+	auto m() -> T&;
 
 	/**
 	 * Access a member by 2D, 1-based index.
 	 * @warning This method is **not bounds-checked**!
 	 */
-	inline auto m(usize idx_2d) const -> T;
+	auto m(usize idx_2d) const -> T;
 	/**
 	 * Access a member by 2D, 1-based index.
 	 * @warning This method is **not bounds-checked**!
 	 */
-	inline auto m(usize idx_2d) -> T&;
+	auto m(usize idx_2d) -> T&;
 
 	/**
 	 * Access a member by 2D, 1-based index, with runtime bounds-checking. Use
 	 * the templated `Matrix::m<size_t>()` for static, compile-time
 	 * bounds-checking.
 	 */
-	inline auto m_checked(usize idx_2d) const -> T;
+	auto m_checked(usize idx_2d) const -> T;
 	/**
 	 * Access a member by 2D, 1-based index, with runtime bounds-checking. Use
 	 * the templated `Matrix::m<size_t>()` for static, compile-time
 	 * bounds-checking.
 	 */
-	inline auto m_checked(usize idx_2d) -> T&;
+	auto m_checked(usize idx_2d) -> T&;
 
 	/**
 	 * Get the row at the 1-based index indicated by the template argument.
 	 * @tparam Index The 1-based index of the desired row.
 	 */
-	template <usize Index> inline auto row() const -> const Row&;
+	template <usize Index>
+	auto row() const -> const Row&;
 	/**
 	 * Get the column at the 1-based index indicated by the template argument.
 	 * @tparam Index The 1-based index of the desired column.
 	 */
-	template <usize Index> inline auto col() const -> Col;
+	template <usize Index>
+	auto col() const -> Col;
 
 	/**
 	 * Get the row at the 1-based index indicated by the argument.
 	 * @param idx The 1-based index of the desired row.
 	 */
-	inline auto row(usize idx) const -> const Row&;
+	auto row(usize idx) const -> const Row&;
 	/**
 	 * Get the column at the 1-based index indicated by the argument.
 	 * @param idx The 1-based index of the desired column.
 	 */
-	inline auto col(usize idx) const -> Col;
+	auto col(usize idx) const -> Col;
 
 	/** Get the row at the 0-based index. */
-	inline auto operator[](usize idx) -> Row&;
+	auto operator[](usize idx) -> Row&;
 	/** Get the row at the 0-based index. */
-	inline auto operator[](usize idx) const -> const Row&;
+	auto operator[](usize idx) const -> const Row&;
 
 	// Matrix transposition
 	auto transpose() const -> Matrix<Cols, Rows, T>;
 
 	// Scalar multiplication
-	inline auto operator*(T value) const -> Matrix;
-	inline auto operator*=(T value) -> Matrix&;
+	auto operator*(T value) const -> Matrix;
+	auto operator*=(T value) -> Matrix&;
 
 	/** Calculate the determinant of the matrix. */
 	auto determinant() const -> T;
@@ -155,7 +159,7 @@ protected:
 	std::array<Row, Rows> m_data; // NOLINT(*-non-private-member-*)
 
 	/** Throws an exception if the provided 2D, 1-based index is out of range. */
-	inline void validate_index_2d(usize idx_2d) const;
+	void validate_index_2d(usize idx_2d) const;
 
 };
 
@@ -351,7 +355,7 @@ inline auto Matrix<R,C,T>::operator[](usize idx) const -> const Row&
 // Matrix transposition --------------------------------------------------------
 
 template <usize R, usize C, typename T>
-auto Matrix<R,C,T>::transpose() const -> Matrix<C,R,T>
+inline auto Matrix<R,C,T>::transpose() const -> Matrix<C,R,T>
 {
 	Matrix<C,R,T> result;
 	for (usize r = 0; r < C; ++r)

@@ -19,28 +19,28 @@ constexpr f64 pi = 3.141592653589793;
  * If no tolerance is provided, the machine epsilon is used.
  */
 template <typename T = f64>
-inline auto nearly_equal(T lhs, T rhs, T tolerance = std::numeric_limits<T>::epsilon())
+constexpr auto nearly_equal(T lhs, T rhs, T tolerance = std::numeric_limits<T>::epsilon())
 {
 	return std::abs(lhs - rhs) < tolerance;
 }
 
 /** Convert degrees to radians. */
 template <typename T = f64>
-inline constexpr auto deg2rad(T deg) -> T
+constexpr auto deg2rad(T deg) -> T
 {
 	return deg * static_cast<T>(pi) / static_cast<T>(180);
 }
 
 /** Convert radians to degrees. */
 template <typename T = f64>
-inline constexpr auto rad2deg(T rad) -> T
+constexpr auto rad2deg(T rad) -> T
 {
 	return rad * static_cast<T>(180) / static_cast<T>(pi);
 }
 
 /** Get the number of non-fractional digits in a number. */
 template <typename T>
-inline constexpr auto num_digits(T value) -> usize // NOLINT(*-cognitive-complexity)
+constexpr auto num_digits(T value) -> usize // NOLINT(*-cognitive-complexity)
 {
 	auto n = static_cast<usize>(std::abs(value));
 	return n < 10 ? 1 :
@@ -66,7 +66,7 @@ inline constexpr auto num_digits(T value) -> usize // NOLINT(*-cognitive-complex
 }
 
 template <typename T>
-inline constexpr auto num_decimal_places(T value, usize max = 20) -> usize
+constexpr auto num_decimal_places(T value, usize max = 20) -> usize
 {
 	if (std::is_integral<T>::value)
 		return 0;

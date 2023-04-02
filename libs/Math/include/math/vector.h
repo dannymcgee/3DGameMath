@@ -91,84 +91,84 @@ public:
 	template <usize Index> inline auto get() const&& { return components[Index]; }
 
 	// Iterator support
-	inline auto begin() -> detail::RawIterator<T>;
-	inline auto begin() const -> detail::RawConstIterator<T>;
+	auto begin() -> detail::RawIterator<T>;
+	auto begin() const -> detail::RawConstIterator<T>;
 
-	inline auto end() -> detail::RawIterator<T>;
-	inline auto end() const -> detail::RawConstIterator<T>;
+	auto end() -> detail::RawIterator<T>;
+	auto end() const -> detail::RawConstIterator<T>;
 
 	// Subscript operator
-	inline auto operator[](usize idx) -> T&;
-	inline auto operator[](usize idx) const -> T;
+	auto operator[](usize idx) -> T&;
+	auto operator[](usize idx) const -> T;
 
 	// Unary negation
-	inline auto operator-() const -> Vector;
+	auto operator-() const -> Vector;
 
 	// Vector addition
-	inline auto operator+(const Vector& other) const -> Vector;
-	inline auto operator+=(const Vector& other) -> Vector&;
+	auto operator+(const Vector& other) const -> Vector;
+	auto operator+=(const Vector& other) -> Vector&;
 
 	// Vector subtraction
-	inline auto operator-(const Vector& other) const -> Vector;
-	inline auto operator-=(const Vector& other) -> Vector&;
+	auto operator-(const Vector& other) const -> Vector;
+	auto operator-=(const Vector& other) -> Vector&;
 
 	// Scalar multiplication
-	inline auto operator*(T magnitude) const -> Vector;
-	inline auto operator*=(T magnitude) -> Vector&;
+	auto operator*(T magnitude) const -> Vector;
+	auto operator*=(T magnitude) -> Vector&;
 
 	// Scalar division
-	inline auto operator/(T magnitude) const -> Vector;
-	inline auto operator/=(T magnitude) -> Vector&;
+	auto operator/(T magnitude) const -> Vector;
+	auto operator/=(T magnitude) -> Vector&;
 
 	// Equality comparison
-	inline auto operator==(const Vector& other) const -> bool;
+	auto operator==(const Vector& other) const -> bool;
 
 	// Not-equal comparison
-	inline auto operator!=(const Vector& other) const -> bool;
+	auto operator!=(const Vector& other) const -> bool;
 
 	/** Calculate the length (magnitude) of the vector. */
-	inline auto length() const -> T;
+	auto length() const -> T;
 	/** Calculate the length (magnitude) of the vector. */
-	inline auto magnitude() const -> T;
+	auto magnitude() const -> T;
 
 	/** Calculate the unit-length direction of the vector. */
-	inline auto unit() const -> Vector;
+	auto unit() const -> Vector;
 	/** Calculate the unit-length direction of the vector. */
-	inline auto direction() const -> Vector;
+	auto direction() const -> Vector;
 	/** Calculate the unit-length direction of the vector. */
-	inline auto normal() const -> Vector;
+	auto normal() const -> Vector;
 	/** Normalize the vector in place. */
-	inline void normalize();
+	void normalize();
 
 	/**
 	 * Calculate the magnitude and unit-length direction of the vector in a
 	 * single operation.
 	 */
-	inline auto length_and_direction() const -> std::tuple<T, Vector>;
+	auto length_and_direction() const -> std::tuple<T, Vector>;
 
 	/** Calculate the distance between two points. */
-	inline auto dist(const Vector& other) const -> T;
+	auto dist(const Vector& other) const -> T;
 	/** Calculate the distance between two points. */
-	static inline auto dist(const Vector& lhs, const Vector& rhs) -> T;
+	static auto dist(const Vector& lhs, const Vector& rhs) -> T;
 
 	/** Calculate the dot-product of two vectors. */
-	inline auto dot(const Vector& other) const -> T;
+	auto dot(const Vector& other) const -> T;
 	/** Calculate the dot-product of two vectors. */
-	inline auto operator|(const Vector& other) const -> T;
+	auto operator|(const Vector& other) const -> T;
 
 	/** Calculate the cross-product of two vectors. */
-	inline auto cross(const Vector& other) const -> Vector;
+	auto cross(const Vector& other) const -> Vector;
 	/** Calculate the cross-product of two vectors. */
-	inline auto operator^(const Vector& other) const -> Vector;
+	auto operator^(const Vector& other) const -> Vector;
 	/** Cross this vector with another in-place. */
-	inline auto operator^=(const Vector& other) -> Vector&;
+	auto operator^=(const Vector& other) -> Vector&;
 
 	// Misc / Utility
 	auto to_string(usize precision = 3) const -> std::string;
-	inline auto to_string(const fmt::AlignedValues& formatter) const -> std::string;
+	auto to_string(const fmt::AlignedValues& formatter) const -> std::string;
 
 private:
-	inline void validate_index(usize idx) const;
+	void validate_index(usize idx) const;
 };
 
 
