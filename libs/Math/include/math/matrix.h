@@ -10,6 +10,7 @@
 #include <sized.h>
 
 #include "math/fmt.h"
+#include "math/utility.h"
 #include "math/vector.h"
 
 namespace math {
@@ -30,6 +31,13 @@ public:
 	explicit Matrix(std::array<Row, Rows> data);
 
 	static constexpr auto identity() -> Matrix;
+
+	// Iterator support
+	inline auto begin() -> detail::RawIterator<T>;
+	inline auto begin() const -> detail::RawConstIterator<T>;
+
+	inline auto end() -> detail::RawIterator<T>;
+	inline auto end() const -> detail::RawConstIterator<T>;
 
 	// Member access
 	/**
@@ -83,7 +91,7 @@ public:
 	 * Get the row at the 1-based index indicated by the template argument.
 	 * @tparam Index The 1-based index of the desired row.
 	 */
-	template <usize Index> inline auto row() const -> Row;
+	template <usize Index> inline auto row() const -> const Row&;
 	/**
 	 * Get the column at the 1-based index indicated by the template argument.
 	 * @tparam Index The 1-based index of the desired column.
@@ -94,7 +102,7 @@ public:
 	 * Get the row at the 1-based index indicated by the argument.
 	 * @param idx The 1-based index of the desired row.
 	 */
-	inline auto row(usize idx) const -> Row;
+	inline auto row(usize idx) const -> const Row&;
 	/**
 	 * Get the column at the 1-based index indicated by the argument.
 	 * @param idx The 1-based index of the desired column.
@@ -164,6 +172,33 @@ constexpr auto Matrix<R,C,T>::identity() -> Matrix<R,C,T>
 }
 
 
+// Iterator support ------------------------------------------------------------
+
+template <usize R, usize C, typename T>
+inline auto Matrix<R,C,T>::begin() -> detail::RawIterator<T>
+{
+	return m_data[0].begin();
+}
+
+template <usize R, usize C, typename T>
+inline auto Matrix<R,C,T>::begin() const -> detail::RawConstIterator<T>
+{
+	return m_data[0].begin();
+}
+
+template <usize R, usize C, typename T>
+inline auto Matrix<R,C,T>::end() -> detail::RawIterator<T>
+{
+	return m_data[C-1].end();
+}
+
+template <usize R, usize C, typename T>
+inline auto Matrix<R,C,T>::end() const -> detail::RawConstIterator<T>
+{
+	return m_data[C-1].end();
+}
+
+
 // Member access ---------------------------------------------------------------
 
 #define VALIDATE_INDEX_2D(index, rows, cols) \
@@ -194,7 +229,7 @@ inline auto Matrix<R,C,T>::m() -> T&
 
 template <usize R, usize C, typename T>
 template <usize Index>
-inline auto Matrix<R,C,T>::row() const -> Row
+inline auto Matrix<R,C,T>::row() const -> const Row&
 {
 	static_assert(Index > 0 && Index <= R);
 	return m_data[Index - 1];
@@ -212,7 +247,7 @@ inline auto Matrix<R,C,T>::col() const -> Col
 }
 
 template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::row(usize idx) const -> Row
+inline auto Matrix<R,C,T>::row(usize idx) const -> const Row&
 {
 	return m_data[idx-1];
 }
@@ -368,9 +403,7 @@ namespace math {
 template <usize R, usize C, typename T>
 auto Matrix<R,C,T>::to_string(usize precision) const -> std::string
 {
-	auto begin = m_data[0].begin();
-	auto end = m_data[R-1].end();
-	auto formatter = fmt::AlignedValues(begin, end, precision);
+	auto formatter = fmt::AlignedValues(begin(), end(), precision);
 
 	std::string result;
 	for (usize r = 0; r < R; ++r) {

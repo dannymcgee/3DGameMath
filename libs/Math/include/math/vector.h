@@ -31,16 +31,16 @@ namespace detail {
  */
 template <usize D, typename T = f64>
 struct Vector {
-// NOLINTBEGIN(*-pro-type-member-init)
+// NOLINTBEGIN(*-pro-type-member-init, *-avoid-c-arrays)
 	union {
-		std::array<T,D> components;
+		T components[D];
 	};
 };
 
 template <typename T>
 struct Vector<2, T> {
 	union {
-		std::array<T,2> components { 0, 0 };
+		T components[2] { 0, 0 };
 		struct { T x, y; };
 	};
 };
@@ -48,7 +48,7 @@ struct Vector<2, T> {
 template <typename T>
 struct Vector<3, T> {
 	union {
-		std::array<T,3> components { 0, 0, 0 };
+		T components[3] { 0, 0, 0 };
 		struct { T x, y, z; };
 	};
 
@@ -65,10 +65,10 @@ struct Vector<3, T> {
 template <typename T>
 struct Vector<4, T> {
 	union {
-		std::array<T,4> components { 0, 0, 0, 0 };
+		T components[4] { 0, 0, 0, 0 };
 		struct { T x, y, z, w; };
 	};
-// NOLINTEND(*-pro-type-member-init)
+// NOLINTEND(*-pro-type-member-init, *-avoid-c-arrays)
 };
 }
 
@@ -100,8 +100,11 @@ public:
 	template <usize Index> inline auto get() const&& { return components[Index]; }
 
 	// Iterator support
-	inline auto begin() const { return components.begin(); }
-	inline auto end() const { return components.end(); }
+	inline auto begin() -> detail::RawIterator<T>;
+	inline auto begin() const -> detail::RawConstIterator<T>;
+
+	inline auto end() -> detail::RawIterator<T>;
+	inline auto end() const -> detail::RawConstIterator<T>;
 
 	// Subscript operator
 	inline auto operator[](usize idx) -> T&;
@@ -229,6 +232,33 @@ inline auto Vector<D,T>::all(T value) -> Vector
 		result.components[i] = value;
 
 	return result;
+}
+
+
+// Iterator support ------------------------------------------------------------
+
+template <usize D, typename T>
+inline auto Vector<D,T>::begin() -> detail::RawIterator<T>
+{
+	return detail::RawIterator(&components[0]);
+}
+
+template <usize D, typename T>
+inline auto Vector<D,T>::begin() const -> detail::RawConstIterator<T>
+{
+	return detail::RawConstIterator(&components[0]);
+}
+
+template <usize D, typename T>
+inline auto Vector<D,T>::end() -> detail::RawIterator<T>
+{
+	return detail::RawIterator(&components[D]);
+}
+
+template <usize D, typename T>
+inline auto Vector<D,T>::end() const -> detail::RawConstIterator<T>
+{
+	return detail::RawConstIterator(&components[D]);
 }
 
 

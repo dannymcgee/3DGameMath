@@ -140,22 +140,20 @@ void rotation_matrix()
 	using math::RotationMatrix;
 	using math::fmt::AlignedValues;
 	using Vec3 = math::Vector<3>;
+	using Mat3x3 = math::Matrix<3,3>;
 
 	auto angle = math::deg2rad(45.0);
 	auto axis = Vec3{ -0.25, 0.5, 0.33 }.unit();
 
 	auto rotation_mat = RotationMatrix(angle, axis);
 
-	auto x = Vec3{ 1, 0, 0 } * rotation_mat;
-	auto y = Vec3{ 0, 1, 0 } * rotation_mat;
-	auto z = Vec3{ 0, 0, 1 } * rotation_mat;
-
-	auto formatter = AlignedValues(x.begin(), z.end(), 5);
+	auto rotated = Mat3x3::identity() * rotation_mat;
+	auto formatter = AlignedValues(rotated.begin(), rotated.end(), 5);
 
 	fmt::print("============= Rotation Matrix =============\n");
-	fmt::print("Right:   {}\n", x.to_string(formatter));
-	fmt::print("Up:      {}\n", y.to_string(formatter));
-	fmt::print("Forward: {}\n", z.to_string(formatter));
+	fmt::print("Right:   {}\n", rotated.row(1).to_string(formatter));
+	fmt::print("Up:      {}\n", rotated.row(2).to_string(formatter));
+	fmt::print("Forward: {}\n", rotated.row(3).to_string(formatter));
 	fmt::print("-------------------------------------------\n");
 	fmt::print("Axis:    {}\n", axis.to_string(formatter));
 	fmt::print("Radians: {}\n", angle);

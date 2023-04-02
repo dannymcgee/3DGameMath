@@ -14,33 +14,47 @@
 namespace math::fmt {
 using namespace sized; // NOLINT(*-using-namespace)
 
-struct AlignedValues {
-	std::string fmt_string;
-	usize width = 0;
-	usize precision = 0;
-	f64 tolerance = std::numeric_limits<f64>::epsilon();
-
-	AlignedValues() = default;
-
-	AlignedValues(std::string fmt_string, usize width, usize precision)
-		: fmt_string(std::move(fmt_string))
-		, width(width)
-		, precision(precision)
-		, tolerance(1.0 / std::pow(10.0, precision))
-	{}
-
+/**
+ * A formatter for printing rows, columns, or grids of numeric values such that
+ * they're all aligned and formatted consistently with one another.
+ */
+class AlignedValues {
+public:
+	/**
+	 * Configure a formatter for printing the provided set of numeric values, by
+	 * taking into account:
+	 *
+	 * - The max number of non-fractional digits
+	 * - Whether any values are negative
+	 * - Whether any values are fractional
+	 * - The max number of digits after the decimal point (if applicable)
+	 *
+	 * @param begin, end The range of values to consider
+	 * @param precision The maximum number of decimal places to display
+	 */
 	template <typename Iter>
-	AlignedValues(Iter begin, Iter end, usize prec);
+	AlignedValues(Iter begin, Iter end, usize precision);
 
+	/** Format a value to a `std::string`. */
 	template <typename T>
-	auto format(T n) const -> std::string;
+	inline auto format(T value) const -> std::string;
+
+	/** Print a value to `stdout`. */
+	template <typename T>
+	inline void print(T value) const;
+
+private:
+	std::string m_fmt_string;
+	usize m_width = 0;
+	usize m_precision = 0;
+	f64 m_tolerance = std::numeric_limits<f64>::epsilon();
 };
 
 
 template <typename Iter>
-AlignedValues::AlignedValues(Iter begin, Iter end, usize prec)
-	: precision(prec)
-	, tolerance(1.0 / std::pow(10.0, prec))
+AlignedValues::AlignedValues(Iter begin, Iter end, usize precision)
+	: m_precision(precision)
+	, m_tolerance(1.0 / std::pow(10.0, precision))
 {
 	// Iterate through all values to determine:
 	// - The max number of non-fractional digits
@@ -61,32 +75,41 @@ AlignedValues::AlignedValues(Iter begin, Iter end, usize prec)
 
 		if (remainder > 0) {
 			fixed_point = true;
-			precision = std::min(precision, num_decimal_places(remainder, precision));
+			m_precision = std::min(m_precision, num_decimal_places(remainder, m_precision));
 		}
 	});
 
 	// Determine a consistent print-width for each value
-	width = num_digits(largest_abs);
-	if (needs_sign) width += 1;
-	if (fixed_point) width += precision + 1;
+	m_width = num_digits(largest_abs);
+	if (needs_sign) m_width += 1;
+	if (fixed_point) m_width += m_precision + 1;
 
 	// Build the format string
-	fmt_string
-		= std::string(needs_sign
-			? "{0:> {1}.{2}"
-			: "{0:>{1}.{2}")
-		+ (fixed_point
-			? "f}"
-			: "}");
+	m_fmt_string.reserve(16);
+	m_fmt_string.append(needs_sign
+		? "{0:> {1}.{2}"
+		: "{0:>{1}.{2}");
+	m_fmt_string.append(fixed_point
+		? "f}"
+		: "}");
 }
 
 template <typename T>
-auto AlignedValues::format(T n) const -> std::string
+inline auto AlignedValues::format(T value) const -> std::string
 {
-	if (nearly_equal<T>(n, 0, tolerance))
-		n = 0;
+	if (nearly_equal<T>(value, 0, m_tolerance))
+		value = 0;
 
-	return ::fmt::format(fmt_string, n, width, precision);
+	return ::fmt::format(m_fmt_string, value, m_width, m_precision);
+}
+
+template <typename T>
+inline void AlignedValues::print(T value) const
+{
+	if (nearly_equal<T>(value, 0, m_tolerance))
+		value = 0;
+
+	::fmt::print(m_fmt_string, value, m_width, m_precision);
 }
 
 }
