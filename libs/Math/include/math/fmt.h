@@ -54,7 +54,7 @@ private:
 template <typename Iter>
 AlignedValues::AlignedValues(Iter begin, Iter end, usize precision)
 	: m_precision(precision)
-	, m_tolerance(1.0 / std::pow(10.0, precision))
+	, m_tolerance(std::pow(0.1, precision))
 {
 	// Iterate through all values to determine:
 	// - The max number of non-fractional digits
@@ -70,7 +70,7 @@ AlignedValues::AlignedValues(Iter begin, Iter end, usize precision)
 
 		largest_abs = std::max(largest_abs, std::abs(n));
 
-		f64 base = std::pow(10.0, num_digits(n));
+		f64 base;
 		f64 remainder = std::modf(std::abs(n), &base);
 
 		if (remainder > 0) {

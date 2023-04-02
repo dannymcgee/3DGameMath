@@ -166,8 +166,8 @@ void scale_matrix()
 	using Mat3x3 = math::Matrix<3,3>;
 	using Vec3 = math::Vector<3>;
 
-	auto mat = ScaleMatrix(10.0);
-	fmt::print("ScaleMatrix(10)\n{}\n", mat.to_string());
+	auto mat = ScaleMatrix(-12.125);
+	fmt::print("ScaleMatrix(-12.125)\n{}\n", mat.to_string());
 
 	auto non_uniform = ScaleMatrix({ -1.0, 1.5, 1.0 });
 	fmt::print("non-uniform:\n{}\n", non_uniform.to_string(5));
