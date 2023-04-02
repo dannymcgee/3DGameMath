@@ -88,6 +88,30 @@ public:
 	template <usize Index2D> inline auto m() -> T&;
 
 	/**
+	 * Access a member by 2D, 1-based index.
+	 * @warning This method is **not bounds-checked**!
+	 */
+	inline auto m(usize idx_2d) const -> T;
+	/**
+	 * Access a member by 2D, 1-based index.
+	 * @warning This method is **not bounds-checked**!
+	 */
+	inline auto m(usize idx_2d) -> T&;
+
+	/**
+	 * Access a member by 2D, 1-based index, with runtime bounds-checking. Use
+	 * the templated `Matrix::m<size_t>()` for static, compile-time
+	 * bounds-checking.
+	 */
+	inline auto m_checked(usize idx_2d) const -> T;
+	/**
+	 * Access a member by 2D, 1-based index, with runtime bounds-checking. Use
+	 * the templated `Matrix::m<size_t>()` for static, compile-time
+	 * bounds-checking.
+	 */
+	inline auto m_checked(usize idx_2d) -> T&;
+
+	/**
 	 * Get the row at the 1-based index indicated by the template argument.
 	 * @tparam Index The 1-based index of the desired row.
 	 */
@@ -129,6 +153,10 @@ public:
 
 protected:
 	std::array<Row, Rows> m_data; // NOLINT(*-non-private-member-*)
+
+	/** Throws an exception if the provided 2D, 1-based index is out of range. */
+	inline void validate_index_2d(usize idx_2d) const;
+
 };
 
 
@@ -225,6 +253,48 @@ inline auto Matrix<R,C,T>::m() -> T&
 {
 	VALIDATE_INDEX_2D(Index2D, R, C);
 	return m_data[EXPAND_INDEX_2D(Index2D)];
+}
+
+template <usize R, usize C, typename T>
+inline auto Matrix<R,C,T>::m(usize idx_2d) const -> T
+{
+	return m_data[EXPAND_INDEX_2D(idx_2d)];
+}
+
+template <usize R, usize C, typename T>
+inline auto Matrix<R,C,T>::m(usize idx_2d) -> T&
+{
+	return m_data[EXPAND_INDEX_2D(idx_2d)];
+}
+
+template <usize R, usize C, typename T>
+inline auto Matrix<R,C,T>::m_checked(usize idx_2d) const -> T
+{
+	validate_index_2d(idx_2d);
+	return m_data[EXPAND_INDEX_2D(idx_2d)];
+}
+
+template <usize R, usize C, typename T>
+inline auto Matrix<R,C,T>::m_checked(usize idx_2d) -> T&
+{
+	validate_index_2d(idx_2d);
+	return m_data[EXPAND_INDEX_2D(idx_2d)];
+}
+
+template <usize R, usize C, typename T>
+inline void Matrix<R,C,T>::validate_index_2d(usize idx_2d) const
+{
+	usize r = (idx_2d % 100) / 10;
+	usize c = (idx_2d % 10);
+
+	if (r <= 0 || r > R || c <= 0 || c > C) {
+		auto err_msg = ::fmt::format(
+			"2D Index {0} out of bounds for Matrix<R={1},C={2}>: index expands to "
+			"r={3},c={4} -- expected 0<r<={1}, 0<c<={2}",
+			idx_2d, R, C, r, c);
+
+		throw std::exception(err_msg.c_str());
+	}
 }
 
 #undef VALIDATE_INDEX_2D
