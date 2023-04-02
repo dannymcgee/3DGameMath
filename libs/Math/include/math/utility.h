@@ -42,27 +42,12 @@ constexpr auto rad2deg(T rad) -> T
 template <typename T>
 constexpr auto num_digits(T value) -> usize // NOLINT(*-cognitive-complexity)
 {
-	auto n = static_cast<usize>(std::abs(value));
-	return n < 10 ? 1 :
-		n < 100ull ? 2 :
-		n < 1000ull ? 3 :
-		n < 10000ull ? 4 :
-		n < 100000ull ? 5 :
-		n < 1000000ull ? 6 :
-		n < 10000000ull ? 7 :
-		n < 100000000ull ? 8 :
-		n < 1000000000ull ? 9 :
-		n < 10000000000ull ? 10 :
-		n < 100000000000ull ? 11 :
-		n < 1000000000000ull ? 12 :
-		n < 10000000000000ull ? 13 :
-		n < 100000000000000ull ? 14 :
-		n < 1000000000000000ull ? 15 :
-		n < 10000000000000000ull ? 16 :
-		n < 100000000000000000ull ? 17 :
-		n < 1000000000000000000ull ? 18 :
-		n < 10000000000000000000ull ? 19
-		  : 20;
+	usize count = 1;
+	for (usize order = 10, n = std::abs(value);
+		n > order && count <= 20;
+		order *= 10, ++count);
+
+	return count;
 }
 
 template <typename T>
