@@ -174,7 +174,7 @@ Matrix<R,C,T>::Matrix(std::initializer_list<Row> rows)
 			R, rows.size()
 		);
 
-		throw std::exception{ err_msg.c_str(), 1 };
+		throw std::exception(err_msg.c_str());
 	}
 
 	usize i = 0;
