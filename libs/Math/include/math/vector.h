@@ -386,7 +386,7 @@ template <usize D, typename T>
 inline auto Vector<D,T>::operator/(T magnitude) const -> Vector
 {
 	if (nearly_equal<T>(magnitude, 0))
-		return Vector::all(0);
+		return Zero;
 
 	auto result = *this;
 	for (usize i = 0; i < D; ++i)
