@@ -431,6 +431,23 @@ TEST_CASE("math::Matrix<R,C,T>", "[matrix]") {
 			REQUIRE(math::nearly_equal(a.determinant(), 5.0));
 			REQUIRE(math::nearly_equal(b.determinant(), -23.0));
 		}
+		SECTION("can compute the inverse") {
+			auto mat = Mat2x2{
+				{ -3.0, 4.0 },
+				{  2.0, 5.0 },
+			};
+			auto inverted = mat.inverse();
+
+			REQUIRE(inverted);
+
+			auto id = mat * (*inverted);
+
+			REQUIRE(math::nearly_equal(id.m<11>(), 1.0));
+			REQUIRE(math::nearly_equal(id.m<12>(), 0.0));
+
+			REQUIRE(math::nearly_equal(id.m<21>(), 0.0));
+			REQUIRE(math::nearly_equal(id.m<22>(), 1.0));
+		}
 	}
 	SECTION("Mat3x3") {
 		using Mat3x3 = math::Matrix<3,3,f64>;
@@ -448,6 +465,30 @@ TEST_CASE("math::Matrix<R,C,T>", "[matrix]") {
 			};
 
 			REQUIRE(math::nearly_equal(mat.determinant(), -24.0));
+		}
+		SECTION("can compute the inverse") {
+			auto mat = Mat3x3{
+				{ -4.0, -3.0,  3.0 },
+				{  0.0,  2.0, -2.0 },
+				{  1.0,  4.0, -1.0 },
+			};
+			auto inverted = mat.inverse();
+
+			REQUIRE(inverted);
+
+			auto id = mat * (*inverted);
+
+			REQUIRE(math::nearly_equal(id.m<11>(), 1.0));
+			REQUIRE(math::nearly_equal(id.m<12>(), 0.0));
+			REQUIRE(math::nearly_equal(id.m<13>(), 0.0));
+
+			REQUIRE(math::nearly_equal(id.m<21>(), 0.0));
+			REQUIRE(math::nearly_equal(id.m<22>(), 1.0));
+			REQUIRE(math::nearly_equal(id.m<23>(), 0.0));
+
+			REQUIRE(math::nearly_equal(id.m<31>(), 0.0));
+			REQUIRE(math::nearly_equal(id.m<32>(), 0.0));
+			REQUIRE(math::nearly_equal(id.m<33>(), 1.0));
 		}
 	}
 	SECTION("Mat4x4") {
@@ -468,6 +509,39 @@ TEST_CASE("math::Matrix<R,C,T>", "[matrix]") {
 			};
 
 			REQUIRE(math::nearly_equal(mat.determinant(), -24.0));
+		}
+		SECTION("can compute the inverse") {
+			auto mat = Mat4x4{
+				{ -4.0, -3.0,  3.0,  1.0 },
+				{  0.0,  2.0, -2.0,  0.0 },
+				{  1.0,  4.0, -1.0,  1.0 },
+				{  0.0,  2.0, -2.0,  1.0 },
+			};
+			auto inverted = mat.inverse();
+
+			REQUIRE(inverted);
+
+			auto id = mat * (*inverted);
+
+			REQUIRE(math::nearly_equal(id.m<11>(), 1.0));
+			REQUIRE(math::nearly_equal(id.m<12>(), 0.0));
+			REQUIRE(math::nearly_equal(id.m<13>(), 0.0));
+			REQUIRE(math::nearly_equal(id.m<14>(), 0.0));
+
+			REQUIRE(math::nearly_equal(id.m<21>(), 0.0));
+			REQUIRE(math::nearly_equal(id.m<22>(), 1.0));
+			REQUIRE(math::nearly_equal(id.m<23>(), 0.0));
+			REQUIRE(math::nearly_equal(id.m<24>(), 0.0));
+
+			REQUIRE(math::nearly_equal(id.m<31>(), 0.0));
+			REQUIRE(math::nearly_equal(id.m<32>(), 0.0));
+			REQUIRE(math::nearly_equal(id.m<33>(), 1.0));
+			REQUIRE(math::nearly_equal(id.m<34>(), 0.0));
+
+			REQUIRE(math::nearly_equal(id.m<41>(), 0.0));
+			REQUIRE(math::nearly_equal(id.m<42>(), 0.0));
+			REQUIRE(math::nearly_equal(id.m<43>(), 0.0));
+			REQUIRE(math::nearly_equal(id.m<44>(), 1.0));
 		}
 	}
 	SECTION("Mat4x3") {

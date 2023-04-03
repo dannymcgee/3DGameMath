@@ -4,6 +4,7 @@
 #include <sized.h>
 
 #include "math/assert.h"
+#include "math/utility.h"
 
 
 #define VALIDATE_INDEX_2D(index, rows, cols) \
@@ -354,6 +355,64 @@ inline auto Matrix<R,C,T>::minor(const usize row, const usize col) const -> T
 	}
 
 	return submat.determinant();
+}
+
+
+// Inversion -------------------------------------------------------------------
+
+template <usize R, usize C, typename T>
+inline auto Matrix<R,C,T>::inverse() const -> std::optional<Matrix<C,R,T>>
+{
+	T determinant;
+	if (!is_invertible(determinant))
+		return {};
+
+	return inverse(determinant);
+}
+
+template <>
+inline auto Matrix<2,2,f32>::inverse(f32 determinant) const -> Matrix<2,2,f32>
+{
+	return (1 / determinant) * Matrix<2,2,f32>{
+		{  m<22>(), -m<12>() },
+		{ -m<21>(),  m<11>() },
+	};
+}
+
+template <>
+inline auto Matrix<2,2,f64>::inverse(f64 determinant) const -> Matrix<2,2,f64>
+{
+	return (1 / determinant) * Matrix<2,2,f64>{
+		{  m<22>(), -m<12>() },
+		{ -m<21>(),  m<11>() },
+	};
+}
+
+template <usize R, usize C, typename T>
+inline auto Matrix<R,C,T>::inverse(T determinant) const -> Matrix<C,R,T>
+{
+	ASSERT(!nearly_equal<T>(det, 0), "Cannot invert a matrix whose determinant is zero");
+
+	return (1 / determinant) * adjoint();
+}
+
+template <usize R, usize C, typename T>
+inline auto Matrix<R,C,T>::is_invertible(T& out_determinant) const -> bool
+{
+	out_determinant = determinant();
+	return !nearly_equal<T>(out_determinant, 0);
+}
+
+template <usize R, usize C, typename T>
+inline auto Matrix<R,C,T>::adjoint() const -> Matrix<C,R,T>
+{
+	Matrix<C,R,T> result;
+
+	for (usize r = 1; r <= R; ++r)
+		for (usize c = 1; c <= C; ++c)
+			result.m(r,c) = cofactor(c,r);
+
+	return result;
 }
 
 

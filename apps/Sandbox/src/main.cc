@@ -213,10 +213,26 @@ void invalid_matrix_ctor()
 	fmt::print("Truncated Mat2x3:\n{}", whoops.to_string());
 }
 
+void matrix_inversion()
+{
+	auto mat = Matrix<4,4>{
+		{ -4.0, -3.0,  3.0,  1.0 },
+		{  0.0,  2.0, -2.0,  0.0 },
+		{  1.0,  4.0, -1.0,  1.0 },
+		{  0.0,  2.0, -2.0,  1.0 },
+	};
+	fmt::print("Mat4x4:\n{}\n", mat.to_string());
+
+	auto inverted = mat.inverse();
+	if (inverted)
+		fmt::print("Inverse Mat4x4:\n{}\n", inverted->to_string());
+}
+
 auto main() -> int
 {
-	rotation_matrix();
-	scale_matrix();
-	matrix_determinants();
-	invalid_matrix_ctor();
+	matrix_inversion();
+	// rotation_matrix();
+	// scale_matrix();
+	// matrix_determinants();
+	// invalid_matrix_ctor();
 }

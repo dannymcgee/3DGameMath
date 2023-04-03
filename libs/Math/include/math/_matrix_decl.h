@@ -1,5 +1,8 @@
 #pragma once
 
+#include <map>
+#include <optional>
+
 #include <sized.h>
 
 #include "math/vector.h"
@@ -142,6 +145,24 @@ public:
 	 * @param c The 1-based column index
 	 */
 	auto minor(usize r, usize c) const -> T;
+
+	/** Compute the matrix's inversion, if possible. */
+	auto inverse() const -> std::optional<Matrix<Cols, Rows, T>>;
+	/**
+	 * Compute the matrix's inversion with a pre-computed determinant. Will abort
+	 * in debug builds if `determinant` is zero.
+	 *
+	 * @param determinant The pre-computed determinant.
+	 */
+	auto inverse(T determinant) const -> Matrix<Cols, Rows, T>;
+	/**
+	 * Computes the determinant and writes it to the output parameter, returning
+	 * a bool indicating whether or not the matrix is invertible.
+	 */
+	auto is_invertible(T& out_determinant) const -> bool;
+
+	/** Compute the classical adjoint of the matrix. */
+	auto adjoint() const -> Matrix<Cols, Rows, T>;
 
 	// Misc / Utility
 	auto to_string(usize precision = 3) const -> std::string;

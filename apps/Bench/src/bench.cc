@@ -230,40 +230,72 @@ BENCHMARK(BM_Mat4x4_Ctor);
 // Matrix Determinants
 static void BM_Mat2x2_Determinant(State& state)
 {
-	for (auto _ : state) {
-		auto mat = Mat2x2{
-			{ -3.0, 4.0 },
-			{  2.0, 5.0 },
-		};
+	auto mat = Mat2x2{
+		{ -3.0, 4.0 },
+		{  2.0, 5.0 },
+	};
+	for (auto _ : state)
 		DoNotOptimize(mat.determinant());
-	}
 }
 static void BM_Mat3x3_Determinant(State& state)
 {
-	for (auto _ : state) {
-		auto mat = Mat3x3{
-			{ -4.0, -3.0,  3.0 },
-			{  0.0,  2.0, -2.0 },
-			{  1.0,  4.0, -1.0 },
-		};
+	auto mat = Mat3x3{
+		{ -4.0, -3.0,  3.0 },
+		{  0.0,  2.0, -2.0 },
+		{  1.0,  4.0, -1.0 },
+	};
+	for (auto _ : state)
 		DoNotOptimize(mat.determinant());
-	}
 }
 static void BM_Mat4x4_Determinant(State& state)
 {
-	for (auto _ : state) {
-		auto mat = Mat4x4{
-			{ -4.0, -3.0,  3.0,  1.0 },
-			{  0.0,  2.0, -2.0,  0.0 },
-			{  1.0,  4.0, -1.0,  1.0 },
-			{  0.0,  2.0, -2.0,  1.0 },
-		};
+	auto mat = Mat4x4{
+		{ -4.0, -3.0,  3.0,  1.0 },
+		{  0.0,  2.0, -2.0,  0.0 },
+		{  1.0,  4.0, -1.0,  1.0 },
+		{  0.0,  2.0, -2.0,  1.0 },
+	};
+	for (auto _ : state)
 		DoNotOptimize(mat.determinant());
-	}
 }
 BENCHMARK(BM_Mat2x2_Determinant);
 BENCHMARK(BM_Mat3x3_Determinant);
 BENCHMARK(BM_Mat4x4_Determinant);
+
+
+static void BM_Mat2x2_Inverse(State& state)
+{
+	auto mat = Mat2x2{
+		{ -3.0, 4.0 },
+		{  2.0, 5.0 },
+	};
+	for (auto _ : state)
+		DoNotOptimize(mat.inverse());
+}
+static void BM_Mat3x3_Inverse(State& state)
+{
+	auto mat = Mat3x3{
+		{ -4.0, -3.0,  3.0 },
+		{  0.0,  2.0, -2.0 },
+		{  1.0,  4.0, -1.0 },
+	};
+	for (auto _ : state)
+		DoNotOptimize(mat.inverse());
+}
+static void BM_Mat4x4_Inverse(State& state)
+{
+	auto mat = Mat4x4{
+		{ -4.0, -3.0,  3.0,  1.0 },
+		{  0.0,  2.0, -2.0,  0.0 },
+		{  1.0,  4.0, -1.0,  1.0 },
+		{  0.0,  2.0, -2.0,  1.0 },
+	};
+	for (auto _ : state)
+		DoNotOptimize(mat.inverse());
+}
+BENCHMARK(BM_Mat2x2_Inverse);
+BENCHMARK(BM_Mat3x3_Inverse);
+BENCHMARK(BM_Mat4x4_Inverse);
 
 
 BENCHMARK_MAIN();
