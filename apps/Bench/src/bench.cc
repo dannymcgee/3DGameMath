@@ -1,8 +1,10 @@
+#include "math/_matrix_decl.h"
 #include <benchmark/benchmark.h>
 
 #include <array>
 
 #include <math/matrix.h>
+#include <math/matrix/rotation.h>
 #include <math/vector.h>
 #include <sized.h>
 
@@ -15,6 +17,7 @@ using benchmark::DoNotOptimize;
 using Mat2x2 = math::Matrix<2,2,f64>;
 using Mat3x3 = math::Matrix<3,3,f64>;
 using Mat4x4 = math::Matrix<4,4,f64>;
+using math::RotationMatrix;
 
 using Vec2 = math::Vector<2,f64>;
 using Vec3 = math::Vector<3,f64>;
@@ -350,6 +353,21 @@ BENCHMARK(BM_Mat3x3_Inverse);
 BENCHMARK(BM_RotationMatrix_Inverse);
 BENCHMARK(BM_Mat4x4_Inverse);
 BENCHMARK(BM_Identity4x4_Inverse);
+
+
+static void BM_Mat3x3_Orthogonalize(State& state)
+{
+	auto angle = math::deg2rad(45.0);
+	auto axis = Vec3{ -0.25, 0.5, 0.33 }.unit();
+	const auto initial = static_cast<Mat3x3>(RotationMatrix(angle, axis));
+
+	for (auto _ : state) {
+		auto mat = initial;
+		mat.orthogonalize();
+		DoNotOptimize(mat);
+	}
+}
+BENCHMARK(BM_Mat3x3_Orthogonalize);
 
 
 BENCHMARK_MAIN();

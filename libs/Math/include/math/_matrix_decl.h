@@ -106,6 +106,13 @@ public:
 	template <usize Index>
 	auto row() const -> const Row&;
 	/**
+	 * Get a mutable reference to the row at the 1-based index indicated by the
+	 * template argument.
+	 * @tparam Index The 1-based index of the desired row.
+	 */
+	template <usize Index>
+	auto row() -> Row&;
+	/**
 	 * Get the column at the 1-based index indicated by the template argument.
 	 * @tparam Index The 1-based index of the desired column.
 	 */
@@ -117,6 +124,12 @@ public:
 	 * @param idx The 1-based index of the desired row.
 	 */
 	auto row(usize idx) const -> const Row&;
+	/**
+	 * Get a mutable reference to the row at the 1-based index indicated by the
+	 * argument.
+	 * @param idx The 1-based index of the desired row.
+	 */
+	auto row(usize idx) -> Row&;
 	/**
 	 * Get the column at the 1-based index indicated by the argument.
 	 * @param idx The 1-based index of the desired column.
@@ -159,6 +172,12 @@ public:
 
 	/** Compute the classical adjoint of the matrix. */
 	auto adjoint() const -> Matrix<Cols, Rows, T>;
+
+	/**
+	 * Correct the orthogonality of a matrix, e.g. due to floating-point error
+	 * accumulation.
+	 */
+	void orthogonalize();
 
 	/**
 	 * Computes the determinant and writes it to the output parameter, returning

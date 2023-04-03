@@ -123,6 +123,14 @@ inline auto Matrix<R,C,T>::row() const -> const Row&
 
 template <usize R, usize C, typename T>
 template <usize Index>
+inline auto Matrix<R,C,T>::row() -> Row&
+{
+	static_assert(Index > 0 && Index <= R);
+	return m_data[Index - 1];
+}
+
+template <usize R, usize C, typename T>
+template <usize Index>
 inline auto Matrix<R,C,T>::col() const -> Col
 {
 	static_assert(Index > 0 && Index <= C);
@@ -136,6 +144,12 @@ inline auto Matrix<R,C,T>::col() const -> Col
 
 template <usize R, usize C, typename T>
 inline auto Matrix<R,C,T>::row(usize idx) const -> const Row&
+{
+	return m_data[idx-1];
+}
+
+template <usize R, usize C, typename T>
+inline auto Matrix<R,C,T>::row(usize idx) -> Row&
 {
 	return m_data[idx-1];
 }
@@ -451,6 +465,38 @@ inline auto Matrix<R,C,T>::adjoint() const -> Matrix<C,R,T>
 			result.m(r,c) = cofactor(c,r);
 
 	return result;
+}
+
+
+// Orthogonalize ---------------------------------------------------------------
+
+template <>
+inline void Matrix<3,3,f64>::orthogonalize()
+{
+	row<1>().normalize();
+
+	row<2>() -= (row<2>() | row<1>()) / (row<1>() | row<1>()) * row<1>();
+	row<2>().normalize();
+
+	row<3>() = (row<1>() ^ row<2>());
+}
+
+template <>
+inline void Matrix<3,3,f32>::orthogonalize()
+{
+	row<1>().normalize();
+
+	row<2>() -= (row<2>() | row<1>()) / (row<1>() | row<1>()) * row<1>();
+	row<2>().normalize();
+
+	row<3>() = (row<1>() ^ row<2>());
+}
+
+template <usize R, usize C, typename T>
+inline void Matrix<R,C,T>::orthogonalize()
+{
+	static_assert(R == 3 && C == 3,
+		"Orthogonalization is only supported for 3x3 square matrices");
 }
 
 
