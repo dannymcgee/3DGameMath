@@ -12,11 +12,15 @@ using namespace sized;
 using benchmark::State;
 using benchmark::DoNotOptimize;
 
-using math::Matrix;
+using Mat2x2 = math::Matrix<2,2,f64>;
+using Mat3x3 = math::Matrix<3,3,f64>;
+using Mat4x4 = math::Matrix<4,4,f64>;
+
 using Vec2 = math::Vector<2,f64>;
 using Vec3 = math::Vector<3,f64>;
 using Vec4 = math::Vector<4,f64>;
 using Vec3f = math::Vector<3,f32>;
+
 
 // Constructor (sanity check)
 static void BM_Ctor_f32(State& state)
@@ -151,7 +155,7 @@ BENCHMARK(BM_DotProduct_f64);
 static void BM_Mat2x2_Ctor(State& state)
 {
 	for (auto _ : state) {
-		auto mat = Matrix<2,2,f64>{
+		auto mat = Mat2x2{
 			{ -3.0, 4.0 },
 			{  2.0, 5.0 },
 		};
@@ -161,7 +165,7 @@ static void BM_Mat2x2_Ctor(State& state)
 static void BM_Mat3x3_Ctor(State& state)
 {
 	for (auto _ : state) {
-		auto mat = Matrix<3,3,f64>{
+		auto mat = Mat3x3{
 			{ -4.0, -3.0,  3.0 },
 			{  0.0,  2.0, -2.0 },
 			{  1.0,  4.0, -1.0 },
@@ -172,7 +176,7 @@ static void BM_Mat3x3_Ctor(State& state)
 static void BM_Mat4x4_Ctor(State& state)
 {
 	for (auto _ : state) {
-		auto mat = Matrix<4,4,f64>{
+		auto mat = Mat4x4{
 			{ -4.0, -3.0,  3.0,  1.0 },
 			{  0.0,  2.0, -2.0,  0.0 },
 			{  1.0,  4.0, -1.0,  1.0 },
@@ -188,7 +192,7 @@ BENCHMARK(BM_Mat4x4_Ctor);
 static void BM_Mat2x2_Ctor_Array(State& state)
 {
 	for (auto _ : state) {
-		auto mat = Matrix<2,2,f64>{std::array{
+		auto mat = Mat2x2{std::array{
 			Vec2{ -3.0, 4.0 },
 			Vec2{  2.0, 5.0 },
 		}};
@@ -198,7 +202,7 @@ static void BM_Mat2x2_Ctor_Array(State& state)
 static void BM_Mat3x3_Ctor_Array(State& state)
 {
 	for (auto _ : state) {
-		auto mat = Matrix<3,3,f64>{std::array{
+		auto mat = Mat3x3{std::array{
 			Vec3{ -4.0, -3.0,  3.0 },
 			Vec3{  0.0,  2.0, -2.0 },
 			Vec3{  1.0,  4.0, -1.0 },
@@ -209,7 +213,7 @@ static void BM_Mat3x3_Ctor_Array(State& state)
 static void BM_Mat4x4_Ctor_Array(State& state)
 {
 	for (auto _ : state) {
-		auto mat = Matrix<4,4,f64>{std::array{
+		auto mat = Mat4x4{std::array{
 			Vec4{ -4.0, -3.0,  3.0,  1.0 },
 			Vec4{  0.0,  2.0, -2.0,  0.0 },
 			Vec4{  1.0,  4.0, -1.0,  1.0 },
@@ -227,7 +231,7 @@ BENCHMARK(BM_Mat4x4_Ctor);
 static void BM_Mat2x2_Determinant(State& state)
 {
 	for (auto _ : state) {
-		auto mat = Matrix<2,2,f64>{
+		auto mat = Mat2x2{
 			{ -3.0, 4.0 },
 			{  2.0, 5.0 },
 		};
@@ -237,7 +241,7 @@ static void BM_Mat2x2_Determinant(State& state)
 static void BM_Mat3x3_Determinant(State& state)
 {
 	for (auto _ : state) {
-		auto mat = Matrix<3,3,f64>{
+		auto mat = Mat3x3{
 			{ -4.0, -3.0,  3.0 },
 			{  0.0,  2.0, -2.0 },
 			{  1.0,  4.0, -1.0 },
@@ -248,7 +252,7 @@ static void BM_Mat3x3_Determinant(State& state)
 static void BM_Mat4x4_Determinant(State& state)
 {
 	for (auto _ : state) {
-		auto mat = Matrix<4,4,f64>{
+		auto mat = Mat4x4{
 			{ -4.0, -3.0,  3.0,  1.0 },
 			{  0.0,  2.0, -2.0,  0.0 },
 			{  1.0,  4.0, -1.0,  1.0 },

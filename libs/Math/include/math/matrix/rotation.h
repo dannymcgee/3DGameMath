@@ -28,11 +28,9 @@ public:
 	{}
 
 private:
-	inline static constexpr
-	auto construct(T angle, Axis axis) -> std::array<Row,3>;
+	static constexpr auto construct(T angle, Axis axis) -> std::array<Row,3>;
 
-	inline static
-	auto construct(T angle, const Vector<3,T>& axis) -> std::array<Row,3>;
+	static auto construct(T angle, const Vector<3,T>& axis) -> std::array<Row,3>;
 };
 
 
@@ -65,7 +63,7 @@ constexpr auto RotationMatrix<T>::construct(T angle, Axis axis) -> std::array<Ro
 }
 
 template <typename T>
-auto RotationMatrix<T>::construct(T angle, const Vector<3,T>& axis) -> std::array<Row,3>
+inline auto RotationMatrix<T>::construct(T angle, const Vector<3,T>& axis) -> std::array<Row,3>
 {
 	auto cos_theta = std::cos(angle);
 	auto sin_theta = std::sin(angle);
