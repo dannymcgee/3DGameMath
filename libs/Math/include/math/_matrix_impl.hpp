@@ -3,6 +3,17 @@
 #include <sized.h>
 
 
+#define VALIDATE_INDEX_2D(index, rows, cols) \
+	static_assert(((index) % 100) / 10 > 0 && ((index) % 100) / 10 <= (rows)); \
+	static_assert((index) % 10 > 0 && (index) % 10 <= (cols))
+
+#define EXPAND_INDEX_2D_SUBSCRIPT(index) \
+	((index) % 100) / 10 - 1][((index) % 10) - 1
+
+#define EXPAND_INDEX_2D_COMMA(index) \
+	((index) % 100) / 10, ((index) % 10)
+
+
 namespace math {
 using namespace sized; // NOLINT
 
@@ -76,19 +87,12 @@ inline auto Matrix<R,C,T>::end() const -> detail::RawConstIterator<T>
 
 // Member access ---------------------------------------------------------------
 
-#define VALIDATE_INDEX_2D(index, rows, cols) \
-	static_assert(((index) % 100) / 10 > 0 && ((index) % 100) / 10 <= (rows)); \
-	static_assert((index) % 10 > 0 && (index) % 10 <= (cols))
-
-#define EXPAND_INDEX_2D(index) \
-	((index) % 100) / 10 - 1][((index) % 10) - 1
-
 template <usize R, usize C, typename T>
 template <usize Index2D>
 inline auto Matrix<R,C,T>::m() const -> T
 {
 	VALIDATE_INDEX_2D(Index2D, R, C);
-	return m_data[EXPAND_INDEX_2D(Index2D)];
+	return m_data[EXPAND_INDEX_2D_SUBSCRIPT(Index2D)];
 }
 
 template <usize R, usize C, typename T>
@@ -96,33 +100,45 @@ template <usize Index2D>
 inline auto Matrix<R,C,T>::m() -> T&
 {
 	VALIDATE_INDEX_2D(Index2D, R, C);
-	return m_data[EXPAND_INDEX_2D(Index2D)];
+	return m_data[EXPAND_INDEX_2D_SUBSCRIPT(Index2D)];
 }
 
 template <usize R, usize C, typename T>
 inline auto Matrix<R,C,T>::m(usize idx_2d) const -> T
 {
-	return m_data[EXPAND_INDEX_2D(idx_2d)];
+	return m_data[EXPAND_INDEX_2D_SUBSCRIPT(idx_2d)];
 }
 
 template <usize R, usize C, typename T>
 inline auto Matrix<R,C,T>::m(usize idx_2d) -> T&
 {
-	return m_data[EXPAND_INDEX_2D(idx_2d)];
+	return m_data[EXPAND_INDEX_2D_SUBSCRIPT(idx_2d)];
+}
+
+template <usize R, usize C, typename T>
+inline auto Matrix<R,C,T>::m(usize r, usize c) const -> T
+{
+	return m_data[r-1][c-1];
+}
+
+template <usize R, usize C, typename T>
+inline auto Matrix<R,C,T>::m(usize r, usize c) -> T&
+{
+	return m_data[r-1][c-1];
 }
 
 template <usize R, usize C, typename T>
 inline auto Matrix<R,C,T>::m_checked(usize idx_2d) const -> T
 {
 	validate_index_2d(idx_2d);
-	return m_data[EXPAND_INDEX_2D(idx_2d)];
+	return m_data[EXPAND_INDEX_2D_SUBSCRIPT(idx_2d)];
 }
 
 template <usize R, usize C, typename T>
 inline auto Matrix<R,C,T>::m_checked(usize idx_2d) -> T&
 {
 	validate_index_2d(idx_2d);
-	return m_data[EXPAND_INDEX_2D(idx_2d)];
+	return m_data[EXPAND_INDEX_2D_SUBSCRIPT(idx_2d)];
 }
 
 template <usize R, usize C, typename T>
@@ -140,9 +156,6 @@ inline void Matrix<R,C,T>::validate_index_2d(usize idx_2d) const
 		throw std::exception(err_msg.c_str());
 	}
 }
-
-#undef VALIDATE_INDEX_2D
-#undef EXPAND_INDEX_2D
 
 template <usize R, usize C, typename T>
 template <usize Index>
@@ -343,8 +356,79 @@ inline auto Matrix<3,3,f32>::determinant() const -> f32
 }
 
 template <usize R, usize C, typename T>
-auto Matrix<R,C,T>::determinant() const -> T
+inline auto Matrix<R,C,T>::determinant() const -> T
 {
+	static_assert(R == C, "Determinant can only be calculated for square matrices");
+
+	T result = 0;
+
+	constexpr usize r = 1;
+	for (usize c = 1; c <= C; ++c)
+		result += m(r,c) * cofactor(r,c);
+
+	return result;
+}
+
+
+// Minor -----------------------------------------------------------------------
+
+template <usize R, usize C, typename T>
+template <usize Index2D>
+inline auto Matrix<R,C,T>::minor() const -> T
+{
+	VALIDATE_INDEX_2D(Index2D, R, C);
+	return minor(EXPAND_INDEX_2D_COMMA(Index2D));
+}
+
+template <usize R, usize C, typename T>
+inline auto Matrix<R,C,T>::minor(usize index_2d) const -> T
+{
+	return minor(EXPAND_INDEX_2D_COMMA(index_2d));
+}
+
+template <usize R, usize C, typename T>
+inline auto Matrix<R,C,T>::minor(const usize row, const usize col) const -> T
+{
+	Matrix<R-1, C-1, T> submat;
+
+	for (usize r = 1; r <= R; ++r) {
+		if (r == row) continue;
+
+		for (usize c = 1; c <= C; ++c) {
+			if (c == col) continue;
+
+			usize r_dest = r > row ? r - 1 : r;
+			usize c_dest = c > col ? c - 1 : c;
+
+			submat.m(r_dest, c_dest) = m(r, c);
+		}
+	}
+
+	return submat.determinant();
+}
+
+
+// Cofactor --------------------------------------------------------------------
+
+template <usize R, usize C, typename T>
+template <usize Index2D>
+inline auto Matrix<R,C,T>::cofactor() const -> T
+{
+	VALIDATE_INDEX_2D(Index2D, R, C);
+	return cofactor(EXPAND_INDEX_2D_COMMA(Index2D));
+}
+
+template <usize R, usize C, typename T>
+inline auto Matrix<R,C,T>::cofactor(usize index_2d) const -> T
+{
+	return cofactor(EXPAND_INDEX_2D_COMMA(index_2d));
+}
+
+template <usize R, usize C, typename T>
+inline auto Matrix<R,C,T>::cofactor(usize r, usize c) const -> T
+{
+	T factor = ((r + c) % 2) ? -1 : 1;
+	return minor(r, c) * factor;
 }
 
 
@@ -371,3 +455,8 @@ auto Matrix<R,C,T>::to_string(usize precision) const -> std::string
 }
 
 }
+
+
+#undef VALIDATE_INDEX_2D
+#undef EXPAND_INDEX_2D_SUBSCRIPT
+#undef EXPAND_INDEX_2D_COMMA

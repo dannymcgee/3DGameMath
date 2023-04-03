@@ -31,11 +31,11 @@ public:
 
 	// Member access
 	/**
-	 * Get the matrix value at the 1-based two-dimensional index indicated by the
-	 * template argument.
+	 * Get the matrix value at the 1-based 2D index indicated by the template
+	 * argument.
 	 *
 	 * @tparam Index2D
-	 * The 1-based, 2D index from which to retrieve the value. The first digit
+	 * The 1-based 2D index from which to retrieve the value. The first digit
 	 * indicates the row, and the second digit indicates the column.
 	 *
 	 * @code
@@ -55,11 +55,11 @@ public:
 	template <usize Index2D>
 	auto m() const -> T;
 	/**
-	 * Get a mutable reference to the matrix value at the 1-based two-dimensional
-	 * index indicated by the template argument.
+	 * Get a mutable reference to the matrix value at the 1-based 2D index
+	 * indicated by the template argument.
 	 *
 	 * @tparam Index2D
-	 * The 1-based, 2D index from which to retrieve the value. The first digit
+	 * The 1-based 2D index from which to retrieve the value. The first digit
 	 * indicates the row, and the second digit indicates the column.
 	 *
 	 * @code
@@ -80,24 +80,35 @@ public:
 	auto m() -> T&;
 
 	/**
-	 * Access a member by 2D, 1-based index.
+	 * Access a member by 1-based 2D index.
 	 * @warning This method is **not bounds-checked**!
 	 */
 	auto m(usize idx_2d) const -> T;
 	/**
-	 * Access a member by 2D, 1-based index.
+	 * Access a member by 1-based 2D index.
 	 * @warning This method is **not bounds-checked**!
 	 */
 	auto m(usize idx_2d) -> T&;
 
 	/**
-	 * Access a member by 2D, 1-based index, with runtime bounds-checking. Use
+	 * Access a member by the 1-based row and column indices.
+	 * @warning This method is **not bounds-checked**!
+	 */
+	auto m(usize row, usize col) const -> T;
+	/**
+	 * Access a member by the 1-based row and column indices.
+	 * @warning This method is **not bounds-checked**!
+	 */
+	auto m(usize row, usize col) -> T&;
+
+	/**
+	 * Access a member by 1-based 2D index, with runtime bounds-checking. Use
 	 * the templated `Matrix::m<size_t>()` for static, compile-time
 	 * bounds-checking.
 	 */
 	auto m_checked(usize idx_2d) const -> T;
 	/**
-	 * Access a member by 2D, 1-based index, with runtime bounds-checking. Use
+	 * Access a member by 1-based 2D index, with runtime bounds-checking. Use
 	 * the templated `Matrix::m<size_t>()` for static, compile-time
 	 * bounds-checking.
 	 */
@@ -141,6 +152,42 @@ public:
 
 	/** Calculate the determinant of the matrix. */
 	auto determinant() const -> T;
+
+	/**
+	 * Calculate the minor determinant for an element of the matrix.
+	 * @tparam Index2D The 1-based 2D index of the element.
+	 */
+	template <usize Index2D>
+	auto minor() const -> T;
+	/**
+	 * Calculate the minor determinant for an element of the matrix.
+	 * @param index_2d The 1-based 2D index of the element.
+	 */
+	auto minor(usize index_2d) const -> T;
+	/**
+	 * Calculate the minor determinant for an element of the matrix.
+	 * @param r The 1-based row index
+	 * @param c The 1-based column index
+	 */
+	auto minor(usize r, usize c) const -> T;
+
+	/**
+	 * Calculate the cofactor for an element of the matrix.
+	 * @tparam Index2D The 1-based 2D index of the element.
+	 */
+	template <usize Index2D>
+	auto cofactor() const -> T;
+	/**
+	 * Calculate the cofactor for an element of the matrix.
+	 * @param index_2d The 1-based 2D index of the element.
+	 */
+	auto cofactor(usize index_2d) const -> T;
+	/**
+	 * Calculate the cofactor for an element of the matrix.
+	 * @param r The 1-based row index
+	 * @param c The 1-based column index
+	 */
+	auto cofactor(usize r, usize c) const -> T;
 
 	// Misc / Utility
 	auto to_string(usize precision = 3) const -> std::string;

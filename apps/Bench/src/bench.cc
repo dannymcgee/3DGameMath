@@ -141,7 +141,17 @@ BENCHMARK(BM_DotProduct_f32); // NOLINT
 BENCHMARK(BM_DotProduct_f64); // NOLINT
 
 
-static void BM_MatrixDeterminant(State& state)
+static void BM_Mat2x2_Determinant(State& state)
+{
+	auto mat = Matrix<2,2,f64>{
+		{ -3.0, 4.0 },
+		{  2.0, 5.0 },
+	};
+
+	for (auto _ : state)
+		DoNotOptimize(mat.determinant());
+}
+static void BM_Mat3x3_Determinant(State& state)
 {
 	auto mat = Matrix<3,3,f64>{
 		{ -4.0, -3.0,  3.0 },
@@ -152,7 +162,21 @@ static void BM_MatrixDeterminant(State& state)
 	for (auto _ : state)
 		DoNotOptimize(mat.determinant());
 }
-BENCHMARK(BM_MatrixDeterminant); // NOLINT
+static void BM_Mat4x4_Determinant(State& state)
+{
+	auto mat = Matrix<4,4,f64>{
+		{ -4.0, -3.0,  3.0,  1.0 },
+		{  0.0,  2.0, -2.0,  0.0 },
+		{  1.0,  4.0, -1.0,  1.0 },
+		{  0.0,  2.0, -2.0,  1.0 },
+	};
+
+	for (auto _ : state)
+		DoNotOptimize(mat.determinant());
+}
+BENCHMARK(BM_Mat2x2_Determinant); // NOLINT
+BENCHMARK(BM_Mat3x3_Determinant); // NOLINT
+BENCHMARK(BM_Mat4x4_Determinant); // NOLINT
 
 
 BENCHMARK_MAIN(); // NOLINT

@@ -434,12 +434,37 @@ TEST_CASE("math::Matrix<R,C,T>", "[matrix]") {
 	}
 	SECTION("Mat3x3") {
 		using Mat3x3 = math::Matrix<3,3,f64>;
+		auto mat3x3_labeled = Mat3x3{
+			{ 11, 12, 13 },
+			{ 21, 22, 23 },
+			{ 31, 32, 33 },
+		};
 
 		SECTION("can compute the determinant") {
 			auto mat = Mat3x3{
 				{ -4, -3,  3 },
 				{  0,  2, -2 },
 				{  1,  4, -1 },
+			};
+
+			REQUIRE(math::nearly_equal(mat.determinant(), -24.0));
+		}
+	}
+	SECTION("Mat4x4") {
+		using Mat4x4 = math::Matrix<4,4,f64>;
+		auto mat4x4_labeled = Mat4x4{
+			{ 11, 12, 13, 14 },
+			{ 21, 22, 23, 24 },
+			{ 31, 32, 33, 34 },
+			{ 41, 42, 43, 44 },
+		};
+
+		SECTION("can compute the determinant") {
+			auto mat = Mat4x4{
+				{ -4, -3,  3,  1 },
+				{  0,  2, -2,  0 },
+				{  1,  4, -1,  1 },
+				{  0,  2, -2,  1 },
 			};
 
 			REQUIRE(math::nearly_equal(mat.determinant(), -24.0));
