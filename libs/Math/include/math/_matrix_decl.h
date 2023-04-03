@@ -1,5 +1,6 @@
 #pragma once
 
+#include <limits>
 #include <map>
 #include <optional>
 
@@ -156,14 +157,14 @@ public:
 	 */
 	auto inverse(T determinant) const -> Matrix<Cols, Rows, T>;
 
+	/** Compute the classical adjoint of the matrix. */
+	auto adjoint() const -> Matrix<Cols, Rows, T>;
+
 	/**
 	 * Computes the determinant and writes it to the output parameter, returning
 	 * a bool indicating whether or not the matrix is invertible.
 	 */
 	auto is_invertible(T& out_determinant) const -> bool;
-
-	/** Compute the classical adjoint of the matrix. */
-	auto adjoint() const -> Matrix<Cols, Rows, T>;
 
 	/**
 	 * Computes the transpose of the matrix and writes it to the output

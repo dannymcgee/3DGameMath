@@ -442,13 +442,6 @@ inline auto Matrix<R,C,T>::inverse(T determinant) const -> Matrix<C,R,T>
 }
 
 template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::is_invertible(T& out_determinant) const -> bool
-{
-	out_determinant = determinant();
-	return !nearly_equal<T>(out_determinant, 0);
-}
-
-template <usize R, usize C, typename T>
 inline auto Matrix<R,C,T>::adjoint() const -> Matrix<C,R,T>
 {
 	Matrix<C,R,T> result;
@@ -458,6 +451,16 @@ inline auto Matrix<R,C,T>::adjoint() const -> Matrix<C,R,T>
 			result.m(r,c) = cofactor(c,r);
 
 	return result;
+}
+
+
+// Queries ---------------------------------------------------------------------
+
+template <usize R, usize C, typename T>
+inline auto Matrix<R,C,T>::is_invertible(T& out_determinant) const -> bool
+{
+	out_determinant = determinant();
+	return !nearly_equal<T>(out_determinant, 0);
 }
 
 template <usize R, usize C, typename T>
