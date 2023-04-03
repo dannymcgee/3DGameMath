@@ -200,7 +200,17 @@ void matrix_determinants()
 		{  0.0,  2.0, -2.0,  1.0 },
 	};
 	fmt::print("Mat4x4:\n{}", mat4x4.to_string());
-	fmt::print("determinant: {}\n", mat4x4.determinant());
+	fmt::print("determinant: {}\n\n", mat4x4.determinant());
+}
+
+void invalid_matrix_ctor()
+{
+	auto whoops = Matrix<2,3,f64>{
+		{ 11, 12, 13 },
+		{ 21, 22, 23 },
+		{ 31, 32, 33 },
+	};
+	fmt::print("Truncated Mat2x3:\n{}", whoops.to_string());
 }
 
 auto main() -> int
@@ -208,4 +218,5 @@ auto main() -> int
 	rotation_matrix();
 	scale_matrix();
 	matrix_determinants();
+	invalid_matrix_ctor();
 }

@@ -1,6 +1,9 @@
 #include "math/_matrix_decl.h"
 
+#include <fmt/format.h>
 #include <sized.h>
+
+#include "math/assert.h"
 
 
 #define VALIDATE_INDEX_2D(index, rows, cols) \
@@ -22,20 +25,16 @@ using namespace sized; // NOLINT
 template <usize R, usize C, typename T>
 Matrix<R,C,T>::Matrix(std::initializer_list<Row> rows)
 {
-	if (rows.size() > R) {
-		auto err_msg = ::fmt::format(
+	ASSERT(rows.size() > 0 && rows.size() <= R,
+		::fmt::format(
 			"Too many arguments for Mat<{},{}>: Expected {}, received {}",
 			R, C,
-			R, rows.size()
-		);
-
-		throw std::exception(err_msg.c_str());
-	}
+			R, rows.size()));
 
 	usize i = 0;
-	for (auto& row : rows) {
+	for (auto&& row : rows) {
 		m_data[i] = std::move(row);
-		++i;
+		if (++i > R) break;
 	}
 }
 
