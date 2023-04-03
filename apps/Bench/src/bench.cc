@@ -227,6 +227,42 @@ BENCHMARK(BM_Mat3x3_Ctor);
 BENCHMARK(BM_Mat4x4_Ctor);
 
 
+// Matrix Transposition
+static void BM_Mat2x2_Transpose(State& state)
+{
+	auto mat = Mat2x2{
+		{ -3.0, 4.0 },
+		{  2.0, 5.0 },
+	};
+	for (auto _ : state)
+		DoNotOptimize(mat.transpose());
+}
+static void BM_Mat3x3_Transpose(State& state)
+{
+	auto mat = Mat3x3{
+		{ -4.0, -3.0,  3.0 },
+		{  0.0,  2.0, -2.0 },
+		{  1.0,  4.0, -1.0 },
+	};
+	for (auto _ : state)
+		DoNotOptimize(mat.transpose());
+}
+static void BM_Mat4x4_Transpose(State& state)
+{
+	auto mat = Mat4x4{
+		{ -4.0, -3.0,  3.0,  1.0 },
+		{  0.0,  2.0, -2.0,  0.0 },
+		{  1.0,  4.0, -1.0,  1.0 },
+		{  0.0,  2.0, -2.0,  1.0 },
+	};
+	for (auto _ : state)
+		DoNotOptimize(mat.transpose());
+}
+BENCHMARK(BM_Mat2x2_Transpose);
+BENCHMARK(BM_Mat3x3_Transpose);
+BENCHMARK(BM_Mat4x4_Transpose);
+
+
 // Matrix Determinants
 static void BM_Mat2x2_Determinant(State& state)
 {
@@ -293,9 +329,27 @@ static void BM_Mat4x4_Inverse(State& state)
 	for (auto _ : state)
 		DoNotOptimize(mat.inverse());
 }
+static void BM_RotationMatrix_Inverse(State& state)
+{
+	auto angle = math::deg2rad(45.0);
+	auto axis = Vec3{ -0.25, 0.5, 0.33 }.unit();
+	auto rotation_mat = RotationMatrix(angle, axis);
+
+	for (auto _ : state)
+		DoNotOptimize(rotation_mat.inverse());
+}
+static void BM_Identity4x4_Inverse(State& state)
+{
+	auto mat = Mat4x4::identity();
+
+	for (auto _ : state)
+		DoNotOptimize(mat.inverse());
+}
 BENCHMARK(BM_Mat2x2_Inverse);
 BENCHMARK(BM_Mat3x3_Inverse);
+BENCHMARK(BM_RotationMatrix_Inverse);
 BENCHMARK(BM_Mat4x4_Inverse);
+BENCHMARK(BM_Identity4x4_Inverse);
 
 
 BENCHMARK_MAIN();
