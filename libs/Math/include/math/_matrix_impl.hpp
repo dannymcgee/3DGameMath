@@ -101,18 +101,6 @@ inline auto Matrix<R,C,T>::m() -> T&
 }
 
 template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::m(usize idx_2d) const -> T
-{
-	return m_data[EXPAND_INDEX_2D_SUBSCRIPT(idx_2d)];
-}
-
-template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::m(usize idx_2d) -> T&
-{
-	return m_data[EXPAND_INDEX_2D_SUBSCRIPT(idx_2d)];
-}
-
-template <usize R, usize C, typename T>
 inline auto Matrix<R,C,T>::m(usize r, usize c) const -> T
 {
 	return m_data[r-1][c-1];
@@ -122,36 +110,6 @@ template <usize R, usize C, typename T>
 inline auto Matrix<R,C,T>::m(usize r, usize c) -> T&
 {
 	return m_data[r-1][c-1];
-}
-
-template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::m_checked(usize idx_2d) const -> T
-{
-	validate_index_2d(idx_2d);
-	return m_data[EXPAND_INDEX_2D_SUBSCRIPT(idx_2d)];
-}
-
-template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::m_checked(usize idx_2d) -> T&
-{
-	validate_index_2d(idx_2d);
-	return m_data[EXPAND_INDEX_2D_SUBSCRIPT(idx_2d)];
-}
-
-template <usize R, usize C, typename T>
-inline void Matrix<R,C,T>::validate_index_2d(usize idx_2d) const
-{
-	usize r = (idx_2d % 100) / 10;
-	usize c = (idx_2d % 10);
-
-	if (r <= 0 || r > R || c <= 0 || c > C) {
-		auto err_msg = ::fmt::format(
-			"2D Index {0} out of bounds for Matrix<R={1},C={2}>: index expands to "
-			"r={3},c={4} -- expected 0<r<={1}, 0<c<={2}",
-			idx_2d, R, C, r, c);
-
-		throw std::exception(err_msg.c_str());
-	}
 }
 
 template <usize R, usize C, typename T>
@@ -166,6 +124,8 @@ template <usize R, usize C, typename T>
 template <usize Index>
 inline auto Matrix<R,C,T>::col() const -> Col
 {
+	static_assert(Index > 0 && Index <= C);
+
 	Col result;
 	for (usize r = 0; r < R; ++r)
 		result[r] = m_data[r][Index-1];
@@ -367,21 +327,13 @@ inline auto Matrix<R,C,T>::determinant() const -> T
 }
 
 
-// Minor -----------------------------------------------------------------------
-
 template <usize R, usize C, typename T>
-template <usize Index2D>
-inline auto Matrix<R,C,T>::minor() const -> T
+inline auto Matrix<R,C,T>::cofactor(usize r, usize c) const -> T
 {
-	VALIDATE_INDEX_2D(Index2D, R, C);
-	return minor(EXPAND_INDEX_2D_COMMA(Index2D));
+	T factor = ((r + c) % 2) ? -1 : 1;
+	return minor(r, c) * factor;
 }
 
-template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::minor(usize index_2d) const -> T
-{
-	return minor(EXPAND_INDEX_2D_COMMA(index_2d));
-}
 
 template <usize R, usize C, typename T>
 inline auto Matrix<R,C,T>::minor(const usize row, const usize col) const -> T
@@ -402,30 +354,6 @@ inline auto Matrix<R,C,T>::minor(const usize row, const usize col) const -> T
 	}
 
 	return submat.determinant();
-}
-
-
-// Cofactor --------------------------------------------------------------------
-
-template <usize R, usize C, typename T>
-template <usize Index2D>
-inline auto Matrix<R,C,T>::cofactor() const -> T
-{
-	VALIDATE_INDEX_2D(Index2D, R, C);
-	return cofactor(EXPAND_INDEX_2D_COMMA(Index2D));
-}
-
-template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::cofactor(usize index_2d) const -> T
-{
-	return cofactor(EXPAND_INDEX_2D_COMMA(index_2d));
-}
-
-template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::cofactor(usize r, usize c) const -> T
-{
-	T factor = ((r + c) % 2) ? -1 : 1;
-	return minor(r, c) * factor;
 }
 
 

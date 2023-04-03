@@ -80,17 +80,6 @@ public:
 	auto m() -> T&;
 
 	/**
-	 * Access a member by 1-based 2D index.
-	 * @warning This method is **not bounds-checked**!
-	 */
-	auto m(usize idx_2d) const -> T;
-	/**
-	 * Access a member by 1-based 2D index.
-	 * @warning This method is **not bounds-checked**!
-	 */
-	auto m(usize idx_2d) -> T&;
-
-	/**
 	 * Access a member by the 1-based row and column indices.
 	 * @warning This method is **not bounds-checked**!
 	 */
@@ -101,18 +90,10 @@ public:
 	 */
 	auto m(usize row, usize col) -> T&;
 
-	/**
-	 * Access a member by 1-based 2D index, with runtime bounds-checking. Use
-	 * the templated `Matrix::m<size_t>()` for static, compile-time
-	 * bounds-checking.
-	 */
-	auto m_checked(usize idx_2d) const -> T;
-	/**
-	 * Access a member by 1-based 2D index, with runtime bounds-checking. Use
-	 * the templated `Matrix::m<size_t>()` for static, compile-time
-	 * bounds-checking.
-	 */
-	auto m_checked(usize idx_2d) -> T&;
+	/** Get the row at the 0-based index. */
+	auto operator[](usize idx) -> Row&;
+	/** Get the row at the 0-based index. */
+	auto operator[](usize idx) const -> const Row&;
 
 	/**
 	 * Get the row at the 1-based index indicated by the template argument.
@@ -138,11 +119,6 @@ public:
 	 */
 	auto col(usize idx) const -> Col;
 
-	/** Get the row at the 0-based index. */
-	auto operator[](usize idx) -> Row&;
-	/** Get the row at the 0-based index. */
-	auto operator[](usize idx) const -> const Row&;
-
 	// Matrix transposition
 	auto transpose() const -> Matrix<Cols, Rows, T>;
 
@@ -154,16 +130,12 @@ public:
 	auto determinant() const -> T;
 
 	/**
-	 * Calculate the minor determinant for an element of the matrix.
-	 * @tparam Index2D The 1-based 2D index of the element.
+	 * Calculate the cofactor for an element of the matrix.
+	 * @param r The 1-based row index
+	 * @param c The 1-based column index
 	 */
-	template <usize Index2D>
-	auto minor() const -> T;
-	/**
-	 * Calculate the minor determinant for an element of the matrix.
-	 * @param index_2d The 1-based 2D index of the element.
-	 */
-	auto minor(usize index_2d) const -> T;
+	auto cofactor(usize r, usize c) const -> T;
+
 	/**
 	 * Calculate the minor determinant for an element of the matrix.
 	 * @param r The 1-based row index
@@ -171,32 +143,11 @@ public:
 	 */
 	auto minor(usize r, usize c) const -> T;
 
-	/**
-	 * Calculate the cofactor for an element of the matrix.
-	 * @tparam Index2D The 1-based 2D index of the element.
-	 */
-	template <usize Index2D>
-	auto cofactor() const -> T;
-	/**
-	 * Calculate the cofactor for an element of the matrix.
-	 * @param index_2d The 1-based 2D index of the element.
-	 */
-	auto cofactor(usize index_2d) const -> T;
-	/**
-	 * Calculate the cofactor for an element of the matrix.
-	 * @param r The 1-based row index
-	 * @param c The 1-based column index
-	 */
-	auto cofactor(usize r, usize c) const -> T;
-
 	// Misc / Utility
 	auto to_string(usize precision = 3) const -> std::string;
 
 protected:
 	std::array<Row, Rows> m_data; // NOLINT(*-non-private-member-*)
-
-	/** Throws an exception if the provided 2D, 1-based index is out of range. */
-	void validate_index_2d(usize idx_2d) const;
 };
 
 }
