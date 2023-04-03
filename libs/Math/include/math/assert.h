@@ -17,5 +17,5 @@
 		} \
 	} while (false)
 #else
-	#define ASSERT(condition, message)
+	#define ASSERT(condition, fmt_str, ...)
 #endif
