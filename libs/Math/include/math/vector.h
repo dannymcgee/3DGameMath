@@ -3,12 +3,12 @@
 #include <array>
 #include <cmath>
 #include <cstdlib>
-#include <exception>
 #include <utility>
 
 #include <fmt/format.h>
 #include <sized.h>
 
+#include "math/assert.h"
 #include "math/fmt.h"
 #include "math/utility.h"
 
@@ -241,14 +241,10 @@ inline auto Vector<D,T>::operator[](usize idx) const -> T
 template <usize D, typename T>
 inline void Vector<D,T>::validate_index(usize idx) const
 {
-	if (idx > D) {
-		auto err_msg = ::fmt::format(
-			"Index out of range for Vec<{}>: Expected < {}, received {}",
-			D, D, idx
-		);
-
-		throw std::exception{ err_msg.c_str(), 1 };
-	}
+	ASSERT(idx < D, ::fmt::format(
+		"Index out of range for Vec<{}>: Expected < {}, received {}",
+		D, D, idx
+	));
 }
 
 
