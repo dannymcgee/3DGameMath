@@ -360,10 +360,28 @@ inline auto Matrix<R,C,T>::minor(const usize row, const usize col) const -> T
 
 // Inversion -------------------------------------------------------------------
 
-template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::inverse() const -> std::optional<Matrix<C,R,T>>
+template <>
+inline auto Matrix<2,2,f32>::inverse(f32 determinant) const -> Matrix
 {
-	T determinant;
+	return (1 / determinant) * Matrix{
+		{  m<22>(), -m<12>() },
+		{ -m<21>(),  m<11>() },
+	};
+}
+
+template <>
+inline auto Matrix<2,2,f64>::inverse(f64 determinant) const -> Matrix
+{
+	return (1 / determinant) * Matrix{
+		{  m<22>(), -m<12>() },
+		{ -m<21>(),  m<11>() },
+	};
+}
+
+template <>
+inline auto Matrix<2,2,f32>::inverse() const -> std::optional<Matrix>
+{
+	f32 determinant;
 	if (!is_invertible(determinant))
 		return {};
 
@@ -371,28 +389,55 @@ inline auto Matrix<R,C,T>::inverse() const -> std::optional<Matrix<C,R,T>>
 }
 
 template <>
-inline auto Matrix<2,2,f32>::inverse(f32 determinant) const -> Matrix<2,2,f32>
+inline auto Matrix<2,2,f64>::inverse() const -> std::optional<Matrix>
 {
-	return (1 / determinant) * Matrix<2,2,f32>{
-		{  m<22>(), -m<12>() },
-		{ -m<21>(),  m<11>() },
-	};
+	f64 determinant;
+	if (!is_invertible(determinant))
+		return {};
+
+	return inverse(determinant);
 }
 
 template <>
-inline auto Matrix<2,2,f64>::inverse(f64 determinant) const -> Matrix<2,2,f64>
+inline auto Matrix<3,3,f32>::inverse() const -> std::optional<Matrix>
 {
-	return (1 / determinant) * Matrix<2,2,f64>{
-		{  m<22>(), -m<12>() },
-		{ -m<21>(),  m<11>() },
-	};
+	f32 determinant;
+	if (!is_invertible(determinant))
+		return {};
+
+	return inverse(determinant);
+}
+
+template <>
+inline auto Matrix<3,3,f64>::inverse() const -> std::optional<Matrix>
+{
+	f64 determinant;
+	if (!is_invertible(determinant))
+		return {};
+
+	return inverse(determinant);
+}
+
+template <usize R, usize C, typename T>
+inline auto Matrix<R,C,T>::inverse() const -> std::optional<Matrix<C,R,T>>
+{
+	{
+		Matrix<C,R,T> transposed;
+		if (is_orthogonal(transposed))
+			return transposed;
+	}
+
+	T determinant;
+	if (!is_invertible(determinant))
+		return {};
+
+	return inverse(determinant);
 }
 
 template <usize R, usize C, typename T>
 inline auto Matrix<R,C,T>::inverse(T determinant) const -> Matrix<C,R,T>
 {
 	ASSERT(!nearly_equal<T>(det, 0), "Cannot invert a matrix whose determinant is zero");
-
 	return (1 / determinant) * adjoint();
 }
 
@@ -413,6 +458,36 @@ inline auto Matrix<R,C,T>::adjoint() const -> Matrix<C,R,T>
 			result.m(r,c) = cofactor(c,r);
 
 	return result;
+}
+
+template <usize R, usize C, typename T>
+inline auto Matrix<R,C,T>::is_orthogonal(Matrix<C,R,T>& out_transposed, T tolerance) const -> bool
+{
+	out_transposed = transpose();
+	return ((*this) * out_transposed).is_identity(tolerance);
+}
+
+template <usize R, usize C, typename T>
+inline auto Matrix<R,C,T>::is_orthogonal(T tolerance) const -> bool
+{
+	// TODO: Multiplying by the transpose is computationally redundant, since
+	// the * operator transposes the RHS to dot the LHS rows by its columns.
+	// Maybe add a special-case function that treats the RHS as already
+	// transposed?
+	return ((*this) * transpose()).is_identity(tolerance);
+}
+
+template <usize R, usize C, typename T>
+constexpr auto Matrix<R,C,T>::is_identity(T tolerance) const -> bool
+{
+	for (usize r = 0; r < R; ++r)
+		for (usize c = 0; c < C; ++c)
+			if (r != c && !nearly_equal<T>(m_data[r][c], 0, tolerance)
+				|| r == c && !nearly_equal<T>(m_data[r][c], 1, tolerance))
+
+				return false;
+
+	return true;
 }
 
 

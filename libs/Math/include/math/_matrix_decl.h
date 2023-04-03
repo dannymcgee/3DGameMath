@@ -155,6 +155,7 @@ public:
 	 * @param determinant The pre-computed determinant.
 	 */
 	auto inverse(T determinant) const -> Matrix<Cols, Rows, T>;
+
 	/**
 	 * Computes the determinant and writes it to the output parameter, returning
 	 * a bool indicating whether or not the matrix is invertible.
@@ -163,6 +164,19 @@ public:
 
 	/** Compute the classical adjoint of the matrix. */
 	auto adjoint() const -> Matrix<Cols, Rows, T>;
+
+	/**
+	 * Computes the transpose of the matrix and writes it to the output
+	 * parameter, returning a bool indicating whether or not the matrix is
+	 * orthogonal.
+	 */
+	auto is_orthogonal(
+		Matrix<Cols, Rows, T>& out_transposed,
+		T tolerance = std::numeric_limits<T>::epsilon()
+	) const -> bool;
+	auto is_orthogonal(T tolerance = std::numeric_limits<T>::epsilon()) const -> bool;
+
+	constexpr auto is_identity(T tolerance = std::numeric_limits<T>::epsilon()) const -> bool;
 
 	// Misc / Utility
 	auto to_string(usize precision = 3) const -> std::string;
