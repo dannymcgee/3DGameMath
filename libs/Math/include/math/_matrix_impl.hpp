@@ -26,10 +26,8 @@ template <usize R, usize C, typename T>
 Matrix<R,C,T>::Matrix(std::initializer_list<Row> rows)
 {
 	ASSERT(rows.size() > 0 && rows.size() <= R,
-		::fmt::format(
-			"Too many arguments for Mat<{},{}>: Expected {}, received {}",
-			R, C,
-			R, rows.size()));
+		"Too many arguments for Matrix<{},{}>: Expected {}, received {}",
+		R, C, R, rows.size());
 
 	usize i = 0;
 	for (auto&& row : rows) {

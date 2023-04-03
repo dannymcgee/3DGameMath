@@ -4,11 +4,13 @@
 	#include <cstdlib>
 	#include <iostream>
 
-	#define ASSERT(condition, message) do { \
+	#include <fmt/format.h>
+
+	#define ASSERT(condition, fmt_str, ...) do { \
 		if (!(condition)) {\
 			std::cerr \
 				<< "\nAssertion failed:" << std::endl \
-				<< "   " << (message) << std::endl \
+				<< "   " << ::fmt::format((fmt_str), __VA_ARGS__) << std::endl \
 				<< "   @ " << __FILE__ << ":" << __LINE__ << std::endl; \
 			\
 			std::abort(); \

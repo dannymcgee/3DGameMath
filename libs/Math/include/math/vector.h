@@ -241,10 +241,9 @@ inline auto Vector<D,T>::operator[](usize idx) const -> T
 template <usize D, typename T>
 inline void Vector<D,T>::validate_index(usize idx) const
 {
-	ASSERT(idx < D, ::fmt::format(
+	ASSERT(idx < D,
 		"Index out of range for Vec<{}>: Expected < {}, received {}",
-		D, D, idx
-	));
+		D, D, idx);
 }
 
 
