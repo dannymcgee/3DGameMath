@@ -1,5 +1,6 @@
 add_library(
 	Math INTERFACE
+		"include/math/detail/bitflags.h"
 		"include/math/fmt.h"
 		"include/math/matrix.h"
 		"include/math/matrix/rotation.h"

@@ -492,6 +492,58 @@ inline void Matrix<3,3,f32>::orthogonalize()
 	row<3>() = (row<1>() ^ row<2>());
 }
 
+template <>
+inline void Matrix<3,3,f64>::orthogonalize(OrthoStrategy strategy)
+{
+	// FIXME: The "unbiased" formula doesn't seem to be working as expected
+	if (strategy & OrthoStrategy::Unbiased) {
+		constexpr f64 k = 0.25;
+		for (usize i = 0; i < 10; ++i) {
+			auto r1 = row<1>();
+			auto r2 = row<2>();
+			auto r3 = row<3>();
+
+			// NOLINTBEGIN(misc-redundant-expression)
+			row<1>() -= k * (((r1 | r2) / (r2 | r2)) * r2)
+			          - k * (((r1 | r3) / (r3 | r3)) * r3);
+
+			row<2>() -= k * (((r2 | r1) / (r1 | r1)) * r1)
+			          - k * (((r2 | r3) / (r3 | r3)) * r3);
+
+			if (!(strategy & OrthoStrategy::DeriveThird)) {
+				row<3>() -= k * (((r3 | r1) / (r1 | r1)) * r1)
+				          - k * (((r3 | r2) / (r2 | r2)) * r2);
+			}
+			// NOLINTEND(misc-redundant-expression)
+		}
+	}
+
+	if (strategy & OrthoStrategy::GramSchmidt) {
+		row<1>().normalize();
+
+		// row<2>().normalize();
+		row<2>() -= (row<2>() | row<1>()) / (row<1>() | row<1>()) * row<1>();
+		row<2>().normalize();
+
+		if (!(strategy & OrthoStrategy::DeriveThird)) {
+			// row<3>().normalize();
+			row<3>() -= (row<3>() | row<1>()) / (row<1>() | row<1>()) * row<1>()
+			          - (row<3>() | row<2>()) / (row<2>() | row<2>()) * row<2>();
+			row<3>().normalize();
+		}
+	}
+
+	if (strategy & OrthoStrategy::DeriveThird)
+		row<3>() = (row<1>() ^ row<2>());
+}
+
+template <usize R, usize C, typename T>
+inline void Matrix<R,C,T>::orthogonalize(OrthoStrategy)
+{
+	static_assert(R == 3 && C == 3,
+		"Orthogonalization is only supported for 3x3 square matrices");
+}
+
 template <usize R, usize C, typename T>
 inline void Matrix<R,C,T>::orthogonalize()
 {

@@ -6,12 +6,23 @@
 
 #include <sized.h>
 
+#include "math/detail/bitflags.h"
 #include "math/vector.h"
 
 
 namespace math {
 using namespace sized; // NOLINT(*-using-namespace)
 
+class OrthoStrategy {
+public:
+	enum Flags : u8 {
+		GramSchmidt = 0b001,
+		DeriveThird = 0b010,
+		Unbiased    = 0b100,
+	};
+	OrthoStrategy() : m_value(GramSchmidt) {}
+	IMPL_BITFLAGS(OrthoStrategy, Flags, u8)
+};
 
 template <usize Rows, usize Cols, typename T = f64>
 class Matrix {
@@ -178,6 +189,11 @@ public:
 	 * accumulation.
 	 */
 	void orthogonalize();
+	/**
+	 * Correct the orthogonality of a matrix, e.g. due to floating-point error
+	 * accumulation.
+	 */
+	void orthogonalize(OrthoStrategy strategy);
 
 	/**
 	 * Computes the determinant and writes it to the output parameter, returning
