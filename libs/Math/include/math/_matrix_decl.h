@@ -2,7 +2,6 @@
 
 #include <array>
 #include <limits>
-#include <map>
 #include <optional>
 #include <string>
 
@@ -16,12 +15,128 @@ using namespace sized; // NOLINT(*-using-namespace)
 
 using math::Vec2; // Hack to silence the warning about unused #include "math/vector.h"
 
+namespace detail {
+// NOLINTBEGIN(*-pro-type-member-init, *-avoid-c-arrays)
 template <usize Rows, usize Cols, typename T = f64>
 class Matrix {
 public:
+	using Row = ::math::Vector<Cols, T>;
+
+	union {
+		std::array<Row,Rows> m_data {};
+	};
+};
+
+template <typename T>
+class Matrix<2,2,T> {
+public:
+	using Row = ::math::Vector<2,T>;
+
+	union {
+		std::array<Row,2> m_data {
+			Row{ 0, 0 },
+			Row{ 0, 0 },
+		};
+		struct {
+			T m11, m12,
+			  m21, m22;
+		};
+	};
+};
+
+template <typename T>
+class Matrix<3,3,T> {
+public:
+	using Row = ::math::Vector<3,T>;
+
+	union {
+		std::array<Row,3> m_data {
+			Row{ 0, 0, 0 },
+			Row{ 0, 0, 0 },
+			Row{ 0, 0, 0 },
+		};
+		struct {
+			T m11, m12, m13,
+			  m21, m22, m23,
+			  m31, m32, m33;
+		};
+	};
+};
+
+template <typename T>
+class Matrix<4,3,T> {
+public:
+	using Row = ::math::Vector<3,T>;
+
+	union {
+		std::array<Row,4> m_data {
+			Row{ 0, 0, 0 },
+			Row{ 0, 0, 0 },
+			Row{ 0, 0, 0 },
+			Row{ 0, 0, 0 },
+		};
+		struct {
+			T m11, m12, m13,
+			  m21, m22, m23,
+			  m31, m32, m33,
+			  m41, m42, m43;
+		};
+	};
+};
+
+template <typename T>
+class Matrix<3,4,T> {
+public:
+	using Row = ::math::Vector<4,T>;
+
+	union {
+		std::array<Row,3> m_data {
+			Row{ 0, 0, 0, 0 },
+			Row{ 0, 0, 0, 0 },
+			Row{ 0, 0, 0, 0 },
+		};
+		struct {
+			T m11, m12, m13, m14,
+			  m21, m22, m23, m24,
+			  m31, m32, m33, m34;
+		};
+	};
+};
+
+template <typename T>
+class Matrix<4,4,T> {
+public:
+	using Row = ::math::Vector<4,T>;
+
+	union {
+		std::array<Row,4> m_data {
+			Row{ 0, 0, 0, 0 },
+			Row{ 0, 0, 0, 0 },
+			Row{ 0, 0, 0, 0 },
+			Row{ 0, 0, 0, 0 },
+		};
+		struct {
+			T m11, m12, m13, m14,
+			  m21, m22, m23, m24,
+			  m31, m32, m33, m34,
+			  m41, m42, m43, m44;
+		};
+	};
+};
+// NOLINTEND(*-pro-type-member-init, *-avoid-c-arrays)
+} // namespace detail
+
+template <usize Rows, usize Cols, typename T = f64>
+class Matrix : public detail::Matrix<Rows,Cols,T> {
+public:
+	using Super = detail::Matrix<Rows,Cols,T>;
 	using Row = Vector<Cols, T>;
 	using Col = Vector<Rows, T>;
 
+protected:
+	using Super::m_data;
+
+public:
 	// Constructors
 	Matrix() = default;
 	Matrix(std::initializer_list<Row> rows);
@@ -204,8 +319,8 @@ public:
 	// Misc / Utility
 	auto to_string(usize precision = 3) const -> std::string;
 
-protected:
-	std::array<Row, Rows> m_data; // NOLINT(*-non-private-member-*)
+// protected:
+// 	std::array<Row, Rows> m_data; // NOLINT(*-non-private-member-*)
 };
 
 }

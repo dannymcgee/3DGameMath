@@ -1,8 +1,4 @@
-#include "math/_matrix_decl.h"
-#include "math/fmt.h"
-#include <array>
 #include <cstdlib>
-#include <iostream>
 
 #include <fmt/format.h>
 
@@ -13,13 +9,25 @@
 #include <math/vector.h>
 #include <sized.h>
 
+#include "math/_matrix_decl.h"
+#include "math/fmt.h"
+
 using namespace sized; // NOLINT;
 using math::Matrix;
+using math::Mat3x3;
+
 using math::Vector;
+using math::Vec3;
+using math::Vec4;
+
+using math::RotationMatrix;
+using math::TranslationMatrix;
+using math::ScaleMatrix;
+
 using math::fmt::AlignedValues;
 
-using Vec3 = math::Vector<3>;
-using Mat3x3 = math::Matrix<3,3>;
+// using Vec3 = math::Vector<3>;
+// using Mat3x3 = math::Matrix<3,3>;
 
 void vector_exercises()
 {
@@ -72,8 +80,6 @@ void vector_exercises()
 
 void coord_spaces()
 {
-	using Vec3 = math::Vector<3, f64>;
-
 	// body-space vector
 	auto b = Vec3{ 1, 2, 3 };
 
@@ -93,6 +99,9 @@ void coord_spaces()
 	auto p = i + o; // [4 2 1]
 	auto q = j + o; // [3 3 1]
 	auto r = k + o; // [3 2 2]
+	fmt::print("p: {}\n", p.to_string());
+	fmt::print("q: {}\n", q.to_string());
+	fmt::print("r: {}\n", r.to_string());
 
 	// u == bx*p + by*q + bz*r
 	//   == 1[4 2 1] + 2[3 3 1] + 3[3 2 2]
@@ -132,10 +141,10 @@ void matrix()
 	};
 	fmt::print("{}\n", mat.to_string());
 
-	auto m21 = mat.m<21>();
+	auto m21 = mat.m21;
 	fmt::print("m21: {}\n", m21);
 
-	mat.m<21>() = 5;
+	mat.m21 = 5;
 	fmt::print("{}\n", mat.to_string());
 
 	auto transposed = mat.transpose();
@@ -144,11 +153,6 @@ void matrix()
 
 void rotation_matrix()
 {
-	using math::RotationMatrix;
-	using math::fmt::AlignedValues;
-	using Vec3 = math::Vector<3>;
-	using Mat3x3 = math::Matrix<3,3>;
-
 	auto angle = math::deg2rad(45.0);
 	auto axis = Vec3{ -0.25, 0.5, 0.33 }.unit();
 
@@ -175,10 +179,6 @@ void rotation_matrix()
 
 void scale_matrix()
 {
-	using math::ScaleMatrix;
-	using Mat3x3 = math::Matrix<3,3>;
-	using Vec3 = math::Vector<3>;
-
 	auto mat = ScaleMatrix(-12.125);
 	fmt::print("ScaleMatrix(-12.125)\n{}\n", mat.to_string());
 
@@ -236,8 +236,7 @@ void matrix_inversion()
 	};
 	fmt::print("Mat4x4:\n{}\n", mat.to_string());
 
-	auto inverted = mat.inverse();
-	if (inverted)
+	if (auto inverted = mat.inverse())
 		fmt::print("Inverse Mat4x4:\n{}\n", inverted->to_string());
 }
 
@@ -261,11 +260,6 @@ void print_error(const Mat3x3& lhs, const Mat3x3& rhs, const AlignedValues& form
 
 void matrix_orthogonality()
 {
-	using math::RotationMatrix;
-	// using math::OrthoStrategy;
-	// using Ortho = math::OrthoStrategy;
-	using Vec3 = math::Vector<3>;
-
 	auto angle = math::deg2rad(45.0);
 	auto axis = Vec3{ -0.25, 0.5, 0.33 }.unit();
 	auto mat = static_cast<Mat3x3>(RotationMatrix(angle, axis));
@@ -334,13 +328,6 @@ void matrix_orthogonality()
 
 void translation_matrix()
 {
-	using math::RotationMatrix;
-	using math::TranslationMatrix;
-
-	using Vec3 = math::Vector<3>;
-	using Vec4 = math::Vector<4>;
-	using Mat4x4 = math::Matrix<4,4>;
-
 	auto angle = math::deg2rad(45.0);
 	auto axis = Vec3{ -0.25, 0.5, 0.33 }.unit();
 
@@ -367,8 +354,7 @@ void translation_matrix()
 	fmt::print("Right:\n{}\n\n", right_x.to_string());
 	fmt::print("Up:\n{}\n\n", up_x.to_string());
 
-	auto inverted = xform.inverse();
-	if (inverted) {
+	if (auto inverted = xform.inverse()) {
 		auto world2local = origin_x * (*inverted);
 		fmt::print("world -> local:\n{}\n\n", world2local.to_string());
 	}

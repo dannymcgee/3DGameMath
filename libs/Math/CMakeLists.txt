@@ -1,17 +1,25 @@
 add_library(
-	Math INTERFACE
+	Math STATIC
 		"include/math/fmt.h"
+		"include/math/_matrix_decl.h"
+		"include/math/_matrix_impl.hpp"
 		"include/math/matrix.h"
 		"include/math/matrix/rotation.h"
 		"include/math/matrix/scale.h"
 		"include/math/matrix/translation.h"
 		"include/math/utility.h"
+		"include/math/_vector_decl.h"
+		"include/math/_vector_impl.hpp"
 		"include/math/vector.h"
+		"src/math/matrix/rotation.cc"
+		"src/math/matrix/scale.cc"
+		"src/math/matrix/translation.cc"
 )
 
 target_include_directories(
-	Math INTERFACE
-		"include"
+	Math
+		PUBLIC "include"
+		PRIVATE "src"
 )
 
 set_target_properties(
@@ -35,7 +43,7 @@ set_target_properties(
 # )
 
 target_link_libraries(
-	Math INTERFACE
+	Math PUBLIC
 		fmt::fmt
 		Sized
 )
