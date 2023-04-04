@@ -9,6 +9,7 @@
 #include <math/matrix.h>
 #include <math/matrix/rotation.h>
 #include <math/matrix/scale.h>
+#include <math/matrix/translation.h>
 #include <math/vector.h>
 #include <sized.h>
 
@@ -157,9 +158,9 @@ void rotation_matrix()
 	auto formatter = AlignedValues(rotated.begin(), rotated.end(), 5);
 
 	fmt::print("============= Rotation Matrix =============\n");
-	fmt::print("Right:   {}\n", rotated.row(1).to_string(formatter));
-	fmt::print("Up:      {}\n", rotated.row(2).to_string(formatter));
-	fmt::print("Forward: {}\n", rotated.row(3).to_string(formatter));
+	fmt::print("Right:   {}\n", rotated.row<1>().to_string(formatter));
+	fmt::print("Up:      {}\n", rotated.row<2>().to_string(formatter));
+	fmt::print("Forward: {}\n", rotated.row<3>().to_string(formatter));
 	fmt::print("-------------------------------------------\n");
 	fmt::print("Axis:    {}\n", axis.to_string(formatter));
 	fmt::print("Radians: {}\n", angle);
@@ -331,6 +332,48 @@ void matrix_orthogonality()
 	// print_error(initial, whole9, formatter);
 }
 
+void translation_matrix()
+{
+	using math::RotationMatrix;
+	using math::TranslationMatrix;
+
+	using Vec3 = math::Vector<3>;
+	using Vec4 = math::Vector<4>;
+	using Mat4x4 = math::Matrix<4,4>;
+
+	auto angle = math::deg2rad(45.0);
+	auto axis = Vec3{ -0.25, 0.5, 0.33 }.unit();
+
+	auto rot = RotationMatrix(angle, axis);
+	auto xlate = TranslationMatrix(5.0, 1.0, -12.125);
+	auto xform = rot * xlate;
+
+	fmt::print("Rotation:\n{}\n", rot.to_string());
+	fmt::print("Translation:\n{}\n", xlate.to_string());
+	fmt::print("Combined transform:\n{}\n", xform.to_string());
+
+	auto origin = Vec4{ 0, 0, 0, 1 };
+	auto fwd =    Vec4{ 1, 0, 0, 1 };
+	auto right =  Vec4{ 0, 1, 0, 1 };
+	auto up =     Vec4{ 0, 0, 1, 1 };
+
+	auto origin_x = origin * xform;
+	auto fwd_x = fwd * xform;
+	auto right_x = right * xform;
+	auto up_x = up * xform;
+
+	fmt::print("Transformed origin:\n{}\n\n", origin_x.to_string());
+	fmt::print("Forward:\n{}\n\n", fwd_x.to_string());
+	fmt::print("Right:\n{}\n\n", right_x.to_string());
+	fmt::print("Up:\n{}\n\n", up_x.to_string());
+
+	auto inverted = xform.inverse();
+	if (inverted) {
+		auto world2local = origin_x * (*inverted);
+		fmt::print("world -> local:\n{}\n\n", world2local.to_string());
+	}
+}
+
 auto main() -> int
 {
 	// matrix_inversion();
@@ -338,5 +381,6 @@ auto main() -> int
 	// scale_matrix();
 	// matrix_determinants();
 	// invalid_matrix_ctor();
-	matrix_orthogonality();
+	// matrix_orthogonality();
+	translation_matrix();
 }

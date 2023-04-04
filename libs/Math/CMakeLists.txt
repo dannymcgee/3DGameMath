@@ -4,6 +4,7 @@ add_library(
 		"include/math/matrix.h"
 		"include/math/matrix/rotation.h"
 		"include/math/matrix/scale.h"
+		"include/math/matrix/translation.h"
 		"include/math/utility.h"
 		"include/math/vector.h"
 )
