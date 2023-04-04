@@ -10,60 +10,57 @@ using namespace sized; // NOLINT(*-using-namespace)
 
 enum class Axis : u8 { X, Y, Z };
 
-template <typename T = f64>
-class RotationMatrix : public Matrix<3,3,T> {
+class RotationMatrix : public Mat3x3 {
 private:
-	using Super = Matrix<3,3,T>;
-	using Row = Vector<3,T>;
+	using Super = Mat3x3;
+	using Row = Vec3;
 
 public:
 	RotationMatrix() = default;
 
-	RotationMatrix(T angle, Axis axis)
+	RotationMatrix(f64 angle, Axis axis)
 		: Super(construct(angle, axis))
 	{}
 
-	RotationMatrix(T angle, const Vector<3,T>& axis)
+	RotationMatrix(f64 angle, const Vec3& axis)
 		: Super(construct(angle, axis))
 	{}
 
 private:
-	static constexpr auto construct(T angle, Axis axis) -> std::array<Row,3>;
+	static constexpr auto construct(f64 angle, Axis axis) -> Super;
 
-	static auto construct(T angle, const Vector<3,T>& axis) -> std::array<Row,3>;
+	static auto construct(f64 angle, const Vec3& axis) -> Super;
 };
 
 
-template <typename T>
-constexpr auto RotationMatrix<T>::construct(T angle, Axis axis) -> std::array<Row,3>
+constexpr auto RotationMatrix::construct(f64 angle, Axis axis) -> Super
 {
 	switch (axis) {
 		case Axis::X: {
-			return std::array{
-				Row{ 1.0, 0.0, 0.0 },
-				Row{ 0.0, std::cos(angle), std::sin(angle) },
-				Row{ 0.0, -std::sin(angle), std::cos(angle) },
+			return {
+				{ 1.0, 0.0, 0.0 },
+				{ 0.0, std::cos(angle), std::sin(angle) },
+				{ 0.0, -std::sin(angle), std::cos(angle) },
 			};
 		}
 		case Axis::Y: {
-			return std::array{
-				Row{ std::cos(angle), 0.0, -std::sin(angle) },
-				Row{ 0.0, 1.0, 0.0 },
-				Row{ std::sin(angle), 0.0, std::cos(angle) },
+			return {
+				{ std::cos(angle), 0.0, -std::sin(angle) },
+				{ 0.0, 1.0, 0.0 },
+				{ std::sin(angle), 0.0, std::cos(angle) },
 			};
 		}
 		case Axis::Z: {
-			return std::array{
-				Row{ std::cos(angle), std::sin(angle), 0.0 },
-				Row{ -std::sin(angle), std::cos(angle), 0.0 },
-				Row{ 0.0, 0.0, 1.0 },
+			return {
+				{ std::cos(angle), std::sin(angle), 0.0 },
+				{ -std::sin(angle), std::cos(angle), 0.0 },
+				{ 0.0, 0.0, 1.0 },
 			};
 		}
 	}
 }
 
-template <typename T>
-inline auto RotationMatrix<T>::construct(T angle, const Vector<3,T>& axis) -> std::array<Row,3>
+inline auto RotationMatrix::construct(f64 angle, const Vec3& axis) -> Super
 {
 	auto cos_theta = std::cos(angle);
 	auto sin_theta = std::sin(angle);
@@ -83,18 +80,16 @@ inline auto RotationMatrix<T>::construct(T angle, const Vector<3,T>& axis) -> st
 	auto y_sin_theta = y * sin_theta;
 	auto z_sin_theta = z * sin_theta;
 
-	return std::array{
-		Row{
+	return {
+		{
 			x2 * one_sub_cos_theta + cos_theta,
 			xy * one_sub_cos_theta + z_sin_theta,
 			xz * one_sub_cos_theta - y_sin_theta,
-		},
-		Row{
+		}, {
 			xy * one_sub_cos_theta - z_sin_theta,
 			y2 * one_sub_cos_theta + cos_theta,
 			yz * one_sub_cos_theta + x_sin_theta,
-		},
-		Row{
+		}, {
 			xz * one_sub_cos_theta + y_sin_theta,
 			yz * one_sub_cos_theta - x_sin_theta,
 			z2 * one_sub_cos_theta + cos_theta,

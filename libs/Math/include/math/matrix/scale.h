@@ -8,26 +8,26 @@
 namespace math {
 using namespace sized; // NOLINT(*-using-namespace)
 
-template <typename T = f64>
-class ScaleMatrix : public Matrix<3,3,T> {
+
+class ScaleMatrix : public Mat3x3 {
 private:
-	using Super = Matrix<3,3,T>;
-	using Row = Vector<3,T>;
+	using Super = Mat3x3;
+	using Row = Vec3;
 
 public:
 	ScaleMatrix() = default;
 
-	explicit ScaleMatrix(T scale)
+	explicit ScaleMatrix(f64 scale)
 		: Super(Super::identity() * scale)
 	{}
 
 	// TODO: Not sure if this is actually what I want
-	explicit ScaleMatrix(const Vector<3,T>& scale)
-		: Super(std::array{
-			Row{ scale.x, 0, 0 },
-			Row{ 0, scale.y, 0 },
-			Row{ 0, 0, scale.z },
-		})
+	explicit ScaleMatrix(const Vec3& scale)
+		: Super{
+			{ scale.x, 0, 0 },
+			{ 0, scale.y, 0 },
+			{ 0, 0, scale.z },
+		}
 	{}
 
 	// explicit ScaleMatrix(const Vector<3,T>& scale)
