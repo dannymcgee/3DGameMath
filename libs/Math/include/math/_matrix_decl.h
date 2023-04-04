@@ -1,8 +1,10 @@
 #pragma once
 
+#include <array>
 #include <limits>
 #include <map>
 #include <optional>
+#include <string>
 
 #include <sized.h>
 
@@ -12,6 +14,7 @@
 namespace math {
 using namespace sized; // NOLINT(*-using-namespace)
 
+using math::Vec2; // Hack to silence the warning about unused #include "math/vector.h"
 
 template <usize Rows, usize Cols, typename T = f64>
 class Matrix {
