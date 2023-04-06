@@ -473,6 +473,7 @@ inline auto Matrix<R,C,T>::adjoint() const -> Matrix<C,R,T>
 
 // Orthogonalize ---------------------------------------------------------------
 
+// FIXME: These methods are not really working as expected
 template <>
 inline void Matrix<3,3,f64>::orthogonalize()
 {
@@ -484,6 +485,7 @@ inline void Matrix<3,3,f64>::orthogonalize()
 	row<3>() = (row<1>() ^ row<2>());
 }
 
+// FIXME: These methods are not really working as expected
 template <>
 inline void Matrix<3,3,f32>::orthogonalize()
 {
