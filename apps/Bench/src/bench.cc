@@ -225,9 +225,9 @@ static void BM_Mat4x4_Ctor_Array(State& state)
 		DoNotOptimize(mat);
 	}
 }
-BENCHMARK(BM_Mat2x2_Ctor);
-BENCHMARK(BM_Mat3x3_Ctor);
-BENCHMARK(BM_Mat4x4_Ctor);
+BENCHMARK(BM_Mat2x2_Ctor_Array);
+BENCHMARK(BM_Mat3x3_Ctor_Array);
+BENCHMARK(BM_Mat4x4_Ctor_Array);
 
 
 // Matrix Transposition
@@ -355,11 +355,12 @@ BENCHMARK(BM_Mat4x4_Inverse);
 BENCHMARK(BM_Identity4x4_Inverse);
 
 
+// FIXME: Huge performance regression -- ~0.8ns -> ~25ns
 static void BM_Mat3x3_Orthogonalize(State& state)
 {
 	auto angle = math::deg2rad(45.0);
 	auto axis = Vec3{ -0.25, 0.5, 0.33 }.unit();
-	const auto initial = static_cast<Mat3x3>(RotationMatrix(angle, axis));
+	const auto initial = RotationMatrix(angle, axis);
 
 	for (auto _ : state) {
 		auto mat = initial;

@@ -15,25 +15,8 @@ private:
 	using Row = Vec4;
 
 public:
-	TranslationMatrix() = default;
-
-	TranslationMatrix(f64 x, f64 y, f64 z)
-		: Super{
-			{ 1, 0, 0, 0 },
-			{ 0, 1, 0, 0 },
-			{ 0, 0, 1, 0 },
-			{ x, y, z, 1 },
-		}
-	{}
-
-	explicit TranslationMatrix(const Vec3& delta)
-		: Super{
-			{ 1, 0, 0, 0 },
-			{ 0, 1, 0, 0 },
-			{ 0, 0, 1, 0 },
-			{ delta.x, delta.y, delta.z, 0 },
-		}
-	{}
+	TranslationMatrix(f64 x, f64 y, f64 z);
+	explicit TranslationMatrix(const Vec3& delta);
 };
 
 } // namespace math
@@ -48,7 +31,7 @@ inline auto operator*(
 	auto [m21,m22,m23] = lhs.row<2>();
 	auto [m31,m32,m33] = lhs.row<3>();
 
-	::math::Mat4x4 linear {
+	auto linear = ::math::Mat4x4{
 		{ m11, m12, m13,   0 },
 		{ m21, m22, m23,   0 },
 		{ m31, m32, m33,   0 },

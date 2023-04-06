@@ -9,13 +9,19 @@
 #include <math/utility.h>
 #include <sized.h>
 
+using math::Vec3;
+using math::Mat2x2;
+using math::Mat3x3;
+using math::Mat4x4;
+using math::Mat4x3;
+
 TEST_CASE("math::Vector", "[vector]") {
 	using namespace sized; // NOLINT
 
 	SECTION("Vector<3, f32>") {
-		using Vec3 = math::Vector<3, f32>;
-
-		static constexpr auto epsilon_practical = 0.00001f;
+		using Vec3 = math::Vector<3,f32>;  // NOLINT(clang-diagnostic-shadow)
+		
+		static constexpr f32 epsilon_practical = 0.00001f;
 
 		SECTION("supports construction with initializer list") {
 			auto vec = Vec3{ 1.f, 2.f, 3.f };
@@ -399,8 +405,6 @@ TEST_CASE("math::Matrix<R,C,T>", "[matrix]") {
 	using namespace sized; // NOLINT
 
 	SECTION("Mat2x2") {
-		using Mat2x2 = math::Matrix<2,2, f64>;
-
 		SECTION("supports matrix multiplication") {
 			auto a = Mat2x2{
 				{ -3.0, 0.0 },
@@ -413,10 +417,10 @@ TEST_CASE("math::Matrix<R,C,T>", "[matrix]") {
 
 			auto ab = a * b;
 
-			REQUIRE(math::nearly_equal(ab.m<11>(), 21.0));
-			REQUIRE(math::nearly_equal(ab.m<12>(), -6.0));
-			REQUIRE(math::nearly_equal(ab.m<21>(), -33.0));
-			REQUIRE(math::nearly_equal(ab.m<22>(), 13.0));
+			REQUIRE(math::nearly_equal(ab.m11, 21.0));
+			REQUIRE(math::nearly_equal(ab.m12, -6.0));
+			REQUIRE(math::nearly_equal(ab.m21, -33.0));
+			REQUIRE(math::nearly_equal(ab.m22, 13.0));
 		}
 		SECTION("can compute the determinant") {
 			auto a = Mat2x2{
@@ -442,15 +446,15 @@ TEST_CASE("math::Matrix<R,C,T>", "[matrix]") {
 
 			auto id = mat * (*inverted);
 
-			REQUIRE(math::nearly_equal(id.m<11>(), 1.0));
-			REQUIRE(math::nearly_equal(id.m<12>(), 0.0));
+			REQUIRE(math::nearly_equal(id.m11, 1.0));
+			REQUIRE(math::nearly_equal(id.m12, 0.0));
 
-			REQUIRE(math::nearly_equal(id.m<21>(), 0.0));
-			REQUIRE(math::nearly_equal(id.m<22>(), 1.0));
+			REQUIRE(math::nearly_equal(id.m21, 0.0));
+			REQUIRE(math::nearly_equal(id.m22, 1.0));
 		}
 	}
 	SECTION("Mat3x3") {
-		using Mat3x3 = math::Matrix<3,3,f64>;
+		[[maybe_unused]]
 		auto mat3x3_labeled = Mat3x3{
 			{ 11, 12, 13 },
 			{ 21, 22, 23 },
@@ -478,21 +482,21 @@ TEST_CASE("math::Matrix<R,C,T>", "[matrix]") {
 
 			auto id = mat * (*inverted);
 
-			REQUIRE(math::nearly_equal(id.m<11>(), 1.0));
-			REQUIRE(math::nearly_equal(id.m<12>(), 0.0));
-			REQUIRE(math::nearly_equal(id.m<13>(), 0.0));
+			REQUIRE(math::nearly_equal(id.m11, 1.0));
+			REQUIRE(math::nearly_equal(id.m12, 0.0));
+			REQUIRE(math::nearly_equal(id.m13, 0.0));
 
-			REQUIRE(math::nearly_equal(id.m<21>(), 0.0));
-			REQUIRE(math::nearly_equal(id.m<22>(), 1.0));
-			REQUIRE(math::nearly_equal(id.m<23>(), 0.0));
+			REQUIRE(math::nearly_equal(id.m21, 0.0));
+			REQUIRE(math::nearly_equal(id.m22, 1.0));
+			REQUIRE(math::nearly_equal(id.m23, 0.0));
 
-			REQUIRE(math::nearly_equal(id.m<31>(), 0.0));
-			REQUIRE(math::nearly_equal(id.m<32>(), 0.0));
-			REQUIRE(math::nearly_equal(id.m<33>(), 1.0));
+			REQUIRE(math::nearly_equal(id.m31, 0.0));
+			REQUIRE(math::nearly_equal(id.m32, 0.0));
+			REQUIRE(math::nearly_equal(id.m33, 1.0));
 		}
 	}
 	SECTION("Mat4x4") {
-		using Mat4x4 = math::Matrix<4,4,f64>;
+		[[maybe_unused]]
 		auto mat4x4_labeled = Mat4x4{
 			{ 11, 12, 13, 14 },
 			{ 21, 22, 23, 24 },
@@ -523,30 +527,28 @@ TEST_CASE("math::Matrix<R,C,T>", "[matrix]") {
 
 			auto id = mat * (*inverted);
 
-			REQUIRE(math::nearly_equal(id.m<11>(), 1.0));
-			REQUIRE(math::nearly_equal(id.m<12>(), 0.0));
-			REQUIRE(math::nearly_equal(id.m<13>(), 0.0));
-			REQUIRE(math::nearly_equal(id.m<14>(), 0.0));
+			REQUIRE(math::nearly_equal(id.m11, 1.0));
+			REQUIRE(math::nearly_equal(id.m12, 0.0));
+			REQUIRE(math::nearly_equal(id.m13, 0.0));
+			REQUIRE(math::nearly_equal(id.m14, 0.0));
 
-			REQUIRE(math::nearly_equal(id.m<21>(), 0.0));
-			REQUIRE(math::nearly_equal(id.m<22>(), 1.0));
-			REQUIRE(math::nearly_equal(id.m<23>(), 0.0));
-			REQUIRE(math::nearly_equal(id.m<24>(), 0.0));
+			REQUIRE(math::nearly_equal(id.m21, 0.0));
+			REQUIRE(math::nearly_equal(id.m22, 1.0));
+			REQUIRE(math::nearly_equal(id.m23, 0.0));
+			REQUIRE(math::nearly_equal(id.m24, 0.0));
 
-			REQUIRE(math::nearly_equal(id.m<31>(), 0.0));
-			REQUIRE(math::nearly_equal(id.m<32>(), 0.0));
-			REQUIRE(math::nearly_equal(id.m<33>(), 1.0));
-			REQUIRE(math::nearly_equal(id.m<34>(), 0.0));
+			REQUIRE(math::nearly_equal(id.m31, 0.0));
+			REQUIRE(math::nearly_equal(id.m32, 0.0));
+			REQUIRE(math::nearly_equal(id.m33, 1.0));
+			REQUIRE(math::nearly_equal(id.m34, 0.0));
 
-			REQUIRE(math::nearly_equal(id.m<41>(), 0.0));
-			REQUIRE(math::nearly_equal(id.m<42>(), 0.0));
-			REQUIRE(math::nearly_equal(id.m<43>(), 0.0));
-			REQUIRE(math::nearly_equal(id.m<44>(), 1.0));
+			REQUIRE(math::nearly_equal(id.m41, 0.0));
+			REQUIRE(math::nearly_equal(id.m42, 0.0));
+			REQUIRE(math::nearly_equal(id.m43, 0.0));
+			REQUIRE(math::nearly_equal(id.m44, 1.0));
 		}
 	}
 	SECTION("Mat4x3") {
-		using Mat4x3 = math::Matrix<4,3, f64>;
-
 		auto mat4x3_labeled = Mat4x3{
 			{ 11, 12, 13 },
 			{ 21, 22, 23 },
@@ -555,21 +557,21 @@ TEST_CASE("math::Matrix<R,C,T>", "[matrix]") {
 		};
 
 		SECTION("supports member access with 2D index") {
-			REQUIRE(math::nearly_equal(mat4x3_labeled.m<11>(), 11.0));
-			REQUIRE(math::nearly_equal(mat4x3_labeled.m<12>(), 12.0));
-			REQUIRE(math::nearly_equal(mat4x3_labeled.m<13>(), 13.0));
+			REQUIRE(math::nearly_equal(mat4x3_labeled.m11, 11.0));
+			REQUIRE(math::nearly_equal(mat4x3_labeled.m12, 12.0));
+			REQUIRE(math::nearly_equal(mat4x3_labeled.m13, 13.0));
 
-			REQUIRE(math::nearly_equal(mat4x3_labeled.m<21>(), 21.0));
-			REQUIRE(math::nearly_equal(mat4x3_labeled.m<22>(), 22.0));
-			REQUIRE(math::nearly_equal(mat4x3_labeled.m<23>(), 23.0));
+			REQUIRE(math::nearly_equal(mat4x3_labeled.m21, 21.0));
+			REQUIRE(math::nearly_equal(mat4x3_labeled.m22, 22.0));
+			REQUIRE(math::nearly_equal(mat4x3_labeled.m23, 23.0));
 
-			REQUIRE(math::nearly_equal(mat4x3_labeled.m<31>(), 31.0));
-			REQUIRE(math::nearly_equal(mat4x3_labeled.m<32>(), 32.0));
-			REQUIRE(math::nearly_equal(mat4x3_labeled.m<33>(), 33.0));
+			REQUIRE(math::nearly_equal(mat4x3_labeled.m31, 31.0));
+			REQUIRE(math::nearly_equal(mat4x3_labeled.m32, 32.0));
+			REQUIRE(math::nearly_equal(mat4x3_labeled.m33, 33.0));
 
-			REQUIRE(math::nearly_equal(mat4x3_labeled.m<41>(), 41.0));
-			REQUIRE(math::nearly_equal(mat4x3_labeled.m<42>(), 42.0));
-			REQUIRE(math::nearly_equal(mat4x3_labeled.m<43>(), 43.0));
+			REQUIRE(math::nearly_equal(mat4x3_labeled.m41, 41.0));
+			REQUIRE(math::nearly_equal(mat4x3_labeled.m42, 42.0));
+			REQUIRE(math::nearly_equal(mat4x3_labeled.m43, 43.0));
 		}
 		SECTION("supports getting an individual row as a math::Vec<C>") {
 			auto row2 = mat4x3_labeled.row<2>();
@@ -589,20 +591,20 @@ TEST_CASE("math::Matrix<R,C,T>", "[matrix]") {
 		SECTION("supports matrix transposition") {
 			auto mat3x4 = mat4x3_labeled.transpose();
 
-			REQUIRE(math::nearly_equal(mat3x4.m<11>(), 11.0));
-			REQUIRE(math::nearly_equal(mat3x4.m<12>(), 21.0));
-			REQUIRE(math::nearly_equal(mat3x4.m<13>(), 31.0));
-			REQUIRE(math::nearly_equal(mat3x4.m<14>(), 41.0));
+			REQUIRE(math::nearly_equal(mat3x4.m11, 11.0));
+			REQUIRE(math::nearly_equal(mat3x4.m12, 21.0));
+			REQUIRE(math::nearly_equal(mat3x4.m13, 31.0));
+			REQUIRE(math::nearly_equal(mat3x4.m14, 41.0));
 
-			REQUIRE(math::nearly_equal(mat3x4.m<21>(), 12.0));
-			REQUIRE(math::nearly_equal(mat3x4.m<22>(), 22.0));
-			REQUIRE(math::nearly_equal(mat3x4.m<23>(), 32.0));
-			REQUIRE(math::nearly_equal(mat3x4.m<24>(), 42.0));
+			REQUIRE(math::nearly_equal(mat3x4.m21, 12.0));
+			REQUIRE(math::nearly_equal(mat3x4.m22, 22.0));
+			REQUIRE(math::nearly_equal(mat3x4.m23, 32.0));
+			REQUIRE(math::nearly_equal(mat3x4.m24, 42.0));
 
-			REQUIRE(math::nearly_equal(mat3x4.m<31>(), 13.0));
-			REQUIRE(math::nearly_equal(mat3x4.m<32>(), 23.0));
-			REQUIRE(math::nearly_equal(mat3x4.m<33>(), 33.0));
-			REQUIRE(math::nearly_equal(mat3x4.m<34>(), 43.0));
+			REQUIRE(math::nearly_equal(mat3x4.m31, 13.0));
+			REQUIRE(math::nearly_equal(mat3x4.m32, 23.0));
+			REQUIRE(math::nearly_equal(mat3x4.m33, 33.0));
+			REQUIRE(math::nearly_equal(mat3x4.m34, 43.0));
 		}
 		SECTION("supports scalar multiplication") {
 			auto mat = Mat4x3{
@@ -615,60 +617,60 @@ TEST_CASE("math::Matrix<R,C,T>", "[matrix]") {
 			SECTION("...Mat * f64") {
 				auto result = mat * 2.0;
 
-				REQUIRE(math::nearly_equal(result.m<11>(), 2.0));
-				REQUIRE(math::nearly_equal(result.m<12>(), 4.0));
-				REQUIRE(math::nearly_equal(result.m<13>(), 6.0));
+				REQUIRE(math::nearly_equal(result.m11, 2.0));
+				REQUIRE(math::nearly_equal(result.m12, 4.0));
+				REQUIRE(math::nearly_equal(result.m13, 6.0));
 
-				REQUIRE(math::nearly_equal(result.m<21>(), 8.0));
-				REQUIRE(math::nearly_equal(result.m<22>(), 10.0));
-				REQUIRE(math::nearly_equal(result.m<23>(), 12.0));
+				REQUIRE(math::nearly_equal(result.m21, 8.0));
+				REQUIRE(math::nearly_equal(result.m22, 10.0));
+				REQUIRE(math::nearly_equal(result.m23, 12.0));
 
-				REQUIRE(math::nearly_equal(result.m<31>(), 14.0));
-				REQUIRE(math::nearly_equal(result.m<32>(), 16.0));
-				REQUIRE(math::nearly_equal(result.m<33>(), 18.0));
+				REQUIRE(math::nearly_equal(result.m31, 14.0));
+				REQUIRE(math::nearly_equal(result.m32, 16.0));
+				REQUIRE(math::nearly_equal(result.m33, 18.0));
 
-				REQUIRE(math::nearly_equal(result.m<41>(), 20.0));
-				REQUIRE(math::nearly_equal(result.m<42>(), 22.0));
-				REQUIRE(math::nearly_equal(result.m<43>(), 24.0));
+				REQUIRE(math::nearly_equal(result.m41, 20.0));
+				REQUIRE(math::nearly_equal(result.m42, 22.0));
+				REQUIRE(math::nearly_equal(result.m43, 24.0));
 			}
 			SECTION("...f64 * Mat") {
 				auto result = 2.0 * mat;
 
-				REQUIRE(math::nearly_equal(result.m<11>(), 2.0));
-				REQUIRE(math::nearly_equal(result.m<12>(), 4.0));
-				REQUIRE(math::nearly_equal(result.m<13>(), 6.0));
+				REQUIRE(math::nearly_equal(result.m11, 2.0));
+				REQUIRE(math::nearly_equal(result.m12, 4.0));
+				REQUIRE(math::nearly_equal(result.m13, 6.0));
 
-				REQUIRE(math::nearly_equal(result.m<21>(), 8.0));
-				REQUIRE(math::nearly_equal(result.m<22>(), 10.0));
-				REQUIRE(math::nearly_equal(result.m<23>(), 12.0));
+				REQUIRE(math::nearly_equal(result.m21, 8.0));
+				REQUIRE(math::nearly_equal(result.m22, 10.0));
+				REQUIRE(math::nearly_equal(result.m23, 12.0));
 
-				REQUIRE(math::nearly_equal(result.m<31>(), 14.0));
-				REQUIRE(math::nearly_equal(result.m<32>(), 16.0));
-				REQUIRE(math::nearly_equal(result.m<33>(), 18.0));
+				REQUIRE(math::nearly_equal(result.m31, 14.0));
+				REQUIRE(math::nearly_equal(result.m32, 16.0));
+				REQUIRE(math::nearly_equal(result.m33, 18.0));
 
-				REQUIRE(math::nearly_equal(result.m<41>(), 20.0));
-				REQUIRE(math::nearly_equal(result.m<42>(), 22.0));
-				REQUIRE(math::nearly_equal(result.m<43>(), 24.0));
+				REQUIRE(math::nearly_equal(result.m41, 20.0));
+				REQUIRE(math::nearly_equal(result.m42, 22.0));
+				REQUIRE(math::nearly_equal(result.m43, 24.0));
 			}
 			SECTION("...Mat *= f64") {
 				auto result = mat;
 				result *= 2.0;
 
-				REQUIRE(math::nearly_equal(result.m<11>(), 2.0));
-				REQUIRE(math::nearly_equal(result.m<12>(), 4.0));
-				REQUIRE(math::nearly_equal(result.m<13>(), 6.0));
+				REQUIRE(math::nearly_equal(result.m11, 2.0));
+				REQUIRE(math::nearly_equal(result.m12, 4.0));
+				REQUIRE(math::nearly_equal(result.m13, 6.0));
 
-				REQUIRE(math::nearly_equal(result.m<21>(), 8.0));
-				REQUIRE(math::nearly_equal(result.m<22>(), 10.0));
-				REQUIRE(math::nearly_equal(result.m<23>(), 12.0));
+				REQUIRE(math::nearly_equal(result.m21, 8.0));
+				REQUIRE(math::nearly_equal(result.m22, 10.0));
+				REQUIRE(math::nearly_equal(result.m23, 12.0));
 
-				REQUIRE(math::nearly_equal(result.m<31>(), 14.0));
-				REQUIRE(math::nearly_equal(result.m<32>(), 16.0));
-				REQUIRE(math::nearly_equal(result.m<33>(), 18.0));
+				REQUIRE(math::nearly_equal(result.m31, 14.0));
+				REQUIRE(math::nearly_equal(result.m32, 16.0));
+				REQUIRE(math::nearly_equal(result.m33, 18.0));
 
-				REQUIRE(math::nearly_equal(result.m<41>(), 20.0));
-				REQUIRE(math::nearly_equal(result.m<42>(), 22.0));
-				REQUIRE(math::nearly_equal(result.m<43>(), 24.0));
+				REQUIRE(math::nearly_equal(result.m41, 20.0));
+				REQUIRE(math::nearly_equal(result.m42, 22.0));
+				REQUIRE(math::nearly_equal(result.m43, 24.0));
 			}
 		}
 		SECTION("supports vector multiplication") {

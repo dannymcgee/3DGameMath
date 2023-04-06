@@ -75,7 +75,7 @@ AlignedValues::AlignedValues(Iter begin, Iter end, usize precision)
 
 		if (remainder > 0) {
 			fixed_point = true;
-			m_precision = std::min(m_precision, num_decimal_places(remainder, m_precision));
+			m_precision = std::min(precision, num_decimal_places(remainder, precision));
 		}
 	});
 

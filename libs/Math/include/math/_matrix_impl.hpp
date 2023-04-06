@@ -1,3 +1,5 @@
+#pragma once
+
 #include "math/_matrix_decl.h"
 
 #include <fmt/format.h>
@@ -25,6 +27,7 @@ using namespace sized; // NOLINT
 
 template <usize R, usize C, typename T>
 Matrix<R,C,T>::Matrix(std::initializer_list<Row> rows)
+	: Super()
 {
 	ASSERT(rows.size() > 0 && rows.size() <= R,
 		"Too many arguments for Matrix<{},{}>: Expected {}, received {}",
@@ -39,7 +42,7 @@ Matrix<R,C,T>::Matrix(std::initializer_list<Row> rows)
 
 template <usize R, usize C, typename T>
 Matrix<R,C,T>::Matrix(std::array<Row, R> data)
-	: m_data(data)
+	: Super{ .m_data = data }
 {}
 
 template <usize R, usize C, typename T>
@@ -306,13 +309,13 @@ namespace math {
 template <>
 inline auto Matrix<2,2,f64>::determinant() const -> f64
 {
-	return m<11>() * m<22>() - m<12>() * m<21>();
+	return m11 * m22 - m12 * m21;
 }
 
 template <>
 inline auto Matrix<2,2,f32>::determinant() const -> f32
 {
-	return m<11>() * m<22>() - m<12>() * m<21>();
+	return m11 * m22 - m12 * m21;
 }
 
 template <>
@@ -378,8 +381,8 @@ template <>
 inline auto Matrix<2,2,f32>::inverse(f32 determinant) const -> Matrix
 {
 	return (1 / determinant) * Matrix{
-		{  m<22>(), -m<12>() },
-		{ -m<21>(),  m<11>() },
+		{  m22, -m12 },
+		{ -m21,  m11 },
 	};
 }
 
@@ -387,8 +390,8 @@ template <>
 inline auto Matrix<2,2,f64>::inverse(f64 determinant) const -> Matrix
 {
 	return (1 / determinant) * Matrix{
-		{  m<22>(), -m<12>() },
-		{ -m<21>(),  m<11>() },
+		{  m22, -m12 },
+		{ -m21,  m11 },
 	};
 }
 
@@ -451,7 +454,7 @@ inline auto Matrix<R,C,T>::inverse() const -> std::optional<Matrix<C,R,T>>
 template <usize R, usize C, typename T>
 inline auto Matrix<R,C,T>::inverse(T determinant) const -> Matrix<C,R,T>
 {
-	ASSERT(!nearly_equal<T>(det, 0), "Cannot invert a matrix whose determinant is zero");
+	ASSERT(!nearly_equal<T>(determinant, 0), "Cannot invert a matrix whose determinant is zero {}", ' ');
 	return (1 / determinant) * adjoint();
 }
 
@@ -470,6 +473,7 @@ inline auto Matrix<R,C,T>::adjoint() const -> Matrix<C,R,T>
 
 // Orthogonalize ---------------------------------------------------------------
 
+// FIXME: These methods are not really working as expected
 template <>
 inline void Matrix<3,3,f64>::orthogonalize()
 {
@@ -481,6 +485,7 @@ inline void Matrix<3,3,f64>::orthogonalize()
 	row<3>() = (row<1>() ^ row<2>());
 }
 
+// FIXME: These methods are not really working as expected
 template <>
 inline void Matrix<3,3,f32>::orthogonalize()
 {
@@ -492,6 +497,7 @@ inline void Matrix<3,3,f32>::orthogonalize()
 	row<3>() = (row<1>() ^ row<2>());
 }
 
+// ReSharper disable once CppMemberFunctionMayBeStatic
 template <usize R, usize C, typename T>
 inline void Matrix<R,C,T>::orthogonalize()
 {
