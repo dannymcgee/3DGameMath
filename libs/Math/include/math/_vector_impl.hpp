@@ -1,3 +1,5 @@
+#pragma once
+
 #include "math/_vector_decl.h"
 
 #include <cmath>
@@ -5,7 +7,6 @@
 #include <utility>
 
 #include "math/assert.h"
-#include "math/fmt.h"
 
 
 namespace math {
@@ -16,7 +17,7 @@ template <usize D, typename T>
 const Vector<D,T> Vector<D,T>::Zero {};
 
 
-// Static All(T) ---------------------------------------------------------------
+// Static methods --------------------------------------------------------------
 
 template <usize D, typename T>
 inline auto Vector<D,T>::all(T value) -> Vector
@@ -26,6 +27,41 @@ inline auto Vector<D,T>::all(T value) -> Vector
 		result.components[i] = value;
 
 	return result;
+}
+
+template <usize D, typename T>
+constexpr auto Vector<D,T>::from_polar(T radius, T angle) -> Vector
+{
+	static_assert(D == 2, "Polar coordinates are only supported by 2-Dimensional vectors");
+	return {
+		radius * std::cos(angle),
+		radius * std::sin(angle),
+	};
+}
+
+template <usize D, typename T>
+constexpr auto Vector<D,T>::from_polar(const PolarCoords<T>& coords) -> Vector
+{
+	auto [radius,angle] = coords;
+	return from_polar(radius, angle);
+}
+
+template <usize D, typename T>
+constexpr auto Vector<D,T>::from_polar(T radius, T heading, T declination) -> Vector
+{
+	static_assert(D == 3, "Polar coordinates are only supported by 2-Dimensional vectors");
+	return {
+		radius * std::cos(declination) * std::sin(heading),
+		-radius * std::sin(declination),
+		radius * std::cos(declination) * std::cos(heading),
+	};
+}
+
+template <usize D, typename T>
+constexpr auto Vector<D,T>::from_polar(const SphericalCoords<T>& coords) -> Vector
+{
+	auto [radius,heading,declination] = coords;
+	return from_polar(radius, heading, declination);
 }
 
 

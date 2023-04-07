@@ -9,8 +9,10 @@
 
 
 namespace math {
-
 using namespace sized; // NOLINT(*-using-namespace)
+
+template <typename T> struct PolarCoords;
+template <typename T> struct SphericalCoords;
 
 namespace detail {
 
@@ -73,6 +75,15 @@ public:
 
 	/** Create a vector where all components have the same value. */
 	static auto all(T value) -> Vector;
+
+	/** Convert polar to cartesian coordinates. */
+	static constexpr auto from_polar(T radius, T angle) -> Vector;
+	/** Convert polar to cartesian coordinates. */
+	static constexpr auto from_polar(const PolarCoords<T>& coords) -> Vector;
+	/** Convert polar to cartesian coordinates. */
+	static constexpr auto from_polar(T radius, T heading, T declination) -> Vector;
+	/** Convert polar to cartesian coordinates. */
+	static constexpr auto from_polar(const SphericalCoords<T>& coords) -> Vector;
 
 	// Structured binding support
 	template <usize Index> inline auto get() &       { return components[Index]; }

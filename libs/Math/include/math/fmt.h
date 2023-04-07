@@ -29,7 +29,8 @@ public:
 	 * - Whether any values are fractional
 	 * - The max number of digits after the decimal point (if applicable)
 	 *
-	 * @param begin, end The range of values to consider
+	 * @param begin The range of values to consider
+	 * @param end The range of values to consider
 	 * @param precision The maximum number of decimal places to display
 	 */
 	template <typename Iter>
