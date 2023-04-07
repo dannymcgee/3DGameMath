@@ -192,43 +192,6 @@ BENCHMARK(BM_Mat2x2_Ctor);
 BENCHMARK(BM_Mat3x3_Ctor);
 BENCHMARK(BM_Mat4x4_Ctor);
 
-static void BM_Mat2x2_Ctor_Array(State& state)
-{
-	for (auto _ : state) {
-		auto mat = Mat2x2{std::array{
-			Vec2{ -3.0, 4.0 },
-			Vec2{  2.0, 5.0 },
-		}};
-		DoNotOptimize(mat);
-	}
-}
-static void BM_Mat3x3_Ctor_Array(State& state)
-{
-	for (auto _ : state) {
-		auto mat = Mat3x3{std::array{
-			Vec3{ -4.0, -3.0,  3.0 },
-			Vec3{  0.0,  2.0, -2.0 },
-			Vec3{  1.0,  4.0, -1.0 },
-		}};
-		DoNotOptimize(mat);
-	}
-}
-static void BM_Mat4x4_Ctor_Array(State& state)
-{
-	for (auto _ : state) {
-		auto mat = Mat4x4{std::array{
-			Vec4{ -4.0, -3.0,  3.0,  1.0 },
-			Vec4{  0.0,  2.0, -2.0,  0.0 },
-			Vec4{  1.0,  4.0, -1.0,  1.0 },
-			Vec4{  0.0,  2.0, -2.0,  1.0 },
-		}};
-		DoNotOptimize(mat);
-	}
-}
-BENCHMARK(BM_Mat2x2_Ctor_Array);
-BENCHMARK(BM_Mat3x3_Ctor_Array);
-BENCHMARK(BM_Mat4x4_Ctor_Array);
-
 
 // Matrix Transposition
 static void BM_Mat2x2_Transpose(State& state)

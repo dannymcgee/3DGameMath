@@ -139,8 +139,7 @@ protected:
 public:
 	// Constructors
 	Matrix() = default;
-	Matrix(std::initializer_list<Row> rows);
-	explicit Matrix(std::array<Row, Rows> data);
+	constexpr Matrix(std::initializer_list<Row> rows);
 
 	static constexpr auto identity() -> Matrix;
 
@@ -318,9 +317,6 @@ public:
 
 	// Misc / Utility
 	auto to_string(usize precision = 3) const -> std::string;
-
-// protected:
-// 	std::array<Row, Rows> m_data; // NOLINT(*-non-private-member-*)
 };
 
 }

@@ -26,7 +26,7 @@ using namespace sized; // NOLINT
 // Constructors ----------------------------------------------------------------
 
 template <usize R, usize C, typename T>
-Matrix<R,C,T>::Matrix(std::initializer_list<Row> rows)
+constexpr Matrix<R,C,T>::Matrix(std::initializer_list<Row> rows)
 	: Super()
 {
 	ASSERT(rows.size() > 0 && rows.size() <= R,
@@ -39,11 +39,6 @@ Matrix<R,C,T>::Matrix(std::initializer_list<Row> rows)
 		if (++i > R) break;
 	}
 }
-
-template <usize R, usize C, typename T>
-Matrix<R,C,T>::Matrix(std::array<Row, R> data)
-	: Super{ .m_data = data }
-{}
 
 template <usize R, usize C, typename T>
 constexpr auto Matrix<R,C,T>::identity() -> Matrix<R,C,T>
