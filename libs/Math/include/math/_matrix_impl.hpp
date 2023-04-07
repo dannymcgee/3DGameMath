@@ -36,7 +36,7 @@ constexpr Matrix<R,C,T>::Matrix(std::initializer_list<Row> rows)
 	usize i = 0;
 	for (auto&& row : rows) {
 		m_data[i] = std::move(row);
-		if (++i > R) break;
+		if (++i >= R) break;
 	}
 }
 
