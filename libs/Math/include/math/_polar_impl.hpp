@@ -38,7 +38,7 @@ constexpr auto PolarCoords<T>::canonical() const -> PolarCoords
 {
 	using namespace math::literals; // NOLINT
 
-	if (nearly_equal<T>(radius, 0))
+	if (math::nearly_equal<T>(radius, 0))
 		return { 0, 0 };
 
 	T r = radius;
@@ -72,7 +72,7 @@ auto PolarCoords<T>::to_string(usize precision) const -> std::string
 {
 	return ::fmt::format(
 		"({0:.{2}}, {1:.{2}}°)",
-		radius, rad2deg(angle), precision);
+		radius, math::rad2deg(angle), precision);
 }
 
 
@@ -96,7 +96,7 @@ constexpr auto SphericalCoords<T>::from_cartesian(T x, T y, T z) -> SphericalCoo
 		return { 0, 0, 0 };
 
 	T declination = std::asin(-y / radius);
-	T heading = nearly_equal<T>(declination, 90_deg, 0.0001)
+	T heading = math::nearly_equal<T>(declination, 90_deg, 0.0001)
 		? 0
 		: std::atan2(x, z);
 

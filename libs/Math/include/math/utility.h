@@ -28,14 +28,14 @@ constexpr auto nearly_equal(T lhs, T rhs, T tolerance = std::numeric_limits<T>::
 template <typename T = f64>
 constexpr auto deg2rad(T deg) -> T
 {
-	return deg * static_cast<T>(pi) / static_cast<T>(180);
+	return deg * static_cast<T>(math::pi) / static_cast<T>(180);
 }
 
 /** Convert radians to degrees. */
 template <typename T = f64>
 constexpr auto rad2deg(T rad) -> T
 {
-	return rad * static_cast<T>(180) / static_cast<T>(pi);
+	return rad * static_cast<T>(180) / static_cast<T>(math::pi);
 }
 
 /** Get the number of non-fractional digits in a number. */

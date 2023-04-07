@@ -43,7 +43,7 @@ template <usize D, typename T>
 constexpr auto Vector<D,T>::from_polar(const PolarCoords<T>& coords) -> Vector
 {
 	auto [radius,angle] = coords;
-	return from_polar(radius, angle);
+	return Vector::from_polar(radius, angle);
 }
 
 template <usize D, typename T>
@@ -61,7 +61,7 @@ template <usize D, typename T>
 constexpr auto Vector<D,T>::from_polar(const SphericalCoords<T>& coords) -> Vector
 {
 	auto [radius,heading,declination] = coords;
-	return from_polar(radius, heading, declination);
+	return Vector::from_polar(radius, heading, declination);
 }
 
 
@@ -210,7 +210,7 @@ namespace math {
 template <usize D, typename T>
 inline auto Vector<D,T>::operator/(T magnitude) const -> Vector
 {
-	if (nearly_equal<T>(magnitude, 0))
+	if (math::nearly_equal<T>(magnitude, 0))
 		return Zero;
 
 	auto result = *this;
@@ -223,7 +223,7 @@ inline auto Vector<D,T>::operator/(T magnitude) const -> Vector
 template <usize D, typename T>
 inline auto Vector<D,T>::operator/=(T magnitude) -> Vector&
 {
-	if (nearly_equal<T>(magnitude, 0)) {
+	if (math::nearly_equal<T>(magnitude, 0)) {
 		for (usize i = 0; i < D; ++i)
 			components[i] = 0;
 
@@ -246,7 +246,7 @@ inline auto Vector<D,T>::operator==(const Vector& other) const -> bool
 		return true;
 
 	for (usize i = 0; i < D; ++i)
-		if (!nearly_equal<T>(components[i], other.components[i]))
+		if (!math::nearly_equal<T>(components[i], other.components[i]))
 			return false;
 
 	return true;
@@ -259,7 +259,7 @@ inline auto Vector<D,T>::operator!=(const Vector& other) const -> bool
 		return false;
 
 	for (usize i = 0; i < D; ++i)
-		if (!nearly_equal<T>(components[i], other.components[i]))
+		if (!math::nearly_equal<T>(components[i], other.components[i]))
 			return true;
 
 	return false;
@@ -293,7 +293,7 @@ inline auto Vector<D,T>::normal() const -> Vector
 	Vector result;
 	auto len = length();
 
-	if (nearly_equal<T>(len, 0))
+	if (math::nearly_equal<T>(len, 0))
 		return Zero;
 
 	for (usize i = 0; i < D; ++i)
@@ -317,9 +317,9 @@ inline auto Vector<D,T>::unit() const -> Vector
 template <usize D, typename T>
 inline void Vector<D,T>::normalize()
 {
-	auto len = length();
+	T len = length();
 
-	if (nearly_equal<T>(len, 0)) {
+	if (math::nearly_equal<T>(len, 0)) {
 		*this = Zero;
 		return;
 	}
@@ -334,12 +334,12 @@ inline void Vector<D,T>::normalize()
 template <usize D, typename T>
 inline auto Vector<D,T>::length_and_direction() const -> std::tuple<T, Vector>
 {
-	Vector normal;
-	auto len = length();
+	T len = length();
 
-	if (nearly_equal<T>(len, 0))
+	if (math::nearly_equal<T>(len, 0))
 		return { len, Zero };
 
+	Vector normal;
 	for (usize i = 0; i < D; ++i)
 		normal.components[i] = components[i] / len;
 

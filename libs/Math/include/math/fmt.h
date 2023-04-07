@@ -76,12 +76,12 @@ AlignedValues::AlignedValues(Iter begin, Iter end, usize precision)
 
 		if (remainder > 0) {
 			fixed_point = true;
-			m_precision = std::min(precision, num_decimal_places(remainder, precision));
+			m_precision = std::min(precision, math::num_decimal_places(remainder, precision));
 		}
 	});
 
 	// Determine a consistent print-width for each value
-	m_width = num_digits(largest_abs);
+	m_width = math::num_digits(largest_abs);
 	if (needs_sign) m_width += 1;
 	if (fixed_point) m_width += m_precision + 1;
 
@@ -98,7 +98,7 @@ AlignedValues::AlignedValues(Iter begin, Iter end, usize precision)
 template <typename T>
 inline auto AlignedValues::format(T value) const -> std::string
 {
-	if (nearly_equal<T>(value, 0, m_tolerance))
+	if (math::nearly_equal<T>(value, 0, m_tolerance))
 		value = 0;
 
 	return ::fmt::format(m_fmt_string, value, m_width, m_precision);
@@ -107,7 +107,7 @@ inline auto AlignedValues::format(T value) const -> std::string
 template <typename T>
 inline void AlignedValues::print(T value) const
 {
-	if (nearly_equal<T>(value, 0, m_tolerance))
+	if (math::nearly_equal<T>(value, 0, m_tolerance))
 		value = 0;
 
 	::fmt::print(m_fmt_string, value, m_width, m_precision);

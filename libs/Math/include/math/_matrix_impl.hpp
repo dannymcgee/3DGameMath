@@ -454,7 +454,9 @@ inline auto Matrix<R,C,T>::inverse() const -> std::optional<Matrix<C,R,T>>
 template <usize R, usize C, typename T>
 inline auto Matrix<R,C,T>::inverse(T determinant) const -> Matrix<C,R,T>
 {
-	ASSERT(!nearly_equal<T>(determinant, 0), "Cannot invert a matrix whose determinant is zero {}", ' ');
+	ASSERT(!math::nearly_equal<T>(determinant, 0),
+		"Cannot invert a matrix whose determinant is zero {}", ' ');
+
 	return (1 / determinant) * adjoint();
 }
 
@@ -512,7 +514,7 @@ template <usize R, usize C, typename T>
 inline auto Matrix<R,C,T>::is_invertible(T& out_determinant) const -> bool
 {
 	out_determinant = determinant();
-	return !nearly_equal<T>(out_determinant, 0);
+	return !math::nearly_equal<T>(out_determinant, 0);
 }
 
 template <usize R, usize C, typename T>
@@ -537,8 +539,8 @@ constexpr auto Matrix<R,C,T>::is_identity(T tolerance) const -> bool
 {
 	for (usize r = 0; r < R; ++r)
 		for (usize c = 0; c < C; ++c)
-			if (r != c && !nearly_equal<T>(m_data[r][c], 0, tolerance)
-				|| r == c && !nearly_equal<T>(m_data[r][c], 1, tolerance))
+			if (r != c && !math::nearly_equal<T>(m_data[r][c], 0, tolerance)
+				|| r == c && !math::nearly_equal<T>(m_data[r][c], 1, tolerance))
 
 				return false;
 
