@@ -30,6 +30,54 @@ inline auto Vector<D,T>::all(T value) -> Vector
 }
 
 template <usize D, typename T>
+constexpr auto Vector<D,T>::unit_x() -> Vector
+{
+	return Vector{ 1 };
+}
+
+template <usize D, typename T>
+constexpr auto Vector<D,T>::unit_y() -> Vector
+{
+	static_assert(D >= 2);
+	return Vector{ 0, 1 };
+}
+
+template <usize D, typename T>
+constexpr auto Vector<D,T>::unit_z() -> Vector
+{
+	static_assert(D >= 3);
+	return Vector{ 0, 0, 1 };
+}
+
+template <usize D, typename T>
+constexpr auto Vector<D,T>::unit_w() -> Vector
+{
+	static_assert(D >= 4);
+	return Vector{ 0, 0, 0, 1 };
+}
+
+template <usize D, typename T>
+constexpr auto Vector<D,T>::up() -> Vector
+{
+	static_assert(D == 3);
+	return Vector{ 0, 1, 0 };
+}
+
+template <usize D, typename T>
+constexpr auto Vector<D,T>::right() -> Vector
+{
+	static_assert(D == 3);
+	return Vector{ 1, 0, 0 };
+}
+
+template <usize D, typename T>
+constexpr auto Vector<D,T>::forward() -> Vector
+{
+	static_assert(D == 3);
+	return Vector{ 0, 0, 1 };
+}
+
+template <usize D, typename T>
 constexpr auto Vector<D,T>::from_polar(T radius, T angle) -> Vector
 {
 	static_assert(D == 2, "Polar coordinates are only supported by 2-Dimensional vectors");
@@ -47,13 +95,13 @@ constexpr auto Vector<D,T>::from_polar(const PolarCoords<T>& coords) -> Vector
 }
 
 template <usize D, typename T>
-constexpr auto Vector<D,T>::from_polar(T radius, T heading, T declination) -> Vector
+constexpr auto Vector<D,T>::from_polar(T radius, T heading, T pitch) -> Vector
 {
 	static_assert(D == 3, "Polar coordinates are only supported by 2-Dimensional vectors");
 	return {
-		radius * std::cos(declination) * std::sin(heading),
-		-radius * std::sin(declination),
-		radius * std::cos(declination) * std::cos(heading),
+		radius * std::cos(pitch) * std::sin(heading),
+		-radius * std::sin(pitch),
+		radius * std::cos(pitch) * std::cos(heading),
 	};
 }
 
@@ -271,11 +319,7 @@ inline auto Vector<D,T>::operator!=(const Vector& other) const -> bool
 template <usize D, typename T>
 inline auto Vector<D,T>::length() const -> T
 {
-	T result = 0;
-	for (usize i = 0; i < D; ++i)
-		result += components[i] * components[i];
-
-	return std::sqrt(result);
+	return std::sqrt(sq_length());
 }
 
 template <usize D, typename T>
@@ -284,20 +328,35 @@ inline auto Vector<D,T>::magnitude() const -> T
 	return length();
 }
 
+template <usize D, typename T>
+inline auto Vector<D,T>::sq_length() const -> T
+{
+	T result = 0;
+	for (usize i = 0; i < D; ++i)
+		result += components[i] * components[i];
+
+	return result;
+}
+
 
 // Unit-Length Direction -------------------------------------------------------
 
 template <usize D, typename T>
 inline auto Vector<D,T>::normal() const -> Vector
 {
-	Vector result;
-	auto len = length();
+	T sq_len = sq_length();
 
-	if (math::nearly_equal<T>(len, 0))
+	if (math::nearly_equal<T>(sq_len, 0))
 		return Zero;
 
+	if (math::nearly_equal<T>(sq_len, 1))
+		return *this;
+
+	T scale = 1.0 / std::sqrt(sq_len);
+
+	Vector result;
 	for (usize i = 0; i < D; ++i)
-		result.components[i] = components[i] / len;
+		result.components[i] = components[i] * scale;
 
 	return result;
 }
@@ -317,15 +376,19 @@ inline auto Vector<D,T>::unit() const -> Vector
 template <usize D, typename T>
 inline void Vector<D,T>::normalize()
 {
-	T len = length();
+	T sq_len = sq_length();
 
-	if (math::nearly_equal<T>(len, 0)) {
+	if (math::nearly_equal<T>(sq_len, 0)) {
 		*this = Zero;
 		return;
 	}
 
+	if (math::nearly_equal<T>(sq_len, 1))
+		return;
+
+	T scale = 1.0 / std::sqrt(sq_len);
 	for (usize i = 0; i < D; ++i)
-		components[i] /= len;
+		components[i] *= scale;
 }
 
 

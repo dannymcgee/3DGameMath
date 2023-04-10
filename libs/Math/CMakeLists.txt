@@ -1,11 +1,21 @@
 add_library(
 	Math STATIC
+		"include/math/assert.h"
+
+		"include/math/euler.h"
+		"include/math/_euler_decl.h"
+		"include/math/_euler_impl.hpp"
+
+		"include/math/fmt.h"
+		"include/math/literals.h"
+
 		"include/math/matrix.h"
 		"include/math/_matrix_decl.h"
 		"include/math/_matrix_impl.hpp"
 
 			"include/math/matrix/rotation.h"
-			"src/math/matrix/rotation.cc"
+			"include/math/matrix/_rotation_decl.h"
+			"include/math/matrix/_rotation_impl.hpp"
 
 			"include/math/matrix/scale.h"
 			"src/math/matrix/scale.cc"
@@ -17,16 +27,17 @@ add_library(
 		"include/math/_polar_decl.h"
 		"include/math/_polar_impl.hpp"
 
+		"include/math/quat.h"
+		"include/math/_quat_decl.h"
+		"include/math/_quat_impl.hpp"
+
+		"include/math/spaces.h"
+
+		"include/math/utility.h"
+
 		"include/math/vector.h"
 		"include/math/_vector_decl.h"
 		"include/math/_vector_impl.hpp"
-
-		"include/math/literals.h"
-		"src/math/literals.cc"
-
-		"include/math/assert.h"
-		"include/math/fmt.h"
-		"include/math/utility.h"
 )
 
 target_include_directories(

@@ -4,12 +4,19 @@
 #include <catch2/catch_all.hpp>
 #include <fmt/format.h>
 
-#include <math/vector.h>
+#include <math/euler.h>
+#include <math/literals.h>
 #include <math/matrix.h>
+#include <math/matrix/rotation.h>
+#include <math/quat.h>
+#include <math/spaces.h>
 #include <math/utility.h>
+#include <math/vector.h>
 #include <sized.h>
 
 using math::Vec3;
+using math::Vec4;
+
 using math::Mat2x2;
 using math::Mat3x3;
 using math::Mat4x4;
@@ -20,7 +27,7 @@ TEST_CASE("math::Vector", "[vector]") {
 
 	SECTION("Vector<3, f32>") {
 		using Vec3 = math::Vector<3,f32>;  // NOLINT(clang-diagnostic-shadow)
-		
+
 		static constexpr f32 epsilon_practical = 0.00001f;
 
 		SECTION("supports construction with initializer list") {
@@ -700,6 +707,219 @@ TEST_CASE("math::Matrix<R,C,T>", "[matrix]") {
 				REQUIRE(math::nearly_equal(result.z, expected.z));
 				REQUIRE(math::nearly_equal(result.w, expected.w));
 			}
+		}
+	}
+}
+
+TEST_CASE("Orientation", "[orientation]") {
+	using namespace sized; // NOLINT(*-using-namespace)
+	using namespace math::literals; // NOLINT(*-using-namespace)
+
+	using math::Axis;
+	using math::Space;
+	using Euler = math::Euler<f64>;
+	using Quat = math::Quat<f64>;
+	using RotationMatrix = math::RotationMatrix<f64>;
+
+	constexpr f64 epsilon = 1e-13;
+
+	SECTION("Euler Angles") {
+		auto euler = Euler{
+			45_deg,
+			-15_deg,
+			3.3_deg,
+		};
+
+		SECTION("Literal constructor") {
+			REQUIRE(math::nearly_equal<f64>(euler.yaw, 45_deg));
+			REQUIRE(math::nearly_equal<f64>(euler.pitch, -15_deg));
+			REQUIRE(math::nearly_equal<f64>(euler.roll, 3.3_deg));
+		}
+		SECTION("Matrix conversion") {
+			SECTION("Local -> Parent") {
+				auto result = euler.matrix(Space::Local2Parent);
+
+				auto yaw_mat   = RotationMatrix(45_deg, Axis::Up);
+				auto pitch_mat = RotationMatrix(-15_deg, Axis::Right);
+				auto roll_mat  = RotationMatrix(3.3_deg, Axis::Forward);
+				auto expected = roll_mat * pitch_mat * yaw_mat;
+
+				REQUIRE(math::nearly_equal(result.m11, expected.m11, epsilon));
+				REQUIRE(math::nearly_equal(result.m12, expected.m12, epsilon));
+				REQUIRE(math::nearly_equal(result.m13, expected.m13, epsilon));
+
+				REQUIRE(math::nearly_equal(result.m21, expected.m21, epsilon));
+				REQUIRE(math::nearly_equal(result.m22, expected.m22, epsilon));
+				REQUIRE(math::nearly_equal(result.m23, expected.m23, epsilon));
+
+				REQUIRE(math::nearly_equal(result.m31, expected.m31, epsilon));
+				REQUIRE(math::nearly_equal(result.m32, expected.m32, epsilon));
+				REQUIRE(math::nearly_equal(result.m33, expected.m33, epsilon));
+			}
+			SECTION("Parent -> Local") {
+				auto result = euler.matrix(Space::Parent2Local);
+
+				auto yaw_mat   = RotationMatrix(45_deg, Vec3::up());
+				auto pitch_mat = RotationMatrix(-15_deg, Vec3::right());
+				auto roll_mat  = RotationMatrix(3.3_deg, Vec3::forward());
+				auto expected = (roll_mat * pitch_mat * yaw_mat).inverse();
+
+				REQUIRE(math::nearly_equal(result.m11, expected.m11, epsilon));
+				REQUIRE(math::nearly_equal(result.m12, expected.m12, epsilon));
+				REQUIRE(math::nearly_equal(result.m13, expected.m13, epsilon));
+
+				REQUIRE(math::nearly_equal(result.m21, expected.m21, epsilon));
+				REQUIRE(math::nearly_equal(result.m22, expected.m22, epsilon));
+				REQUIRE(math::nearly_equal(result.m23, expected.m23, epsilon));
+
+				REQUIRE(math::nearly_equal(result.m31, expected.m31, epsilon));
+				REQUIRE(math::nearly_equal(result.m32, expected.m32, epsilon));
+				REQUIRE(math::nearly_equal(result.m33, expected.m33, epsilon));
+			}
+		}
+		SECTION("Quaternion conversion") {
+			SECTION("Local -> Parent") {
+				auto result = euler.quat(Space::Local2Parent);
+
+				auto yaw_quat   = Quat::angle_axis(45_deg, Vec3::up());
+				auto pitch_quat = Quat::angle_axis(-15_deg, Vec3::right());
+				auto roll_quat  = Quat::angle_axis(3.3_deg, Vec3::forward());
+				auto expected = yaw_quat * pitch_quat * roll_quat;
+
+				REQUIRE(math::nearly_equal(result.w, expected.w, epsilon));
+				REQUIRE(math::nearly_equal(result.x, expected.x, epsilon));
+				REQUIRE(math::nearly_equal(result.y, expected.y, epsilon));
+				REQUIRE(math::nearly_equal(result.z, expected.z, epsilon));
+			}
+			SECTION("Parent -> Local") {
+				auto result = euler.quat(Space::Parent2Local);
+
+				auto yaw_quat   = Quat::angle_axis(45_deg, Vec3::up());
+				auto pitch_quat = Quat::angle_axis(-15_deg, Vec3::right());
+				auto roll_quat  = Quat::angle_axis(3.3_deg, Vec3::forward());
+				auto expected = (yaw_quat * pitch_quat * roll_quat).inverse();
+
+				REQUIRE(math::nearly_equal(result.w, expected.w, epsilon));
+				REQUIRE(math::nearly_equal(result.x, expected.x, epsilon));
+				REQUIRE(math::nearly_equal(result.y, expected.y, epsilon));
+				REQUIRE(math::nearly_equal(result.z, expected.z, epsilon));
+			}
+		}
+	}
+	SECTION("Quaternion") {
+		auto yaw_45 = Quat::angle_axis(45_deg, Vec3::up());
+		auto pitch_neg15 = Quat::angle_axis(-15_deg, Vec3::right());
+		auto roll_3_3 = Quat::angle_axis(3.3_deg, Vec3::forward());
+
+		auto quat = yaw_45 * pitch_neg15 * roll_3_3;
+
+		SECTION("Angle/axis extraction") {
+
+			auto [yaw_angle, yaw_axis] = yaw_45.angle_axis();
+			REQUIRE(math::nearly_equal(yaw_angle, 45_deg, epsilon));
+			REQUIRE(math::nearly_equal(yaw_axis.x, 0.0, epsilon));
+			REQUIRE(math::nearly_equal(yaw_axis.y, 1.0, epsilon));
+			REQUIRE(math::nearly_equal(yaw_axis.z, 0.0, epsilon));
+
+			auto [pitch_angle, pitch_axis] = pitch_neg15.angle_axis();
+			REQUIRE(math::nearly_equal(pitch_angle, 15_deg, epsilon));
+			REQUIRE(math::nearly_equal(pitch_axis.x, -1.0, epsilon));
+			REQUIRE(math::nearly_equal(pitch_axis.y, 0.0, epsilon));
+			REQUIRE(math::nearly_equal(pitch_axis.z, 0.0, epsilon));
+
+			auto [roll_angle, roll_axis] = roll_3_3.angle_axis();
+			REQUIRE(math::nearly_equal(roll_angle, 3.3_deg, epsilon));
+			REQUIRE(math::nearly_equal(roll_axis.x, 0.0, epsilon));
+			REQUIRE(math::nearly_equal(roll_axis.y, 0.0, epsilon));
+			REQUIRE(math::nearly_equal(roll_axis.z, 1.0, epsilon));
+		}
+		SECTION("Euler conversion") {
+			SECTION("Local -> Parent") {
+				auto euler = quat.euler(Space::Local2Parent);
+
+				REQUIRE(math::nearly_equal(euler.yaw, 45_deg, epsilon));
+				REQUIRE(math::nearly_equal(euler.pitch, -15_deg, epsilon));
+				REQUIRE(math::nearly_equal(euler.roll, 3.3_deg, epsilon));
+			}
+			SECTION("Parent -> Local") {
+				auto euler = quat.euler(Space::Parent2Local);
+
+				// TODO: _Are_ these the expected values? I think so, but this is
+				// just a snapshot of the current behavior, not externally verified
+				REQUIRE(math::nearly_equal(euler.yaw, -46.369_deg, 0.001));
+				REQUIRE(math::nearly_equal(euler.pitch, 8.164_deg, 0.001));
+				REQUIRE(math::nearly_equal(euler.roll, -13.044_deg, 0.001));
+			}
+		}
+		SECTION("Matrix conversion") {
+			SECTION("Local -> Parent") {
+				auto result = quat.matrix(Space::Local2Parent);
+
+				auto yaw_mat   = RotationMatrix(45_deg, Axis::Up);
+				auto pitch_mat = RotationMatrix(-15_deg, Axis::Right);
+				auto roll_mat  = RotationMatrix(3.3_deg, Axis::Forward);
+				auto expected = roll_mat * pitch_mat * yaw_mat;
+
+				REQUIRE(math::nearly_equal(result.m11, expected.m11, epsilon));
+				REQUIRE(math::nearly_equal(result.m12, expected.m12, epsilon));
+				REQUIRE(math::nearly_equal(result.m13, expected.m13, epsilon));
+
+				REQUIRE(math::nearly_equal(result.m21, expected.m21, epsilon));
+				REQUIRE(math::nearly_equal(result.m22, expected.m22, epsilon));
+				REQUIRE(math::nearly_equal(result.m23, expected.m23, epsilon));
+
+				REQUIRE(math::nearly_equal(result.m31, expected.m31, epsilon));
+				REQUIRE(math::nearly_equal(result.m32, expected.m32, epsilon));
+				REQUIRE(math::nearly_equal(result.m33, expected.m33, epsilon));
+			}
+			SECTION("Parent -> Local") {
+				auto result = quat.matrix(Space::Parent2Local);
+
+				auto yaw_mat   = RotationMatrix(45_deg, Vec3::up());
+				auto pitch_mat = RotationMatrix(-15_deg, Vec3::right());
+				auto roll_mat  = RotationMatrix(3.3_deg, Vec3::forward());
+				auto expected = (roll_mat * pitch_mat * yaw_mat).inverse();
+
+				REQUIRE(math::nearly_equal(result.m11, expected.m11, epsilon));
+				REQUIRE(math::nearly_equal(result.m12, expected.m12, epsilon));
+				REQUIRE(math::nearly_equal(result.m13, expected.m13, epsilon));
+
+				REQUIRE(math::nearly_equal(result.m21, expected.m21, epsilon));
+				REQUIRE(math::nearly_equal(result.m22, expected.m22, epsilon));
+				REQUIRE(math::nearly_equal(result.m23, expected.m23, epsilon));
+
+				REQUIRE(math::nearly_equal(result.m31, expected.m31, epsilon));
+				REQUIRE(math::nearly_equal(result.m32, expected.m32, epsilon));
+				REQUIRE(math::nearly_equal(result.m33, expected.m33, epsilon));
+			}
+		}
+	}
+	SECTION("Matrix") {
+		auto yaw_mat   = RotationMatrix(45_deg, Axis::Up);
+		auto pitch_mat = RotationMatrix(-15_deg, Axis::Right);
+		auto roll_mat  = RotationMatrix(3.3_deg, Axis::Forward);
+		auto matrix = roll_mat * pitch_mat * yaw_mat;
+
+		SECTION("Quaternion conversion") {
+			auto result = matrix.quat();
+
+			auto yaw_quat   = Quat::angle_axis(45_deg, Vec3::up());
+			auto pitch_quat = Quat::angle_axis(-15_deg, Vec3::right());
+			auto roll_quat  = Quat::angle_axis(3.3_deg, Vec3::forward());
+			auto expected = yaw_quat * pitch_quat * roll_quat;
+
+			REQUIRE(math::nearly_equal(result.w, expected.w, epsilon));
+			REQUIRE(math::nearly_equal(result.x, expected.x, epsilon));
+			REQUIRE(math::nearly_equal(result.y, expected.y, epsilon));
+			REQUIRE(math::nearly_equal(result.z, expected.z, epsilon));
+		}
+		SECTION("Euler angles conversion") {
+			auto result = matrix.euler();
+			auto expected = Euler{ 45_deg, -15_deg, 3.3_deg };
+
+			REQUIRE(math::nearly_equal(result.yaw, expected.yaw, epsilon));
+			REQUIRE(math::nearly_equal(result.pitch, expected.pitch, epsilon));
+			REQUIRE(math::nearly_equal(result.roll, expected.roll, epsilon));
 		}
 	}
 }

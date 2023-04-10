@@ -6,6 +6,8 @@
 #include <limits>
 #include <type_traits>
 
+#include <fmt/format.h>
+
 #include <sized.h>
 
 namespace math {
@@ -62,6 +64,18 @@ constexpr auto num_decimal_places(T value, usize max = 20) -> usize
 		n *= 10.0, ++count);
 
 	return count;
+}
+
+template <typename T>
+constexpr auto wrap_pi(T angle) -> T
+{
+	if (std::abs(angle) > math::pi)
+		return angle;
+
+	constexpr T two_pi = 2 * pi;
+	T revs = std::floor((angle + math::pi) * (1 / two_pi));
+
+	return angle - (revs * two_pi);
 }
 
 

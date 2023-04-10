@@ -13,10 +13,8 @@
 namespace math {
 using namespace sized; // NOLINT(*-using-namespace)
 
-using math::Vec2; // Hack to silence the warning about unused #include "math/vector.h"
-
 namespace detail {
-// NOLINTBEGIN(*-pro-type-member-init, *-avoid-c-arrays)
+
 template <usize Rows, usize Cols, typename T = f64>
 class Matrix {
 public:
@@ -123,7 +121,7 @@ public:
 		};
 	};
 };
-// NOLINTEND(*-pro-type-member-init, *-avoid-c-arrays)
+
 } // namespace detail
 
 template <usize Rows, usize Cols, typename T = f64>
@@ -257,7 +255,7 @@ public:
 	auto transpose() const -> Matrix<Cols, Rows, T>;
 
 	// Scalar multiplication
-	auto operator*(T value) const -> Matrix;
+	constexpr auto operator*(T value) const -> Matrix;
 	auto operator*=(T value) -> Matrix&;
 
 	/** Calculate the determinant of the matrix. */

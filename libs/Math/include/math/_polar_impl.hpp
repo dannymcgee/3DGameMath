@@ -117,7 +117,7 @@ constexpr auto SphericalCoords<T>::canonical() const -> SphericalCoords
 
 	T r = radius;
 	T h = heading;
-	T p = declination;
+	T p = pitch;
 
 	// Clamp radius to positive
 	if (r < 0) {
@@ -174,7 +174,7 @@ auto SphericalCoords<T>::to_string(usize precision) const -> std::string
 {
 	return ::fmt::format(
 		"(r {0:.{3}}, h {1:.{3}}°, p {2:.{3}}°)",
-		radius, math::rad2deg(heading), math::rad2deg(declination), precision);
+		radius, math::rad2deg(heading), math::rad2deg(pitch), precision);
 }
 
 } // namespace math

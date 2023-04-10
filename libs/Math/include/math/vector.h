@@ -5,6 +5,7 @@
 
 
 namespace math {
+template <usize D, typename T> struct Vector;
 
 using Vec2 = Vector<2>;
 using Vec3 = Vector<3>;

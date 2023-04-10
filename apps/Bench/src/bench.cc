@@ -1,10 +1,14 @@
-#include "math/_matrix_decl.h"
+#include "math/matrix/_rotation_decl.h"
 #include <benchmark/benchmark.h>
 
 #include <array>
 
+#include <math/euler.h>
+#include <math/literals.h>
 #include <math/matrix.h>
 #include <math/matrix/rotation.h>
+#include <math/quat.h>
+#include <math/spaces.h>
 #include <math/vector.h>
 #include <sized.h>
 
@@ -14,14 +18,19 @@ using namespace sized;
 using benchmark::State;
 using benchmark::DoNotOptimize;
 
-using Mat2x2 = math::Matrix<2,2,f64>;
-using Mat3x3 = math::Matrix<3,3,f64>;
-using Mat4x4 = math::Matrix<4,4,f64>;
-using math::RotationMatrix;
+using math::Mat2x2;
+using math::Mat3x3;
+using math::Mat4x4;
 
-using Vec2 = math::Vector<2,f64>;
-using Vec3 = math::Vector<3,f64>;
-using Vec4 = math::Vector<4,f64>;
+using RotationMatrix = math::RotationMatrix<f64>;
+using Euler = math::Euler<f64>;
+using Quat = math::Quat<f64>;
+using math::Axis;
+using math::Space;
+
+using math::Vec2;
+using math::Vec3;
+using math::Vec4;
 using Vec3f = math::Vector<3,f32>;
 
 
@@ -318,7 +327,6 @@ BENCHMARK(BM_Mat4x4_Inverse);
 BENCHMARK(BM_Identity4x4_Inverse);
 
 
-// FIXME: Huge performance regression -- ~0.8ns -> ~25ns
 static void BM_Mat3x3_Orthogonalize(State& state)
 {
 	auto angle = math::deg2rad(45.0);
@@ -332,6 +340,139 @@ static void BM_Mat3x3_Orthogonalize(State& state)
 	}
 }
 BENCHMARK(BM_Mat3x3_Orthogonalize);
+
+
+static void BM_EulerToMatrix_Expanded(State& state)
+{
+	using namespace math::literals;
+	auto euler = Euler{ 31.9_deg, -22.8_deg, 17.2_deg };
+
+	for (auto _ : state)
+		DoNotOptimize(euler.matrix(Space::Local2Parent));
+}
+static void BM_EulerToMatrix_Composed(State& state)
+{
+	using namespace math::literals;
+	auto euler = Euler{ 31.9_deg, -22.8_deg, 17.2_deg };
+
+	for (auto _ : state) {
+		auto mat
+			= RotationMatrix(euler.roll, Axis::Forward)
+			* RotationMatrix(euler.pitch, Axis::Right)
+			* RotationMatrix(euler.yaw, Axis::Up);
+
+		DoNotOptimize(mat);
+	}
+}
+BENCHMARK(BM_EulerToMatrix_Expanded);
+BENCHMARK(BM_EulerToMatrix_Composed);
+
+
+static void BM_Max_Recursive(State& state)
+{
+	using namespace math::literals;
+	auto m = RotationMatrix(45_deg, Vec3{ -0.25, 0.5, 0.33 }.normal());
+	f64 w = m.m11 + m.m22 + m.m33;
+	f64 x = m.m11 - m.m22 - m.m33;
+	f64 y = m.m22 - m.m11 - m.m33;
+	f64 z = m.m33 - m.m11 - m.m22;
+
+	for (auto _ : state) {
+		f64 largest = std::max(w, std::max(x, std::max(y, z)));
+		DoNotOptimize(largest);
+	}
+}
+static void BM_Max_InitList(State& state)
+{
+	using namespace math::literals;
+	auto m = RotationMatrix(45_deg, Vec3{ -0.25, 0.5, 0.33 }.normal());
+	f64 w = m.m11 + m.m22 + m.m33;
+	f64 x = m.m11 - m.m22 - m.m33;
+	f64 y = m.m22 - m.m11 - m.m33;
+	f64 z = m.m33 - m.m11 - m.m22;
+
+	for (auto _ : state) {
+		f64 largest = std::max({ w, x, y, z });
+		DoNotOptimize(largest);
+	}
+}
+BENCHMARK(BM_Max_Recursive);
+BENCHMARK(BM_Max_InitList);
+
+
+static void BM_Slerp(State& state)
+{
+	using namespace math::literals;
+	auto three60 = Quat::angle_axis(360_deg, Vec3::up());
+	auto seven20 = Quat::angle_axis(720_deg, Vec3::up());
+
+	for (auto _ : state)
+		DoNotOptimize(Quat::slerp(three60, seven20, 0.5));
+}
+BENCHMARK(BM_Slerp);
+
+
+static void BM_Euler2Quat_Composed1(State& state)
+{
+	using namespace math::literals;
+	auto euler = Euler{ 45_deg, -15_deg, 3.3_deg };
+
+	for (auto _ : state) {
+		auto yq = Quat{
+			std::cos(euler.yaw * 0.5),
+			{ 0, std::sin(euler.yaw * 0.5), 0 },
+		};
+		auto pq = Quat{
+			std::cos(euler.pitch * 0.5),
+			{ std::sin(euler.pitch * 0.5), 0, 0 },
+		};
+		auto rq = Quat{
+			std::cos(euler.roll * 0.5),
+			{ 0, 0, std::sin(euler.roll * 0.5) },
+		};
+		auto result = yq * pq * rq;
+		DoNotOptimize(result);
+	}
+}
+static void BM_Euler2Quat_Composed2(State& state)
+{
+	using namespace math::literals;
+	auto euler = Euler{ 45_deg, -15_deg, 3.3_deg };
+
+	for (auto _ : state) {
+		auto yq = Quat::angle_axis(euler.yaw, Vec3::up());
+		auto pq = Quat::angle_axis(euler.pitch, Vec3::right());
+		auto rq = Quat::angle_axis(euler.roll, Vec3::forward());
+		auto result = yq * pq * rq;
+		DoNotOptimize(result);
+	}
+}
+static void BM_Euler2Quat_Expanded(State& state)
+{
+	using namespace math::literals;
+	auto euler = Euler{ 45_deg, -15_deg, 3.3_deg };
+
+	for (auto _ : state) {
+		f64 cos_y2 = std::cos(euler.yaw * 0.5);
+		f64 cos_p2 = std::cos(euler.pitch * 0.5);
+		f64 cos_r2 = std::cos(euler.roll * 0.5);
+
+		f64 sin_y2 = std::sin(euler.yaw * 0.5);
+		f64 sin_p2 = std::sin(euler.pitch * 0.5);
+		f64 sin_r2 = std::sin(euler.roll * 0.5);
+
+		auto result = Quat{
+			 cos_y2*cos_p2*cos_r2 + sin_y2*sin_p2*sin_r2,
+			-cos_y2*sin_p2*cos_r2 - sin_y2*cos_p2*sin_r2,
+			 cos_y2*sin_p2*sin_r2 - sin_y2*cos_p2*cos_r2,
+			 sin_y2*sin_p2*cos_r2 - cos_y2*cos_p2*sin_r2,
+		};
+		DoNotOptimize(result);
+	}
+}
+BENCHMARK(BM_Euler2Quat_Composed1);
+BENCHMARK(BM_Euler2Quat_Composed2);
+BENCHMARK(BM_Euler2Quat_Expanded);
 
 
 BENCHMARK_MAIN();

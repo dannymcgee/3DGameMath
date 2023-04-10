@@ -192,7 +192,7 @@ inline auto Matrix<R,C,T>::transpose() const -> Matrix<C,R,T>
 // Scalar multiplication -------------------------------------------------------
 
 template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::operator*(T value) const -> Matrix
+constexpr auto Matrix<R,C,T>::operator*(T value) const -> Matrix
 {
 	auto result = *this;
 	for (usize r = 0; r < R; ++r)
@@ -214,7 +214,7 @@ inline auto Matrix<R,C,T>::operator*=(T value) -> Matrix&
 } // namespace math
 
 template <sized::usize R, sized::usize C, typename T>
-inline auto operator*(T lhs, const math::Matrix<R,C,T>& rhs) -> math::Matrix<R,C,T>
+constexpr auto operator*(T lhs, const math::Matrix<R,C,T>& rhs) -> math::Matrix<R,C,T>
 {
 	return rhs * lhs;
 }

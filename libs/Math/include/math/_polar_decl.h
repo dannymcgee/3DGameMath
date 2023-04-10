@@ -8,8 +8,8 @@
 namespace math {
 using namespace sized; // NOLINT
 
-template <usize D, typename T>
-struct Vector;
+template <usize D, typename T> struct Vector;
+
 
 template <typename T = f64>
 struct PolarCoords {
@@ -25,11 +25,12 @@ struct PolarCoords {
 	auto to_string(usize precision = 3) const -> std::string;
 };
 
+
 template <typename T = f64>
 struct SphericalCoords {
 	T radius;
 	T heading;
-	T declination;
+	T pitch;
 
 	static constexpr auto from_cartesian(const Vector<3,T>& coords) -> SphericalCoords;
 	static constexpr auto from_cartesian(T x, T y, T z) -> SphericalCoords;

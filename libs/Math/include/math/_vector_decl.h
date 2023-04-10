@@ -76,12 +76,21 @@ public:
 	/** Create a vector where all components have the same value. */
 	static auto all(T value) -> Vector;
 
+	static constexpr auto unit_x() -> Vector;
+	static constexpr auto unit_y() -> Vector;
+	static constexpr auto unit_z() -> Vector;
+	static constexpr auto unit_w() -> Vector;
+
+	static constexpr auto up() -> Vector;
+	static constexpr auto right() -> Vector;
+	static constexpr auto forward() -> Vector;
+
 	/** Convert polar to cartesian coordinates. */
 	static constexpr auto from_polar(T radius, T angle) -> Vector;
 	/** Convert polar to cartesian coordinates. */
 	static constexpr auto from_polar(const PolarCoords<T>& coords) -> Vector;
 	/** Convert polar to cartesian coordinates. */
-	static constexpr auto from_polar(T radius, T heading, T declination) -> Vector;
+	static constexpr auto from_polar(T radius, T heading, T pitch) -> Vector;
 	/** Convert polar to cartesian coordinates. */
 	static constexpr auto from_polar(const SphericalCoords<T>& coords) -> Vector;
 
@@ -131,6 +140,8 @@ public:
 	auto length() const -> T;
 	/** Calculate the length (magnitude) of the vector. */
 	auto magnitude() const -> T;
+	/** Sum of the squares of each component. */
+	auto sq_length() const -> T;
 
 	/** Calculate the unit-length direction of the vector. */
 	auto unit() const -> Vector;
