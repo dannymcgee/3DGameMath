@@ -62,7 +62,7 @@ inline auto AABBox<T>::add(std::initializer_list<Vec3> points) -> AABBox&
 
 template <typename T>
 template <typename Iter>
-inline auto AABBox<T>::add(Iter points) -> ENABLE_IF(ITER_OF(Iter, Vec3), AABBox&)
+inline auto AABBox<T>::add(const Iter& points) -> ENABLE_IF(ITER_OF(Iter, Vec3), AABBox&)
 {
 	for (const auto& p : points)
 		add(p);

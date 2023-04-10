@@ -30,6 +30,6 @@ auto main() -> int
 	// euler();
 	// slerp();
 	// orientation_conversions();
-	// bbox();
+	bbox();
 	plane();
 }

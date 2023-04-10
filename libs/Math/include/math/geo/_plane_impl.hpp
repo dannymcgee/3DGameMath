@@ -47,7 +47,7 @@ constexpr auto Plane<T>::from_points(
 
 template <typename T>
 template <typename Iter>
-constexpr auto Plane<T>::best_fit(Iter points) -> ENABLE_IF(ITER_OF(Iter, Vec3), Plane)
+constexpr auto Plane<T>::best_fit(const Iter& points) -> ENABLE_IF(ITER_OF(Iter, Vec3), Plane)
 {
 	// normal.x = E (z[i] + z[i+1]) (y[i] - y[i+1])
 	// normal.y = E (x[i] + x[i+1]) (z[i] - z[i+1])

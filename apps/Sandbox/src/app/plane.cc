@@ -111,6 +111,6 @@ void best_fit()
 
 void plane()
 {
-	// triangle();
+	triangle();
 	best_fit();
 }

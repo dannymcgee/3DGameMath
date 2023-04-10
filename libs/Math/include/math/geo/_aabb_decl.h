@@ -52,7 +52,7 @@ struct AABBox {
 
 	/** Expand the bounding box to contain all the given points. */
 	template <typename Iter>
-	auto add(Iter points) -> ENABLE_IF(ITER_OF(Iter, Vec3), AABBox&);
+	auto add(const Iter& points) -> ENABLE_IF(ITER_OF(Iter, Vec3), AABBox&);
 
 
 	// Derived properties -------------------------------------------------------

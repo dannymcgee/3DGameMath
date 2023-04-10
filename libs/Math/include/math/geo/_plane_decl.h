@@ -30,7 +30,7 @@ struct Plane {
 
 	/** Create a best-fit plane from a collection of points. */
 	template <typename Iter>
-	static constexpr auto best_fit(Iter points) -> ENABLE_IF(ITER_OF(Iter, Vec3), Plane);
+	static constexpr auto best_fit(const Iter& points) -> ENABLE_IF(ITER_OF(Iter, Vec3), Plane);
 
 
 	// Queries ------------------------------------------------------------------
