@@ -44,6 +44,16 @@ public:
 	template <typename T>
 	inline void print(T value) const;
 
+	inline void debug() const
+	{
+		::fmt::print("AlignedValues{{\n");
+		::fmt::print("   .m_fmt_string = \"{}\",\n", m_fmt_string);
+		::fmt::print("   .m_width = {},\n", m_width);
+		::fmt::print("   .m_precision = {},\n", m_precision);
+		::fmt::print("   .m_tolerance = {},\n", m_tolerance);
+		::fmt::print("}}\n\n");
+	}
+
 private:
 	std::string m_fmt_string;
 	usize m_width = 0;
@@ -88,13 +98,9 @@ AlignedValues::AlignedValues(Iter begin, Iter end, usize precision)
 	if (fixed_point) m_width += m_precision + 1;
 
 	// Build the format string
-	m_fmt_string.reserve(16);
-	m_fmt_string.append(needs_sign
-		? "{0:> {1}.{2}"
-		: "{0:>{1}.{2}");
-	m_fmt_string.append(fixed_point
-		? "f}"
-		: "}");
+	m_fmt_string = needs_sign
+		? "{0:> {1}.{2}f}"
+		: "{0:>{1}.{2}f}";
 }
 
 template <typename T>

@@ -46,7 +46,7 @@ constexpr auto num_digits(T value) -> usize // NOLINT(*-cognitive-complexity)
 {
 	usize count = 1;
 	for (usize order = 10, n = std::abs(value);
-		n > order && count <= 20;
+		n >= order && count < 20;
 		order *= 10, ++count);
 
 	return count;
@@ -60,7 +60,7 @@ constexpr auto num_decimal_places(T value, usize max = 20) -> usize
 
 	usize count = 0;
 	for (T n = std::abs(value);
-		static_cast<i64>(n) != n && count <= max;
+		static_cast<i64>(n) != n && count < max;
 		n *= 10.0, ++count);
 
 	return count;
