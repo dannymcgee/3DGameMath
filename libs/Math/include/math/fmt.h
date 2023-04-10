@@ -54,8 +54,7 @@ private:
 
 template <typename Iter>
 AlignedValues::AlignedValues(Iter begin, Iter end, usize precision)
-	: m_precision(precision)
-	, m_tolerance(std::pow(0.1, precision))
+	: m_tolerance(std::pow(0.1, precision))
 {
 	// Iterate through all values to determine:
 	// - The max number of non-fractional digits
@@ -76,7 +75,10 @@ AlignedValues::AlignedValues(Iter begin, Iter end, usize precision)
 
 		if (remainder > 0) {
 			fixed_point = true;
-			m_precision = std::min(precision, math::num_decimal_places(remainder, precision));
+
+			m_precision = (m_precision == 0)
+				? math::num_decimal_places(remainder, precision)
+				: std::max(m_precision, math::num_decimal_places(remainder, precision));
 		}
 	});
 
