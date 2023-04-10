@@ -1,6 +1,7 @@
 add_executable(
 	Sandbox
 		"src/main.cc"
+		"src/app/bbox.cc"
 		"src/app/coord_spaces.cc"
 		"src/app/euler.cc"
 		"src/app/invalid_matrix_ctor.cc"
@@ -10,6 +11,7 @@ add_executable(
 		"src/app/matrix_transformation.cc"
 		"src/app/matrix.cc"
 		"src/app/orientation_conversions.cc"
+		"src/app/plane.cc"
 		"src/app/polar_coords.cc"
 		"src/app/quaternion.cc"
 		"src/app/rotation_matrix.cc"

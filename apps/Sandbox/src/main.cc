@@ -13,6 +13,8 @@ void quaternion();
 void euler();
 void slerp();
 void orientation_conversions();
+void bbox();
+void plane();
 
 auto main() -> int
 {
@@ -22,10 +24,12 @@ auto main() -> int
 	// matrix_determinants();
 	// invalid_matrix_ctor();
 	// matrix_orthogonality();
-	matrix_transformation();
+	// matrix_transformation();
 	// polar_coords();
 	// quaternion();
 	// euler();
 	// slerp();
 	// orientation_conversions();
+	// bbox();
+	plane();
 }

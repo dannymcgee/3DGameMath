@@ -74,7 +74,7 @@ public:
 	static const Vector Zero;
 
 	/** Create a vector where all components have the same value. */
-	static auto all(T value) -> Vector;
+	static constexpr auto all(T value) -> Vector;
 
 	static constexpr auto unit_x() -> Vector;
 	static constexpr auto unit_y() -> Vector;

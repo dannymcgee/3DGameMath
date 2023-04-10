@@ -20,7 +20,7 @@ const Vector<D,T> Vector<D,T>::Zero {};
 // Static methods --------------------------------------------------------------
 
 template <usize D, typename T>
-inline auto Vector<D,T>::all(T value) -> Vector
+constexpr auto Vector<D,T>::all(T value) -> Vector
 {
 	Vector result;
 	for (usize i = 0; i < D; ++i)
