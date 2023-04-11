@@ -15,6 +15,7 @@ void slerp();
 void orientation_conversions();
 void bbox();
 void plane();
+void tri();
 
 auto main() -> int
 {
@@ -30,6 +31,7 @@ auto main() -> int
 	// euler();
 	// slerp();
 	// orientation_conversions();
-	bbox();
-	plane();
+	// bbox();
+	// plane();
+	tri();
 }

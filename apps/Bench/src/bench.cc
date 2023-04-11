@@ -1,9 +1,10 @@
-#include "math/matrix/_rotation_decl.h"
 #include <benchmark/benchmark.h>
 
 #include <array>
+#include <cstdlib>
 
 #include <math/euler.h>
+#include <math/geo/tri.h>
 #include <math/literals.h>
 #include <math/matrix.h>
 #include <math/matrix/rotation.h>
@@ -32,6 +33,8 @@ using math::Vec2;
 using math::Vec3;
 using math::Vec4;
 using Vec3f = math::Vector<3,f32>;
+
+using math::geo::Tri;
 
 
 // Constructor (sanity check)
@@ -473,6 +476,119 @@ static void BM_Euler2Quat_Expanded(State& state)
 BENCHMARK(BM_Euler2Quat_Composed1);
 BENCHMARK(BM_Euler2Quat_Composed2);
 BENCHMARK(BM_Euler2Quat_Expanded);
+
+
+static void BM_Cart2Bary_eq1(State& state)
+{
+	auto t = Tri<f64>{
+		Vec3{ -1,  0, -0.5 },
+		Vec3{  0,  0,  1   },
+		Vec3{  1,  0, -0.5 },
+	};
+	auto p = Vec3{ 0,  0,  0 };
+
+	Vec3 result;
+
+	for (auto _ : state) {
+		Vec3 d1 = t.edge<3>();
+		Vec3 d2 = t.edge<1>();
+		Vec3 n = d1 ^ d2;
+
+		f64 u1, u2, u3, u4;
+		f64 v1, v2, v3, v4;
+
+		if (std::abs(n.x) >= std::abs(n.y)
+			&& std::abs(n.x) >= std::abs(n.z))
+		{
+			// Discard x, project onto yz plane
+			u1 = t.v1.y - t.v3.y;
+			u2 = t.v2.y - t.v3.y;
+			u3 = p.y - t.v1.y;
+			u4 = p.y - t.v3.y;
+
+			v1 = t.v1.z - t.v3.z;
+			v2 = t.v2.z - t.v3.z;
+			v3 = p.z - t.v1.z;
+			v4 = p.z - t.v3.z;
+		}
+		else if (std::abs(n.y) >= std::abs(n.z)) {
+			// Discard y, project onto xz plane
+			u1 = t.v1.z - t.v3.z;
+			u2 = t.v2.z - t.v3.z;
+			u3 = p.z - t.v1.z;
+			u4 = p.z - t.v3.z;
+
+			v1 = t.v1.x - t.v3.x;
+			v2 = t.v2.x - t.v3.x;
+			v3 = p.x - t.v1.x;
+			v4 = p.x - t.v3.x;
+		}
+		else {
+			// Discard z, project onto xy plane
+			u1 = t.v1.x - t.v3.x;
+			u2 = t.v2.x - t.v3.x;
+			u3 = p.x - t.v1.x;
+			u4 = p.x - t.v3.x;
+
+			v1 = t.v1.y - t.v3.y;
+			v2 = t.v2.y - t.v3.y;
+			v3 = p.y - t.v1.y;
+			v4 = p.y - t.v3.y;
+		}
+
+		f64 denom = v1 * u2 - v2 * u1;
+		f64 scale = 1.0 / denom;
+
+		f64 x = (v4 * u2 - v2 * u4) * scale;
+		f64 y = (v1 * u3 - v3 * u1) * scale;
+		f64 z = 1.0 - x - y;
+
+		result = Vec3{ x, y, z };
+
+		DoNotOptimize(result);
+	}
+}
+static void BM_Cart2Bary_eq2(State& state)
+{
+	auto t = Tri<f64>{
+		Vec3{ -1,  0, -0.5 },
+		Vec3{  0,  0,  1   },
+		Vec3{  1,  0, -0.5 },
+	};
+	auto p = Vec3{ 0,  0,  0 };
+
+	Vec3 result;
+
+	for (auto _ : state) {
+		Vec3 e1 = t.edge<1>();
+		Vec3 e2 = t.edge<2>();
+		Vec3 e3 = t.edge<3>();
+
+		Vec3 d1 = p - t.v1;
+		Vec3 d2 = p - t.v2;
+		Vec3 d3 = p - t.v3;
+
+		Vec3 e1_x_e2 = e1 ^ e2;
+		Vec3 n = e1_x_e2.normal();
+
+		f64 at  = (e1_x_e2 | n);
+		f64 at1 = ((e1 ^ d3) | n);
+		f64 at2 = ((e2 ^ d1) | n);
+		f64 at3 = ((e3 ^ d2) | n);
+
+		f64 scale = 1 / at;
+
+		result = Vec3{
+			scale * at1,
+			scale * at2,
+			scale * at3,
+		};
+
+		DoNotOptimize(result);
+	}
+}
+BENCHMARK(BM_Cart2Bary_eq1);
+BENCHMARK(BM_Cart2Bary_eq2);
 
 
 BENCHMARK_MAIN();

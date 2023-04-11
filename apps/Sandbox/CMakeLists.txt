@@ -17,6 +17,7 @@ add_executable(
 		"src/app/rotation_matrix.cc"
 		"src/app/scale_matrix.cc"
 		"src/app/slerp.cc"
+		"src/app/tri.cc"
 		"src/app/vector_exercises.cc"
 )
 

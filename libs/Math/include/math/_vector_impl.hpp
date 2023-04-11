@@ -402,9 +402,10 @@ inline auto Vector<D,T>::length_and_direction() const -> std::tuple<T, Vector>
 	if (math::nearly_equal<T>(len, 0))
 		return { len, Zero };
 
+	T scale = 1 / len;
 	Vector normal;
 	for (usize i = 0; i < D; ++i)
-		normal.components[i] = components[i] / len;
+		normal.components[i] = components[i] * scale;
 
 	return { len, normal };
 }
