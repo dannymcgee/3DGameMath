@@ -45,6 +45,10 @@ add_library(
 			"include/math/matrix/scale.h"
 			"src/math/matrix/scale.cc"
 
+			"include/math/matrix/transform.h"
+			"include/math/matrix/_transform_decl.h"
+			"include/math/matrix/_transform_impl.hpp"
+
 			"include/math/matrix/translation.h"
 			"src/math/matrix/translation.cc"
 

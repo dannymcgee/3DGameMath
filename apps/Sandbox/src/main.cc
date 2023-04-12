@@ -19,6 +19,7 @@ void tri();
 
 auto main() -> int
 {
+	// matrix();
 	// matrix_inversion();
 	// rotation_matrix();
 	// scale_matrix();
@@ -32,6 +33,6 @@ auto main() -> int
 	// slerp();
 	// orientation_conversions();
 	// bbox();
-	// plane();
-	tri();
+	plane();
+	// tri();
 }
