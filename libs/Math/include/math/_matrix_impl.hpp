@@ -34,8 +34,8 @@ constexpr Matrix<R,C,T>::Matrix(std::initializer_list<Row> rows)
 		R, C, R, rows.size());
 
 	usize i = 0;
-	for (auto&& row : rows) {
-		m_data[i] = std::move(row);
+	for (const auto& row : rows) {
+		m_data[i] = row;
 		if (++i >= R) break;
 	}
 }
@@ -71,13 +71,13 @@ inline auto Matrix<R,C,T>::begin() const -> detail::RawConstIterator<T>
 template <usize R, usize C, typename T>
 inline auto Matrix<R,C,T>::end() -> detail::RawIterator<T>
 {
-	return m_data[C-1].end();
+	return m_data[R-1].end();
 }
 
 template <usize R, usize C, typename T>
 inline auto Matrix<R,C,T>::end() const -> detail::RawConstIterator<T>
 {
-	return m_data[C-1].end();
+	return m_data[R-1].end();
 }
 
 
