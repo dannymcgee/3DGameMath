@@ -7,20 +7,21 @@
 #include <utility>
 
 #include "math/assert.h"
+#include "math/polar.h"
 
 
 namespace math {
 
 // Static Zero -----------------------------------------------------------------
 
-template <usize D, typename T>
-const Vector<D,T> Vector<D,T>::Zero {};
+template <usize D>
+const Vector<D> Vector<D>::Zero {};
 
 
 // Static methods --------------------------------------------------------------
 
-template <usize D, typename T>
-constexpr auto Vector<D,T>::all(T value) -> Vector
+template <usize D>
+constexpr auto Vector<D>::all(flt value) -> Vector
 {
 	Vector result;
 	for (usize i = 0; i < D; ++i)
@@ -29,56 +30,56 @@ constexpr auto Vector<D,T>::all(T value) -> Vector
 	return result;
 }
 
-template <usize D, typename T>
-constexpr auto Vector<D,T>::unit_x() -> Vector
+template <usize D>
+constexpr auto Vector<D>::unit_x() -> Vector
 {
 	return Vector{ 1 };
 }
 
-template <usize D, typename T>
-constexpr auto Vector<D,T>::unit_y() -> Vector
+template <usize D>
+constexpr auto Vector<D>::unit_y() -> Vector
 {
 	static_assert(D >= 2);
 	return Vector{ 0, 1 };
 }
 
-template <usize D, typename T>
-constexpr auto Vector<D,T>::unit_z() -> Vector
+template <usize D>
+constexpr auto Vector<D>::unit_z() -> Vector
 {
 	static_assert(D >= 3);
 	return Vector{ 0, 0, 1 };
 }
 
-template <usize D, typename T>
-constexpr auto Vector<D,T>::unit_w() -> Vector
+template <usize D>
+constexpr auto Vector<D>::unit_w() -> Vector
 {
 	static_assert(D >= 4);
 	return Vector{ 0, 0, 0, 1 };
 }
 
-template <usize D, typename T>
-constexpr auto Vector<D,T>::up() -> Vector
+template <usize D>
+constexpr auto Vector<D>::up() -> Vector
 {
 	static_assert(D == 3);
 	return Vector{ 0, 1, 0 };
 }
 
-template <usize D, typename T>
-constexpr auto Vector<D,T>::right() -> Vector
+template <usize D>
+constexpr auto Vector<D>::right() -> Vector
 {
 	static_assert(D == 3);
 	return Vector{ 1, 0, 0 };
 }
 
-template <usize D, typename T>
-constexpr auto Vector<D,T>::forward() -> Vector
+template <usize D>
+constexpr auto Vector<D>::forward() -> Vector
 {
 	static_assert(D == 3);
 	return Vector{ 0, 0, 1 };
 }
 
-template <usize D, typename T>
-constexpr auto Vector<D,T>::from_polar(T radius, T angle) -> Vector
+template <usize D>
+constexpr auto Vector<D>::from_polar(flt radius, flt angle) -> Vector
 {
 	static_assert(D == 2, "Polar coordinates are only supported by 2-Dimensional vectors");
 	return {
@@ -87,15 +88,15 @@ constexpr auto Vector<D,T>::from_polar(T radius, T angle) -> Vector
 	};
 }
 
-template <usize D, typename T>
-constexpr auto Vector<D,T>::from_polar(const PolarCoords<T>& coords) -> Vector
+template <usize D>
+constexpr auto Vector<D>::from_polar(const PolarCoords& coords) -> Vector
 {
-	auto [radius,angle] = coords;
+	auto [radius, angle] = coords;
 	return Vector::from_polar(radius, angle);
 }
 
-template <usize D, typename T>
-constexpr auto Vector<D,T>::from_polar(T radius, T heading, T pitch) -> Vector
+template <usize D>
+constexpr auto Vector<D>::from_polar(flt radius, flt heading, flt pitch) -> Vector
 {
 	static_assert(D == 3, "Polar coordinates are only supported by 2-Dimensional vectors");
 	return {
@@ -105,36 +106,36 @@ constexpr auto Vector<D,T>::from_polar(T radius, T heading, T pitch) -> Vector
 	};
 }
 
-template <usize D, typename T>
-constexpr auto Vector<D,T>::from_polar(const SphericalCoords<T>& coords) -> Vector
+template <usize D>
+constexpr auto Vector<D>::from_polar(const SphericalCoords& coords) -> Vector
 {
-	auto [radius,heading,declination] = coords;
+	auto [radius, heading, declination] = coords;
 	return Vector::from_polar(radius, heading, declination);
 }
 
 
 // Iterator support ------------------------------------------------------------
 
-template <usize D, typename T>
-inline auto Vector<D,T>::begin() -> detail::RawIterator<T>
+template <usize D>
+inline auto Vector<D>::begin() -> detail::RawIterator<flt>
 {
 	return detail::RawIterator(&components[0]);
 }
 
-template <usize D, typename T>
-inline auto Vector<D,T>::begin() const -> detail::RawConstIterator<T>
+template <usize D>
+inline auto Vector<D>::begin() const -> detail::RawConstIterator<flt>
 {
 	return detail::RawConstIterator(&components[0]);
 }
 
-template <usize D, typename T>
-inline auto Vector<D,T>::end() -> detail::RawIterator<T>
+template <usize D>
+inline auto Vector<D>::end() -> detail::RawIterator<flt>
 {
 	return detail::RawIterator(&components[D]);
 }
 
-template <usize D, typename T>
-inline auto Vector<D,T>::end() const -> detail::RawConstIterator<T>
+template <usize D>
+inline auto Vector<D>::end() const -> detail::RawConstIterator<flt>
 {
 	return detail::RawConstIterator(&components[D]);
 }
@@ -142,22 +143,22 @@ inline auto Vector<D,T>::end() const -> detail::RawConstIterator<T>
 
 // Subscript operator ----------------------------------------------------------
 
-template <usize D, typename T>
-inline auto Vector<D,T>::operator[](usize idx) -> T&
+template <usize D>
+inline auto Vector<D>::operator[](usize idx) -> flt&
 {
 	validate_index(idx);
 	return components[idx];
 }
 
-template <usize D, typename T>
-inline auto Vector<D,T>::operator[](usize idx) const -> T
+template <usize D>
+inline auto Vector<D>::operator[](usize idx) const -> flt
 {
 	validate_index(idx);
 	return components[idx];
 }
 
-template <usize D, typename T>
-inline void Vector<D,T>::validate_index(usize idx) const // NOLINT(*-unused-parameters)
+template <usize D>
+inline void Vector<D>::validate_index(usize idx) const // NOLINT(*-unused-parameters)
 {
 	ASSERT(idx < D,
 		"Index out of range for Vec<{}>: Expected < {}, received {}",
@@ -167,8 +168,8 @@ inline void Vector<D,T>::validate_index(usize idx) const // NOLINT(*-unused-para
 
 // Unary negation --------------------------------------------------------------
 
-template <usize D, typename T>
-inline auto Vector<D,T>::operator-() const -> Vector
+template <usize D>
+inline auto Vector<D>::operator-() const -> Vector
 {
 	auto result = *this;
 	for (usize i = 0; i < D; ++i)
@@ -180,8 +181,8 @@ inline auto Vector<D,T>::operator-() const -> Vector
 
 // Vector addition -------------------------------------------------------------
 
-template <usize D, typename T>
-inline auto Vector<D,T>::operator+(const Vector& other) const -> Vector
+template <usize D>
+inline auto Vector<D>::operator+(const Vector& other) const -> Vector
 {
 	auto result = *this;
 	for (usize i = 0; i < D; ++i)
@@ -190,8 +191,8 @@ inline auto Vector<D,T>::operator+(const Vector& other) const -> Vector
 	return result;
 }
 
-template <usize D, typename T>
-inline auto Vector<D,T>::operator+=(const Vector& other) -> Vector&
+template <usize D>
+inline auto Vector<D>::operator+=(const Vector& other) -> Vector&
 {
 	for (usize i = 0; i < D; ++i)
 		components[i] += other.components[i];
@@ -202,8 +203,8 @@ inline auto Vector<D,T>::operator+=(const Vector& other) -> Vector&
 
 // Vector subtraction ----------------------------------------------------------
 
-template <usize D, typename T>
-inline auto Vector<D,T>::operator-(const Vector& other) const -> Vector
+template <usize D>
+inline auto Vector<D>::operator-(const Vector& other) const -> Vector
 {
 	auto result = *this;
 	for (usize i = 0; i < D; ++i)
@@ -212,8 +213,8 @@ inline auto Vector<D,T>::operator-(const Vector& other) const -> Vector
 	return result;
 }
 
-template <usize D, typename T>
-inline auto Vector<D,T>::operator-=(const Vector& other) -> Vector&
+template <usize D>
+inline auto Vector<D>::operator-=(const Vector& other) -> Vector&
 {
 	for (usize i = 0; i < D; ++i)
 		components[i] -= other.components[i];
@@ -224,8 +225,8 @@ inline auto Vector<D,T>::operator-=(const Vector& other) -> Vector&
 
 // Scalar multiplication -------------------------------------------------------
 
-template <usize D, typename T>
-inline auto Vector<D,T>::operator*(T magnitude) const -> Vector
+template <usize D>
+inline auto Vector<D>::operator*(flt magnitude) const -> Vector
 {
 	auto result = *this;
 	for (usize i = 0; i < D; ++i)
@@ -234,8 +235,8 @@ inline auto Vector<D,T>::operator*(T magnitude) const -> Vector
 	return result;
 }
 
-template <usize D, typename T>
-inline auto Vector<D,T>::operator*=(T magnitude) -> Vector&
+template <usize D>
+inline auto Vector<D>::operator*=(flt magnitude) -> Vector&
 {
 	for (usize i = 0; i < D; ++i)
 		components[i] *= magnitude;
@@ -244,8 +245,8 @@ inline auto Vector<D,T>::operator*=(T magnitude) -> Vector&
 }
 } // namespace math
 
-template <sized::usize D, typename T>
-inline auto operator*(T lhs, const math::Vector<D,T>& rhs) -> math::Vector<D,T>
+template <sized::usize D, typename flt>
+inline auto operator*(flt lhs, const math::Vector<D>& rhs) -> math::Vector<D>
 {
 	return rhs * lhs;
 }
@@ -255,10 +256,10 @@ namespace math {
 
 // Scalar division -------------------------------------------------------------
 
-template <usize D, typename T>
-inline auto Vector<D,T>::operator/(T magnitude) const -> Vector
+template <usize D>
+inline auto Vector<D>::operator/(flt magnitude) const -> Vector
 {
-	if (math::nearly_equal<T>(magnitude, 0))
+	if (math::nearly_equal(magnitude, 0))
 		return Zero;
 
 	auto result = *this;
@@ -268,10 +269,10 @@ inline auto Vector<D,T>::operator/(T magnitude) const -> Vector
 	return result;
 }
 
-template <usize D, typename T>
-inline auto Vector<D,T>::operator/=(T magnitude) -> Vector&
+template <usize D>
+inline auto Vector<D>::operator/=(flt magnitude) -> Vector&
 {
-	if (math::nearly_equal<T>(magnitude, 0)) {
+	if (math::nearly_equal(magnitude, 0)) {
 		for (usize i = 0; i < D; ++i)
 			components[i] = 0;
 
@@ -287,27 +288,27 @@ inline auto Vector<D,T>::operator/=(T magnitude) -> Vector&
 
 // Equality comparison ---------------------------------------------------------
 
-template <usize D, typename T>
-inline auto Vector<D,T>::operator==(const Vector& other) const -> bool
+template <usize D>
+inline auto Vector<D>::operator==(const Vector& other) const -> bool
 {
 	if (this == &other)
 		return true;
 
 	for (usize i = 0; i < D; ++i)
-		if (!math::nearly_equal<T>(components[i], other.components[i]))
+		if (!math::nearly_equal(components[i], other.components[i]))
 			return false;
 
 	return true;
 }
 
-template <usize D, typename T>
-inline auto Vector<D,T>::operator!=(const Vector& other) const -> bool
+template <usize D>
+inline auto Vector<D>::operator!=(const Vector& other) const -> bool
 {
 	if (this == &other)
 		return false;
 
 	for (usize i = 0; i < D; ++i)
-		if (!math::nearly_equal<T>(components[i], other.components[i]))
+		if (!math::nearly_equal(components[i], other.components[i]))
 			return true;
 
 	return false;
@@ -316,22 +317,22 @@ inline auto Vector<D,T>::operator!=(const Vector& other) const -> bool
 
 // Length / Magnitude ----------------------------------------------------------
 
-template <usize D, typename T>
-inline auto Vector<D,T>::length() const -> T
+template <usize D>
+inline auto Vector<D>::length() const -> flt
 {
 	return std::sqrt(sq_length());
 }
 
-template <usize D, typename T>
-inline auto Vector<D,T>::magnitude() const -> T
+template <usize D>
+inline auto Vector<D>::magnitude() const -> flt
 {
 	return length();
 }
 
-template <usize D, typename T>
-inline auto Vector<D,T>::sq_length() const -> T
+template <usize D>
+inline auto Vector<D>::sq_length() const -> flt
 {
-	T result = 0;
+	flt result = 0;
 	for (usize i = 0; i < D; ++i)
 		result += components[i] * components[i];
 
@@ -341,18 +342,18 @@ inline auto Vector<D,T>::sq_length() const -> T
 
 // Unit-Length Direction -------------------------------------------------------
 
-template <usize D, typename T>
-inline auto Vector<D,T>::normal() const -> Vector
+template <usize D>
+inline auto Vector<D>::normal() const -> Vector
 {
-	T sq_len = sq_length();
+	flt sq_len = sq_length();
 
-	if (math::nearly_equal<T>(sq_len, 0))
+	if (math::nearly_equal(sq_len, 0))
 		return Zero;
 
-	if (math::nearly_equal<T>(sq_len, 1))
+	if (math::nearly_equal(sq_len, 1))
 		return *this;
 
-	T scale = 1.0 / std::sqrt(sq_len);
+	flt scale = 1.0 / std::sqrt(sq_len);
 
 	Vector result;
 	for (usize i = 0; i < D; ++i)
@@ -361,32 +362,32 @@ inline auto Vector<D,T>::normal() const -> Vector
 	return result;
 }
 
-template <usize D, typename T>
-inline auto Vector<D,T>::direction() const -> Vector
+template <usize D>
+inline auto Vector<D>::direction() const -> Vector
 {
 	return normal();
 }
 
-template <usize D, typename T>
-inline auto Vector<D,T>::unit() const -> Vector
+template <usize D>
+inline auto Vector<D>::unit() const -> Vector
 {
 	return normal();
 }
 
-template <usize D, typename T>
-inline void Vector<D,T>::normalize()
+template <usize D>
+inline void Vector<D>::normalize()
 {
-	T sq_len = sq_length();
+	flt sq_len = sq_length();
 
-	if (math::nearly_equal<T>(sq_len, 0)) {
+	if (math::nearly_equal(sq_len, 0)) {
 		*this = Zero;
 		return;
 	}
 
-	if (math::nearly_equal<T>(sq_len, 1))
+	if (math::nearly_equal(sq_len, 1))
 		return;
 
-	T scale = 1.0 / std::sqrt(sq_len);
+	flt scale = 1.0 / std::sqrt(sq_len);
 	for (usize i = 0; i < D; ++i)
 		components[i] *= scale;
 }
@@ -394,15 +395,15 @@ inline void Vector<D,T>::normalize()
 
 // Length and Direction --------------------------------------------------------
 
-template <usize D, typename T>
-inline auto Vector<D,T>::length_and_direction() const -> std::tuple<T, Vector>
+template <usize D>
+inline auto Vector<D>::length_and_direction() const -> std::tuple<flt, Vector>
 {
-	T len = length();
+	flt len = length();
 
-	if (math::nearly_equal<T>(len, 0))
+	if (math::nearly_equal(len, 0))
 		return { len, Zero };
 
-	T scale = 1 / len;
+	flt scale = 1 / len;
 	Vector normal;
 	for (usize i = 0; i < D; ++i)
 		normal.components[i] = components[i] * scale;
@@ -413,10 +414,10 @@ inline auto Vector<D,T>::length_and_direction() const -> std::tuple<T, Vector>
 
 // Distance --------------------------------------------------------------------
 
-template <usize D, typename T>
-inline auto Vector<D,T>::dist(const Vector& other) const -> T
+template <usize D>
+inline auto Vector<D>::dist(const Vector& other) const -> flt
 {
-	T result = 0;
+	flt result = 0;
 	for (usize i = 0; i < D; ++i) {
 		auto diff = other.components[i] - components[i];
 		result += diff * diff;
@@ -425,8 +426,8 @@ inline auto Vector<D,T>::dist(const Vector& other) const -> T
 	return std::sqrt(result);
 }
 
-template <usize D, typename T>
-inline auto Vector<D,T>::dist(const Vector& lhs, const Vector& rhs) -> T
+template <usize D>
+inline auto Vector<D>::dist(const Vector& lhs, const Vector& rhs) -> flt
 {
 	return lhs.dist(rhs);
 }
@@ -434,18 +435,18 @@ inline auto Vector<D,T>::dist(const Vector& lhs, const Vector& rhs) -> T
 
 // Dot-product -----------------------------------------------------------------
 
-template <usize D, typename T>
-inline auto Vector<D,T>::dot(const Vector& other) const -> T
+template <usize D>
+inline auto Vector<D>::dot(const Vector& other) const -> flt
 {
-	T result = 0;
+	flt result = 0;
 	for (usize i = 0; i < D; ++i)
 		result += components[i] * other.components[i];
 
 	return result;
 }
 
-template <usize D, typename T>
-inline auto Vector<D,T>::operator|(const Vector& other) const -> T
+template <usize D>
+inline auto Vector<D>::operator|(const Vector& other) const -> flt
 {
 	return dot(other);
 }
@@ -453,8 +454,8 @@ inline auto Vector<D,T>::operator|(const Vector& other) const -> T
 
 // Cross-product ---------------------------------------------------------------
 
-template <usize D, typename T>
-inline auto Vector<D,T>::cross(const Vector& other) const -> Vector
+template <usize D>
+inline auto Vector<D>::cross(const Vector& other) const -> Vector
 {
 	static_assert(D == 3, "Cross-product is only valid for 3-dimensional vectors.");
 
@@ -465,21 +466,21 @@ inline auto Vector<D,T>::cross(const Vector& other) const -> Vector
 	};
 }
 
-template <usize D, typename T>
-inline auto Vector<D,T>::operator^(const Vector& other) const -> Vector
+template <usize D>
+inline auto Vector<D>::operator^(const Vector& other) const -> Vector
 {
 	static_assert(D == 3, "Cross-product is only valid for 3-dimensional vectors.");
 
 	return cross(other);
 }
 
-template <usize D, typename T>
-inline auto Vector<D,T>::operator^=(const Vector& other) -> Vector&
+template <usize D>
+inline auto Vector<D>::operator^=(const Vector& other) -> Vector&
 {
 	static_assert(D == 3, "Cross-product is only valid for 3-dimensional vectors.");
 
-	T temp_x = this->x;
-	T temp_y = this->y;
+	flt temp_x = this->x;
+	flt temp_y = this->y;
 
 	this->x = this->y * other.z - this->z * other.y;
 	this->y = this->z * other.x - temp_x * other.z;
@@ -491,15 +492,15 @@ inline auto Vector<D,T>::operator^=(const Vector& other) -> Vector&
 
 // Misc / Utility --------------------------------------------------------------
 
-template <usize D, typename T>
-auto Vector<D,T>::to_string(usize precision) const -> std::string
+template <usize D>
+auto Vector<D>::to_string(usize precision) const -> std::string
 {
 	auto formatter = fmt::AlignedValues(begin(), end(), precision);
 	return to_string(formatter);
 }
 
-template <usize D, typename T>
-inline auto Vector<D,T>::to_string(const fmt::AlignedValues& formatter) const -> std::string
+template <usize D>
+inline auto Vector<D>::to_string(const fmt::AlignedValues& formatter) const -> std::string
 {
 	std::string result = "[ ";
 	for (usize i = 0; i < D; ++i) {
@@ -514,29 +515,3 @@ inline auto Vector<D,T>::to_string(const fmt::AlignedValues& formatter) const ->
 }
 
 } // namespace math
-
-
-// Structured binding support --------------------------------------------------
-
-namespace std {
-
-// NOLINTBEGIN(cert-dcl58-cpp):
-
-// I believe cert-dcl58-cpp here is a spurious warning due to limitations of the
-// clang-tidy parser. This is just a template specialization with a user-defined
-// type, which is normally permitted by the linter -- but because our type
-// is templated, the parser is unable to correctly identify what we're doing.
-
-template <size_t D, typename T>
-struct tuple_size<::math::Vector<D,T>> {
-	static constexpr size_t value = D;
-};
-
-template <size_t Index, size_t D, typename T>
-struct tuple_element<Index, ::math::Vector<D,T>> {
-	static_assert(Index < D, "Index out of range");
-	using type = T;
-};
-
-// NOLINTEND(cert-dcl58-cpp)
-}

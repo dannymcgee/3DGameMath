@@ -10,20 +10,18 @@ using namespace sized; // NOLINT(*-using-namespace)
 
 namespace geo {
 
-template <typename T = f64>
 struct Plane {
-	using Vec3 = Vector<3,T>;
-
 	/** The direction of the plane's surface */
 	Vec3 normal;
 	/** Distance from the origin in the direction of `normal` */
-	T distance;
+	flt distance;
 
 
 	// Constructors -------------------------------------------------------------
 
-	constexpr Plane() = default;
-	constexpr Plane(const Vec3& normal, T distance);
+	Plane();
+
+	constexpr Plane(const Vec3& normal, flt distance);
 
 	/** Create a plane from three coplanar, non-colinear points. */
 	static constexpr auto from_points(const Vec3& p1, const Vec3& p2, const Vec3& p3) -> Plane;
@@ -39,7 +37,7 @@ struct Plane {
 	 * Compute the signed distance from the point to the plane. Result will be
 	 * negative if the point is on the back side of the plane.
 	 */
-	constexpr auto dist(const Vec3& point) const -> T;
+	constexpr auto dist(const Vec3& point) const -> flt;
 };
 
 } // namespace geo

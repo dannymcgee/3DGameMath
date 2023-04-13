@@ -15,13 +15,13 @@ using math::SphericalCoords;
 
 void polar_coords()
 {
-	auto polar = PolarCoords<f64>::from_cartesian(Vec2{ 1, 2 });
+	auto polar = PolarCoords::from_cartesian(Vec2{ 1, 2 });
 	fmt::print("Polar: {}\n", polar.to_string());
 
 	auto cart = Vec2::from_polar(polar);
 	fmt::print("Cartesian: {}\n", cart.to_string());
 
-	auto aliased = PolarCoords<f64>{ -10.5, 270.0_deg };
+	auto aliased = PolarCoords{ -10.5, 270.0_deg };
 	auto canon = aliased.canonical();
 	fmt::print("Canonical: {} -> {}\n", aliased.to_string(), canon.to_string());
 
@@ -30,13 +30,13 @@ void polar_coords()
 	fmt::print("Aliased (cartesian):   {}\n", aliased_cart.to_string());
 	fmt::print("Canonical (cartesian): {}\n\n", canon_cart.to_string());
 
-	auto spherical = SphericalCoords<f64>::from_cartesian(Vec3{ 1, 2, 3 });
+	auto spherical = SphericalCoords::from_cartesian(Vec3{ 1, 2, 3 });
 	fmt::print("Spherical: {}\n", spherical.to_string());
 
 	auto scart = Vec3::from_polar(spherical);
 	fmt::print("Cartesian: {}\n", scart.to_string());
 
-	auto saliased = SphericalCoords<f64>{ -10.5, 270_deg, -187.5_deg };
+	auto saliased = SphericalCoords{ -10.5, 270_deg, -187.5_deg };
 	auto scanon = saliased.canonical();
 	fmt::print("Canonical: {} -> {}\n", saliased.to_string(), scanon.to_string());
 

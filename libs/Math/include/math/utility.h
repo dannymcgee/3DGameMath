@@ -14,66 +14,60 @@ namespace math {
 
 using namespace sized; // NOLINT(*-using-namespace)
 
-constexpr f64 pi = 3.141592653589793;
+constexpr flt pi = 3.141592653589793;
 
 /**
  * Compare the equality of floating-point values within a specified tolerance.
  * If no tolerance is provided, the machine epsilon is used.
  */
-template <typename T = f64>
-constexpr auto nearly_equal(T lhs, T rhs, T tolerance = std::numeric_limits<T>::epsilon())
+constexpr auto nearly_equal(flt lhs, flt rhs, flt tolerance = std::numeric_limits<flt>::epsilon())
 {
 	return std::abs(lhs - rhs) < tolerance;
 }
 
 /** Convert degrees to radians. */
-template <typename T = f64>
-constexpr auto deg2rad(T deg) -> T
+constexpr auto deg2rad(flt deg) -> flt
 {
-	return deg * static_cast<T>(math::pi) / static_cast<T>(180);
+	return deg * math::pi / 180_flt;
 }
 
 /** Convert radians to degrees. */
-template <typename T = f64>
-constexpr auto rad2deg(T rad) -> T
+constexpr auto rad2deg(flt rad) -> flt
 {
-	return rad * static_cast<T>(180) / static_cast<T>(math::pi);
+	return rad * 180_flt / math::pi;
 }
 
 /** Get the number of non-fractional digits in a number. */
-template <typename T>
-constexpr auto num_digits(T value) -> usize // NOLINT(*-cognitive-complexity)
+constexpr auto num_digits(flt value) -> usize
 {
 	usize count = 1;
-	for (usize order = 10, n = std::abs(value);
+	for (usize order = 10, n = static_cast<usize>(std::abs(value));
 		n >= order && count < 20;
 		order *= 10, ++count);
 
 	return count;
 }
 
-template <typename T>
-constexpr auto num_decimal_places(T value, usize max = 20) -> usize
+constexpr auto num_decimal_places(flt value, usize max = 20) -> usize
 {
-	if (std::is_integral<T>::value)
-		return 0;
+	// if (std::is_integral<flt>::value)
+	// 	return 0;
 
 	usize count = 0;
-	for (T n = std::abs(value);
-		static_cast<i64>(n) != n && count < max;
+	for (flt n = std::abs(value);
+		static_cast<i64>(n) != n && count < max; // NOLINT(*-narrowing-conversions)
 		n *= 10.0, ++count);
 
 	return count;
 }
 
-template <typename T>
-constexpr auto wrap_pi(T angle) -> T
+constexpr auto wrap_pi(flt angle) -> flt
 {
 	if (std::abs(angle) > math::pi)
 		return angle;
 
-	constexpr T two_pi = 2 * pi;
-	T revs = std::floor((angle + math::pi) * (1 / two_pi));
+	constexpr flt two_pi = 2_flt * pi;
+	flt revs = std::floor((angle + math::pi) * (1_flt / two_pi));
 
 	return angle - (revs * two_pi);
 }

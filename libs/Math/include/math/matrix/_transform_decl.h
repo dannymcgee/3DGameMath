@@ -10,19 +10,18 @@
 namespace math {
 using namespace sized; // NOLINT(*-using-namespace)
 
-template <typename T> class RotationMatrix;
+class RotationMatrix;
 class TranslationMatrix;
-template <typename T> class Quat;
-template <typename T> class Euler;
+class Quat;
+class Euler;
 
 
-template <typename T = f64>
-class TransformMatrix : public Matrix<4,4,T> {
+class TransformMatrix : public Matrix<4,4> {
 private:
-	using Mat3x3 = Matrix<3,3,T>;
-	using Mat4x4 = Matrix<4,4,T>;
-	using Vec3 = Vector<3,T>;
-	using Vec4 = Vector<4,T>;
+	using Mat3x3 = Matrix<3,3>;
+	using Mat4x4 = Matrix<4,4>;
+	using Vec3 = Vector<3>;
+	using Vec4 = Vector<4>;
 
 public:
 	using Super = Mat4x4;
@@ -34,23 +33,23 @@ public:
 
 	/** Create a transform matrix from rotation and translation */
 	constexpr TransformMatrix(
-		const RotationMatrix<T>& rotation,
+		const RotationMatrix& rotation,
 		const TranslationMatrix& translation);
 
 	/** Create a transform matrix from rotation */
-	explicit constexpr TransformMatrix(const RotationMatrix<T>& rotation);
+	explicit constexpr TransformMatrix(const RotationMatrix& rotation);
 
 	/** Create a transform matrix from rotation and translation */
-	explicit constexpr TransformMatrix(const Quat<T>& rotation, const Vec3& origin = Vec3::Zero);
+	explicit constexpr TransformMatrix(const Quat& rotation, const Vec3& origin = Vec3::Zero);
 
 private:
 	static constexpr auto construct(
-		const RotationMatrix<T>& rotation,
+		const RotationMatrix& rotation,
 		const TranslationMatrix& translation)
 		-> Super;
 
-	static constexpr auto construct(const RotationMatrix<T>& rotation) -> Super;
-	static constexpr auto construct(const Quat<T>& rotation, const Vec3& origin) -> Super;
+	static constexpr auto construct(const RotationMatrix& rotation) -> Super;
+	static constexpr auto construct(const Quat& rotation, const Vec3& origin) -> Super;
 
 public:
 	// Transformation -----------------------------------------------------------

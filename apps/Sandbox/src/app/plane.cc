@@ -29,8 +29,8 @@ void triangle()
 	auto p2 = Vec3{ -2,  0,  1 };
 	auto p3 = Vec3{  2,  0,  0 };
 
-	auto transform = TransformMatrix<f64>{
-		Euler<f64>{ 45_deg, -15_deg, 3.3_deg }.quat(),
+	auto transform = TransformMatrix{
+		Euler{ 45_deg, -15_deg, 3.3_deg }.quat(),
 		Vec3{ 1, 5.25, 0.25 },
 	};
 
@@ -38,7 +38,7 @@ void triangle()
 	p2 = transform.transform_point(p2);
 	p3 = transform.transform_point(p3);
 
-	auto plane = Plane<f64>::from_points(p1, p2, p3);
+	auto plane = Plane::from_points(p1, p2, p3);
 
 	fmt::print("Plane{{\n");
 	fmt::print("   normal: {},\n", plane.normal.to_string());
@@ -49,8 +49,8 @@ void triangle()
 void best_fit()
 {
 	// Randomly generate 32 points on a fuzzy plane
-	auto xz_rng = math::Random<f64>(-20.0, 20.0);
-	auto y_rng = math::Random<f64>(0.5, 1.5);
+	auto xz_rng = math::Random<flt>(-20.0, 20.0);
+	auto y_rng = math::Random<flt>(0.5, 1.5);
 
 	std::array<Vec3, 32> points;
 	for (auto& p : points) {
@@ -62,14 +62,14 @@ void best_fit()
 	// Sort the points in a clockwise direction
 	std::sort(points.begin(), points.end(),
 		[](const Vec3& a, const Vec3& b) -> bool {
-			auto theta_a = PolarCoords<f64>::from_cartesian(a.x, a.z).angle;
-			auto theta_b = PolarCoords<f64>::from_cartesian(b.x, b.z).angle;
+			auto theta_a = PolarCoords::from_cartesian(a.x, a.z).angle;
+			auto theta_b = PolarCoords::from_cartesian(b.x, b.z).angle;
 			return theta_a > theta_b;
 		});
 
 	// Transform all of the points
-	auto transform = TransformMatrix<f64>{
-		Euler<f64>{ 45_deg, -15_deg, 3.3_deg }.quat(),
+	auto transform = TransformMatrix{
+		Euler{ 45_deg, -15_deg, 3.3_deg }.quat(),
 		Vec3{ 1, 5.25, 0.25 },
 	};
 
@@ -86,7 +86,7 @@ void best_fit()
 		fmt::print("   {}\n", p.to_string(formatter));
 
 	// Create the best-fit plane
-	auto plane = Plane<f64>::best_fit(points);
+	auto plane = Plane::best_fit(points);
 	fmt::print("\nPlane{{\n");
 	fmt::print("   normal: {},\n", plane.normal.to_string());
 	fmt::print("   distance: {},\n", plane.distance);

@@ -8,17 +8,16 @@
 
 namespace math {
 
-template <typename T>
-inline auto Euler<T>::matrix(Space space) const -> RotationMatrix<T>
+inline auto Euler::matrix(Space space) const -> RotationMatrix
 {
-	T cy = std::cos(yaw);
-	T sy = std::sin(yaw);
+	flt cy = std::cos(yaw);
+	flt sy = std::sin(yaw);
 
-	T cp = std::cos(pitch);
-	T sp = std::sin(pitch);
+	flt cp = std::cos(pitch);
+	flt sp = std::sin(pitch);
 
-	T cr = std::cos(roll);
-	T sr = std::sin(roll);
+	flt cr = std::cos(roll);
+	flt sr = std::sin(roll);
 
 	switch (space) {
 		case Space::Local2Parent:
@@ -26,7 +25,7 @@ inline auto Euler<T>::matrix(Space space) const -> RotationMatrix<T>
 			// 	RotationMatrix(roll, Axis::Forward)
 			// 		* RotationMatrix(pitch, Axis::Right)
 			// 		* RotationMatrix(yaw, Axis::Up);
-			return RotationMatrix<T>{{
+			return RotationMatrix{{
 				{  cy*cr + sy*sp*sr,   sr*cp,  -sy*cr + cy*sp*sr },
 				{ -cy*sr + sy*sp*cr,   cr*cp,   sr*sy + cy*sp*cr },
 				{  sy*cp,             -sp,      cy*cp            },
@@ -39,7 +38,7 @@ inline auto Euler<T>::matrix(Space space) const -> RotationMatrix<T>
 			// 		* RotationMatrix(yaw, Axis::Up))
 			//			.inverse();
 			// (This is the transpose/inverse of the `Local2Parent` return value)
-			return RotationMatrix<T>{{
+			return RotationMatrix{{
 				{  cy*cr + sy*sp*sr,  -cy*sr + sy*sp*cr,   sy*cp },
 				{  sr*cp,              cr*cp,             -sp    },
 				{ -sy*cr + cy*sp*sr,   sr*sy + cy*sp*cr,   cy*cp },
@@ -48,14 +47,13 @@ inline auto Euler<T>::matrix(Space space) const -> RotationMatrix<T>
 
 }
 
-template <typename T>
-inline auto Euler<T>::quat(Space space) const -> Quat<T>
+inline auto Euler::quat(Space space) const -> Quat
 {
-	auto yq = Quat<T>::angle_axis(yaw, Vec3::up());
-	auto pq = Quat<T>::angle_axis(pitch, Vec3::right());
-	auto rq = Quat<T>::angle_axis(roll, Vec3::forward());
+	auto yq = Quat::angle_axis(yaw, Vec3::up());
+	auto pq = Quat::angle_axis(pitch, Vec3::right());
+	auto rq = Quat::angle_axis(roll, Vec3::forward());
 
-	Quat<T> result = yq * pq * rq;
+	Quat result = yq * pq * rq;
 
 	switch (space) {
 		case Space::Local2Parent:
@@ -66,20 +64,18 @@ inline auto Euler<T>::quat(Space space) const -> Quat<T>
 	}
 }
 
-template <typename T>
-constexpr auto Euler<T>::canonical() const -> Euler
+constexpr auto Euler::canonical() const -> Euler
+{
+	// TODO
+	return Euler{};
+}
+
+inline void Euler::canonicalize()
 {
 	// TODO
 }
 
-template <typename T>
-inline void Euler<T>::canonicalize()
-{
-	// TODO
-}
-
-template <typename T>
-inline auto Euler<T>::to_string(usize precision) const -> std::string
+inline auto Euler::to_string(usize precision) const -> std::string
 {
 	return ::fmt::format(
 		"( yaw {0:+.{3}}°, pitch {1:+.{3}}°, roll {2:+.{3}}° )",

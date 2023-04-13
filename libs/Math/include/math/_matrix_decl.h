@@ -15,20 +15,20 @@ using namespace sized; // NOLINT(*-using-namespace)
 
 namespace detail {
 
-template <usize Rows, usize Cols, typename T = f64>
+template <usize Rows, usize Cols>
 class Matrix {
 public:
-	using Row = ::math::Vector<Cols, T>;
+	using Row = ::math::Vector<Cols>;
 
 	union {
 		std::array<Row,Rows> m_data {};
 	};
 };
 
-template <typename T>
-class Matrix<2,2,T> {
+template <>
+class Matrix<2,2> {
 public:
-	using Row = ::math::Vector<2,T>;
+	using Row = ::math::Vector<2>;
 
 	union {
 		std::array<Row,2> m_data {
@@ -36,16 +36,16 @@ public:
 			Row{ 0, 0 },
 		};
 		struct {
-			T m11, m12,
-			  m21, m22;
+			flt m11, m12,
+			    m21, m22;
 		};
 	};
 };
 
-template <typename T>
-class Matrix<3,3,T> {
+template <>
+class Matrix<3,3> {
 public:
-	using Row = ::math::Vector<3,T>;
+	using Row = ::math::Vector<3>;
 
 	union {
 		std::array<Row,3> m_data {
@@ -54,17 +54,17 @@ public:
 			Row{ 0, 0, 0 },
 		};
 		struct {
-			T m11, m12, m13,
-			  m21, m22, m23,
-			  m31, m32, m33;
+			flt m11, m12, m13,
+			    m21, m22, m23,
+			    m31, m32, m33;
 		};
 	};
 };
 
-template <typename T>
-class Matrix<4,3,T> {
+template <>
+class Matrix<4,3> {
 public:
-	using Row = ::math::Vector<3,T>;
+	using Row = ::math::Vector<3>;
 
 	union {
 		std::array<Row,4> m_data {
@@ -74,18 +74,18 @@ public:
 			Row{ 0, 0, 0 },
 		};
 		struct {
-			T m11, m12, m13,
-			  m21, m22, m23,
-			  m31, m32, m33,
-			  m41, m42, m43;
+			flt m11, m12, m13,
+			    m21, m22, m23,
+			    m31, m32, m33,
+			    m41, m42, m43;
 		};
 	};
 };
 
-template <typename T>
-class Matrix<3,4,T> {
+template <>
+class Matrix<3,4> {
 public:
-	using Row = ::math::Vector<4,T>;
+	using Row = ::math::Vector<4>;
 
 	union {
 		std::array<Row,3> m_data {
@@ -94,17 +94,17 @@ public:
 			Row{ 0, 0, 0, 0 },
 		};
 		struct {
-			T m11, m12, m13, m14,
-			  m21, m22, m23, m24,
-			  m31, m32, m33, m34;
+			flt m11, m12, m13, m14,
+			    m21, m22, m23, m24,
+			    m31, m32, m33, m34;
 		};
 	};
 };
 
-template <typename T>
-class Matrix<4,4,T> {
+template <>
+class Matrix<4,4> {
 public:
-	using Row = ::math::Vector<4,T>;
+	using Row = ::math::Vector<4>;
 
 	union {
 		std::array<Row,4> m_data {
@@ -114,22 +114,22 @@ public:
 			Row{ 0, 0, 0, 0 },
 		};
 		struct {
-			T m11, m12, m13, m14,
-			  m21, m22, m23, m24,
-			  m31, m32, m33, m34,
-			  m41, m42, m43, m44;
+			flt m11, m12, m13, m14,
+			    m21, m22, m23, m24,
+			    m31, m32, m33, m34,
+			    m41, m42, m43, m44;
 		};
 	};
 };
 
 } // namespace detail
 
-template <usize Rows, usize Cols, typename T = f64>
-class Matrix : public detail::Matrix<Rows,Cols,T> {
+template <usize Rows, usize Cols>
+class Matrix : public detail::Matrix<Rows,Cols> {
 public:
-	using Super = detail::Matrix<Rows,Cols,T>;
-	using Row = Vector<Cols, T>;
-	using Col = Vector<Rows, T>;
+	using Super = detail::Matrix<Rows,Cols>;
+	using Row = Vector<Cols>;
+	using Col = Vector<Rows>;
 
 protected:
 	using Super::m_data;
@@ -142,11 +142,11 @@ public:
 	static constexpr auto identity() -> Matrix;
 
 	// Iterator support
-	auto begin() -> detail::RawIterator<T>;
-	auto begin() const -> detail::RawConstIterator<T>;
+	auto begin() -> detail::RawIterator<flt>;
+	auto begin() const -> detail::RawConstIterator<flt>;
 
-	auto end() -> detail::RawIterator<T>;
-	auto end() const -> detail::RawConstIterator<T>;
+	auto end() -> detail::RawIterator<flt>;
+	auto end() const -> detail::RawConstIterator<flt>;
 
 	// Member access
 	/**
@@ -172,7 +172,7 @@ public:
 	 * @endcode
 	 */
 	template <usize Index2D>
-	auto m() const -> T;
+	auto m() const -> flt;
 	/**
 	 * Get a mutable reference to the matrix value at the 1-based 2D index
 	 * indicated by the template argument.
@@ -196,18 +196,18 @@ public:
 	 * @endcode
 	 */
 	template <usize Index2D>
-	auto m() -> T&;
+	auto m() -> flt&;
 
 	/**
 	 * Access a member by the 1-based row and column indices.
 	 * @warning This method is **not bounds-checked**!
 	 */
-	auto m(usize row, usize col) const -> T;
+	auto m(usize row, usize col) const -> flt;
 	/**
 	 * Access a member by the 1-based row and column indices.
 	 * @warning This method is **not bounds-checked**!
 	 */
-	auto m(usize row, usize col) -> T&;
+	auto m(usize row, usize col) -> flt&;
 
 	/** Get the row at the 0-based index. */
 	auto operator[](usize idx) -> Row&;
@@ -252,41 +252,41 @@ public:
 	auto col(usize idx) const -> Col;
 
 	// Matrix transposition
-	auto transpose() const -> Matrix<Cols, Rows, T>;
+	auto transpose() const -> Matrix<Cols, Rows>;
 
 	// Scalar multiplication
-	constexpr auto operator*(T value) const -> Matrix;
-	auto operator*=(T value) -> Matrix&;
+	constexpr auto operator*(flt value) const -> Matrix;
+	auto operator*=(flt value) -> Matrix&;
 
 	/** Calculate the determinant of the matrix. */
-	auto determinant() const -> T;
+	auto determinant() const -> flt;
 
 	/**
 	 * Calculate the cofactor for an element of the matrix.
 	 * @param r The 1-based row index
 	 * @param c The 1-based column index
 	 */
-	auto cofactor(usize r, usize c) const -> T;
+	auto cofactor(usize r, usize c) const -> flt;
 
 	/**
 	 * Calculate the minor determinant for an element of the matrix.
 	 * @param r The 1-based row index
 	 * @param c The 1-based column index
 	 */
-	auto minor(usize r, usize c) const -> T;
+	auto minor(usize r, usize c) const -> flt;
 
 	/** Compute the matrix's inversion, if possible. */
-	auto inverse() const -> std::optional<Matrix<Cols, Rows, T>>;
+	auto inverse() const -> std::optional<Matrix<Cols, Rows>>;
 	/**
 	 * Compute the matrix's inversion with a pre-computed determinant. Will abort
 	 * in debug builds if `determinant` is zero.
 	 *
 	 * @param determinant The pre-computed determinant.
 	 */
-	auto inverse(T determinant) const -> Matrix<Cols, Rows, T>;
+	auto inverse(flt determinant) const -> Matrix<Cols, Rows>;
 
 	/** Compute the classical adjoint of the matrix. */
-	auto adjoint() const -> Matrix<Cols, Rows, T>;
+	auto adjoint() const -> Matrix<Cols, Rows>;
 
 	/**
 	 * Correct the orthogonality of a matrix, e.g. due to floating-point error
@@ -298,7 +298,7 @@ public:
 	 * Computes the determinant and writes it to the output parameter, returning
 	 * a bool indicating whether or not the matrix is invertible.
 	 */
-	auto is_invertible(T& out_determinant) const -> bool;
+	auto is_invertible(flt& out_determinant) const -> bool;
 
 	/**
 	 * Computes the transpose of the matrix and writes it to the output
@@ -306,12 +306,12 @@ public:
 	 * orthogonal.
 	 */
 	auto is_orthogonal(
-		Matrix<Cols, Rows, T>& out_transposed,
-		T tolerance = std::numeric_limits<T>::epsilon()
+		Matrix<Cols, Rows>& out_transposed,
+		flt tolerance = std::numeric_limits<flt>::epsilon()
 	) const -> bool;
-	auto is_orthogonal(T tolerance = std::numeric_limits<T>::epsilon()) const -> bool;
+	auto is_orthogonal(flt tolerance = std::numeric_limits<flt>::epsilon()) const -> bool;
 
-	constexpr auto is_identity(T tolerance = std::numeric_limits<T>::epsilon()) const -> bool;
+	constexpr auto is_identity(flt tolerance = std::numeric_limits<flt>::epsilon()) const -> bool;
 
 	// Misc / Utility
 	auto to_string(usize precision = 3) const -> std::string;

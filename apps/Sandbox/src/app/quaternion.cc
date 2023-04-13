@@ -18,7 +18,7 @@ using math::RotationMatrix;
 void quaternion()
 {
 	auto axis = Vec3{ -0.25, 0.5, 0.33 }.normal();
-	auto q = Quat<f64>::angle_axis(45_deg, axis);
+	auto q = Quat::angle_axis(45_deg, axis);
 	fmt::print("Original: 45°, {}\n", axis.to_string());
 	{
 		auto [angle,axis] = q.angle_axis();
@@ -33,15 +33,15 @@ void quaternion()
 	fmt::print(" q: {}\n", q.to_string());
 	fmt::print("-q: {}\n\n", (-q).to_string());
 
-	auto three60 = Quat<f64>::angle_axis(360_deg, Vec3::up());
-	auto five40 = Quat<f64>::angle_axis(540_deg, Vec3::up());
-	auto seven20 = Quat<f64>::angle_axis(720_deg, Vec3::up());
-	auto nine00 = Quat<f64>::angle_axis(900_deg, Vec3::up());
-	auto ten80 = Quat<f64>::angle_axis(1080_deg, Vec3::up());
+	auto three60 = Quat::angle_axis(360_deg, Vec3::up());
+	auto five40 = Quat::angle_axis(540_deg, Vec3::up());
+	auto seven20 = Quat::angle_axis(720_deg, Vec3::up());
+	auto nine00 = Quat::angle_axis(900_deg, Vec3::up());
+	auto ten80 = Quat::angle_axis(1080_deg, Vec3::up());
 
 	std::array<f64, 5_usize * 4_usize> values; // NOLINT
 	for (usize i = 0; i < 5; ++i) {
-		Quat<f64>* ptr = nullptr;
+		Quat* ptr = nullptr;
 		switch (i) {
 			case 0: ptr = &three60; break;
 			case 1: ptr = &five40; break;
@@ -78,10 +78,10 @@ void quaternion()
 	// Quat uninit;
 	// fmt::print("uninit: {}\n", uninit.to_string(20));
 
-	auto id = Quat<f64>::identity();
+	auto id = Quat::identity();
 	fmt::print("identity: {}\n\n", id.to_string());
 
-	auto slerp = Quat<f64>::slerp(three60, five40, 0.5);
+	auto slerp = Quat::slerp(three60, five40, 0.5);
 	fmt::print("slerp1(360°, 540°, 0.5): {}\n", slerp.to_string());
 	auto [angle1,axis1] = slerp.angle_axis();
 	fmt::print("slerp1 angle/axis: {}°, {}\n\n", math::rad2deg(angle1), axis1.to_string());

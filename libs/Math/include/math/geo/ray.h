@@ -4,5 +4,5 @@
 #include "math/geo/_ray_impl.hpp"
 
 namespace math::geo {
-template <typename T> struct Ray;
+struct Ray;
 }

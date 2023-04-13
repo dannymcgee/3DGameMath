@@ -9,39 +9,33 @@ namespace math {
 
 // Constructors ----------------------------------------------------------------
 
-template <typename T>
-constexpr TransformMatrix<T>::TransformMatrix()
+constexpr TransformMatrix::TransformMatrix()
 	: Super(Super::identity())
 {}
 
-template <typename T>
-constexpr TransformMatrix<T>::TransformMatrix(
-	const RotationMatrix<T>& rotation,
+constexpr TransformMatrix::TransformMatrix(
+	const RotationMatrix& rotation,
 	const TranslationMatrix& translation)
 	: Super(construct(rotation, translation))
 {}
 
-template <typename T>
-constexpr TransformMatrix<T>::TransformMatrix(const RotationMatrix<T>& rotation)
+constexpr TransformMatrix::TransformMatrix(const RotationMatrix& rotation)
 	: Super(construct(rotation))
 {}
 
-template <typename T>
-constexpr TransformMatrix<T>::TransformMatrix(const Quat<T>& rotation, const Vec3& origin)
+constexpr TransformMatrix::TransformMatrix(const Quat& rotation, const Vec3& origin)
 	: Super(construct(rotation, origin))
 {}
 
-template <typename T>
-constexpr auto TransformMatrix<T>::construct(
-	const RotationMatrix<T>& rotation,
+constexpr auto TransformMatrix::construct(
+	const RotationMatrix& rotation,
 	const TranslationMatrix& translation)
 -> Super
 {
 	return rotation * translation;
 }
 
-template <typename T>
-constexpr auto TransformMatrix<T>::construct(const RotationMatrix<T>& rotation) -> Super
+constexpr auto TransformMatrix::construct(const RotationMatrix& rotation) -> Super
 {
 	auto [m11, m12, m13] = rotation.template row<1>();
 	auto [m21, m22, m23] = rotation.template row<2>();
@@ -55,8 +49,7 @@ constexpr auto TransformMatrix<T>::construct(const RotationMatrix<T>& rotation) 
 	};
 }
 
-template <typename T>
-constexpr auto TransformMatrix<T>::construct(const Quat<T>& rotation, const Vec3& origin) -> Super
+constexpr auto TransformMatrix::construct(const Quat& rotation, const Vec3& origin) -> Super
 {
 	auto rot_matrix = rotation.matrix();
 	auto [m11, m12, m13] = rot_matrix.template row<1>();
@@ -76,8 +69,7 @@ constexpr auto TransformMatrix<T>::construct(const Quat<T>& rotation, const Vec3
 
 // Transformation --------------------------------------------------------------
 
-template <typename T>
-constexpr auto TransformMatrix<T>::transform_point(const Vec3& point) const -> Vec3
+constexpr auto TransformMatrix::transform_point(const Vec3& point) const -> Vec3
 {
 	auto [xin, yin, zin] = point;
 	auto [xout, yout, zout, _] = Vec4{ xin, yin, zin, 1 } * (*this);
@@ -85,8 +77,7 @@ constexpr auto TransformMatrix<T>::transform_point(const Vec3& point) const -> V
 	return Vec3{ xout, yout, zout };
 }
 
-template <typename T>
-constexpr auto TransformMatrix<T>::transform_vector(const Vec3& vector) const -> Vec3
+constexpr auto TransformMatrix::transform_vector(const Vec3& vector) const -> Vec3
 {
 	auto [xin, yin, zin] = vector;
 	auto [xout, yout, zout, _] = Vec4{ xin, yin, zin, 0 } * (*this);

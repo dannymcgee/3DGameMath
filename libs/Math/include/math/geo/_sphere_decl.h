@@ -9,10 +9,9 @@ using namespace sized; // NOLINT(*-using-namespace)
 
 namespace geo {
 
-template <typename T = f64>
 struct Sphere {
-	Vector<3,T> center;
-	T radius;
+	Vec3 center;
+	flt radius;
 };
 
 } // namespace geo

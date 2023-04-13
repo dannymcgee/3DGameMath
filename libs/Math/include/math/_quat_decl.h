@@ -12,36 +12,35 @@
 namespace math {
 using namespace sized; // NOLINT
 
-template <typename T> class RotationMatrix;
-template <typename T> struct Euler;
+class RotationMatrix;
+struct Euler;
 
 
-template <typename T = f64>
 struct Quat {
-	T w;
-	union {
-		Vector<3,T> vector;
-		struct { T x, y, z; };
+	flt w;
+	union { // NOLINT(*-member-init)
+		Vector<3> vector;
+		struct { flt x, y, z; };
 	};
 
-	constexpr Quat();
-	constexpr Quat(T w, T x, T y, T z);
-	constexpr Quat(T w, const Vector<3,T>& xyz);
+	Quat();
+	constexpr Quat(flt w, flt x, flt y, flt z);
+	constexpr Quat(flt w, const Vector<3>& xyz);
 
 	static constexpr auto identity() -> Quat;
-	static constexpr auto angle_axis(T angle, const Vector<3,T>& unit_axis) -> Quat;
+	static constexpr auto angle_axis(flt angle, const Vector<3>& unit_axis) -> Quat;
 
 	// Conversion
 	/** Extract the angle and axis of rotation */
-	auto angle_axis() const -> std::tuple<T, Vector<3,T>>;
+	auto angle_axis() const -> std::tuple<flt, Vector<3>>;
 	/** Convert to Euler angles */
-	auto euler(Space space = Space::Local2Parent) const -> Euler<T>;
+	auto euler(Space space = Space::Local2Parent) const -> Euler;
 	/** Convert to a RotationMatrix */
-	auto matrix(Space space = Space::Local2Parent) const -> RotationMatrix<T>;
+	auto matrix(Space space = Space::Local2Parent) const -> RotationMatrix;
 
 	// Magnitude
-	auto magnitude() const -> T;
-	auto sq_magnitude() const -> T;
+	auto magnitude() const -> flt;
+	auto sq_magnitude() const -> flt;
 
 	// Normalize
 	void normalize();
@@ -57,8 +56,8 @@ struct Quat {
 	constexpr auto operator*(const Quat& other) const -> Quat;
 
 	// Scalar multiplication
-	constexpr auto operator*(T scale) const -> Quat;
-	constexpr auto operator*=(T scale) -> Quat&;
+	constexpr auto operator*(flt scale) const -> Quat;
+	constexpr auto operator*=(flt scale) -> Quat&;
 
 	// Addition
 	constexpr auto operator+(const Quat& rhs) const -> Quat;
@@ -68,33 +67,33 @@ struct Quat {
 	constexpr auto operator-(const Quat& rhs) const -> Quat;
 
 	// Dot product
-	constexpr auto dot(const Quat& rhs) const -> T;
-	constexpr auto operator|(const Quat& rhs) const -> T;
+	constexpr auto dot(const Quat& rhs) const -> flt;
+	constexpr auto operator|(const Quat& rhs) const -> flt;
 
 	// Exponentiation
-	constexpr auto pow(T exp) const -> Quat;
+	constexpr auto pow(flt exp) const -> Quat;
 
 	// Rotation
-	constexpr auto rotate_point(const Vector<3,T>& point) const -> Vector<3,T>;
+	constexpr auto rotate_point(const Vector<3>& point) const -> Vector<3>;
 
 	// Spherical interpolation
-	static auto slerp(const Quat<T>& src, const Quat<T>& dest, T t) -> Quat;
-	auto slerp(const Quat<T>& dest, T t) const -> Quat;
+	static auto slerp(const Quat& src, const Quat& dest, flt t) -> Quat;
+	auto slerp(const Quat& dest, flt t) const -> Quat;
 
 	// Misc / Utility
 	auto to_string(usize precision = 3) const -> std::string;
 	auto to_string(const fmt::AlignedValues& formatter) const -> std::string;
 
 	// Iterator support
-	auto begin() -> detail::RawIterator<T>;
-	auto begin() const -> detail::RawConstIterator<T>;
+	auto begin() -> detail::RawIterator<flt>;
+	auto begin() const -> detail::RawConstIterator<flt>;
 
-	auto end() -> detail::RawIterator<T>;
-	auto end() const -> detail::RawConstIterator<T>;
+	auto end() -> detail::RawIterator<flt>;
+	auto end() const -> detail::RawConstIterator<flt>;
 
 	// Subscript operator
-	auto operator[](usize idx) -> T&;
-	auto operator[](usize idx) const -> T;
+	auto operator[](usize idx) -> flt&;
+	auto operator[](usize idx) const -> flt;
 
 	// Structured binding support
 	template <usize Index> auto get() &       { return get_helper<Index>(*this); }
@@ -104,12 +103,11 @@ struct Quat {
 private:
 	template <usize Index, typename U> auto get_helper(U&& self) -> auto&&;
 
-	friend class RotationMatrix<T>;
-	friend struct Euler<T>;
+	friend class RotationMatrix;
+	friend struct Euler;
 };
 
 } // namespace math
 
 // Scalar multiplication with scalar on lhs
-template <typename T = sized::f64>
-constexpr auto operator*(T lhs, const math::Quat<T>& rhs) -> math::Quat<T>;
+constexpr auto operator*(sized::flt lhs, const math::Quat& rhs) -> math::Quat;

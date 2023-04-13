@@ -20,7 +20,7 @@ using math::RotationMatrix;
 using math::Space;
 using math::Vec3;
 
-void matrix(const Euler<f64>& euler)
+void matrix(const Euler& euler)
 {
 	auto l2p_conv = euler.matrix(Space::Local2Parent);
 	auto p2l_conv = euler.matrix(Space::Parent2Local);
@@ -39,7 +39,7 @@ void matrix(const Euler<f64>& euler)
 	fmt::print("Parent->Local Composed:\n{}\n\n", p2l_comp.to_string());
 }
 
-auto expand_quat_p2l(const Euler<f64>& euler) -> Quat<f64>
+auto expand_quat_p2l(const Euler& euler) -> Quat
 {
 	f64 cos_h2 = std::cos(euler.yaw * 0.5);
 	f64 cos_p2 = std::cos(euler.pitch * 0.5);
@@ -54,17 +54,17 @@ auto expand_quat_p2l(const Euler<f64>& euler) -> Quat<f64>
 	f64 y =  cos_h2*sin_p2*sin_b2 - sin_h2*cos_p2*cos_b2;
 	f64 z =  sin_h2*sin_p2*cos_b2 - cos_h2*cos_p2*sin_b2;
 
-	return Quat<f64>{ w, x, y, z };
+	return Quat{ w, x, y, z };
 }
 
-void quat(const Euler<f64>& euler)
+void quat(const Euler& euler)
 {
 	auto l2p_conv = euler.quat(Space::Local2Parent);
 	auto p2l_conv = euler.quat(Space::Parent2Local);
 
-	auto yaw_quat   = Quat<f64>::angle_axis(45_deg, Vec3::up());
-	auto pitch_quat = Quat<f64>::angle_axis(-15_deg, Vec3::right());
-	auto roll_quat  = Quat<f64>::angle_axis(3.3_deg, Vec3::forward());
+	auto yaw_quat   = Quat::angle_axis(45_deg, Vec3::up());
+	auto pitch_quat = Quat::angle_axis(-15_deg, Vec3::right());
+	auto roll_quat  = Quat::angle_axis(3.3_deg, Vec3::forward());
 
 	auto l2p_comp = yaw_quat * pitch_quat * roll_quat;
 	auto p2l_comp = (yaw_quat * pitch_quat * roll_quat).conjugate();
@@ -94,7 +94,7 @@ void quat(const Euler<f64>& euler)
 
 void orientation_conversions()
 {
-	auto euler = Euler<f64>{
+	auto euler = Euler{
 		45_deg,
 		-15_deg,
 		3.3_deg,

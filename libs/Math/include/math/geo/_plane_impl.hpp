@@ -14,14 +14,14 @@ namespace math::geo {
 
 // Constructors ----------------------------------------------------------------
 
-template <typename T>
-constexpr Plane<T>::Plane(const Vec3& normal, T distance)
+inline Plane::Plane() {} // NOLINT
+
+constexpr Plane::Plane(const Vec3& normal, flt distance)
 	: normal(normal)
 	, distance(distance)
 {}
 
-template <typename T>
-constexpr auto Plane<T>::from_points(
+constexpr auto Plane::from_points(
 	const Vec3& p1,
 	const Vec3& p2,
 	const Vec3& p3)
@@ -31,23 +31,22 @@ constexpr auto Plane<T>::from_points(
 	Vec3 e1 = p3 - p2;
 
 	Vec3 perp = e3 ^ e1;
-	T sq_length = perp.sq_length();
+	flt sq_length = perp.sq_length();
 
-	ASSERT(!math::nearly_equal<T>(sq_length, 0, 0.001),
+	ASSERT(!math::nearly_equal(sq_length, 0, 0.001),
 		"Cannot construct a plane from nearly colinear points:\n\t{}\n\t{}\n\t{}\n",
 		p1.to_string(),
 		p2.to_string(),
 		p3.to_string());
 
 	Vec3 normal = perp * (1 / std::sqrt(sq_length));
-	T distance = p1 | normal;
+	flt distance = p1 | normal;
 
 	return Plane{ normal, distance };
 }
 
-template <typename T>
 template <typename Iter>
-constexpr auto Plane<T>::best_fit(const Iter& points) -> ENABLE_IF(ITER_OF(Iter, Vec3), Plane)
+constexpr auto Plane::best_fit(const Iter& points) -> ENABLE_IF(ITER_OF(Iter, Vec3), Plane)
 {
 	// normal.x = E (z[i] + z[i+1]) (y[i] - y[i+1])
 	// normal.y = E (x[i] + x[i+1]) (z[i] - z[i+1])
@@ -78,7 +77,7 @@ constexpr auto Plane<T>::best_fit(const Iter& points) -> ENABLE_IF(ITER_OF(Iter,
 	// Compute the distance as the average of the distance for each point
 	//   = avg(p | n)
 	//   = avg(p) | n
-	T distance = ((1 / static_cast<T>(count)) * sum) | normal;
+	flt distance = ((1 / static_cast<flt>(count)) * sum) | normal;
 
 	return Plane{ normal, distance };
 }
@@ -86,8 +85,7 @@ constexpr auto Plane<T>::best_fit(const Iter& points) -> ENABLE_IF(ITER_OF(Iter,
 
 // Queries ---------------------------------------------------------------------
 
-template <typename T>
-constexpr auto Plane<T>::dist(const Vec3& point) const -> T
+constexpr auto Plane::dist(const Vec3& point) const -> flt
 {
 	return (point | normal) - distance;
 }

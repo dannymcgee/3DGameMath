@@ -4,9 +4,5 @@
 #include "math/geo/_circle_impl.hpp"
 
 namespace math::geo {
-template <typename T> struct Circle;
-}
-
-namespace math {
-using Circle = geo::Circle<f64>;
+struct Circle;
 }

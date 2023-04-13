@@ -10,18 +10,17 @@
 namespace math {
 using namespace sized; // NOLINT(*-using-namespace)
 
-template <typename T> class RotationMatrix;
-template <typename T> struct Quat;
+class RotationMatrix;
+struct Quat;
 
 
-template <typename T = f64>
 struct Euler {
-	T yaw = 0;
-	T pitch = 0;
-	T roll = 0;
+	flt yaw = 0;
+	flt pitch = 0;
+	flt roll = 0;
 
-	auto matrix(Space space = Space::Local2Parent) const -> RotationMatrix<T>;
-	auto quat(Space space = Space::Local2Parent) const -> Quat<T>;
+	auto matrix(Space space = Space::Local2Parent) const -> RotationMatrix;
+	auto quat(Space space = Space::Local2Parent) const -> Quat;
 
 	constexpr auto canonical() const -> Euler;
 	void canonicalize();

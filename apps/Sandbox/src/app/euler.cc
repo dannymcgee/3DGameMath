@@ -16,7 +16,7 @@ using math::TranslationMatrix;
 
 void euler()
 {
-	auto rot = Euler<f64>{ 31.9_deg, -22.8_deg, 17.2_deg };
+	auto rot = Euler{ 31.9_deg, -22.8_deg, 17.2_deg };
 	fmt::print("rotation: {}\n", rot.to_string());
 
 	auto l2w = rot.matrix();

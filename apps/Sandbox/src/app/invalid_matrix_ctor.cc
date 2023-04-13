@@ -8,7 +8,7 @@ using math::Matrix;
 
 void invalid_matrix_ctor()
 {
-	auto whoops = Matrix<2,3,f64>{
+	auto whoops = Matrix<2,3>{
 		{ 11, 12, 13 },
 		{ 21, 22, 23 },
 		{ 31, 32, 33 },

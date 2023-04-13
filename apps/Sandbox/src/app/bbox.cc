@@ -26,7 +26,7 @@ void bbox()
 	auto formatter = math::fmt::AlignedValues(begin, end, 3);
 	formatter.debug();
 
-	auto bbox = AABBox<f64>::empty().add(points);
+	auto bbox = AABBox::empty().add(points);
 
 	fmt::print("min:    {}\n", bbox.min.to_string(formatter));
 	fmt::print("max:    {}\n\n", bbox.max.to_string(formatter));

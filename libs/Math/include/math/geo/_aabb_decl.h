@@ -17,10 +17,7 @@ namespace geo {
 /**
  * An axis-aligned bounding-box.
  */
-template <typename T = f64>
 struct AABBox {
-	using Vec3 = Vector<3,T>;
-
 	/** The smallest x, y, and z coordinates of the box. */
 	Vec3 min;
 	/** The largest x, y, and z coordinates of the box. */
@@ -77,7 +74,7 @@ struct AABBox {
 
 	/** Transform the bounding box to another coordinate space. */
 	template <usize R, usize C>
-	auto transform(const Matrix<R,C,T>& m) const -> AABBox;
+	auto transform(const Matrix<R,C>& m) const -> AABBox;
 };
 
 } // namespace geo

@@ -8,24 +8,24 @@ namespace math {
 using namespace sized; // NOLINT
 
 namespace literals {
-	constexpr auto operator""_deg(long double value) -> f64
+	constexpr auto operator""_deg(long double value) -> flt
 	{
-		return math::deg2rad(static_cast<f64>(value));
+		return math::deg2rad(static_cast<flt>(value));
 	}
 
-	constexpr auto operator""_deg(usize value) -> f64
+	constexpr auto operator""_deg(usize value) -> flt
 	{
-		return math::deg2rad(static_cast<f64>(value));
+		return math::deg2rad(static_cast<flt>(value));
 	}
 
-	constexpr auto operator""_rad(long double value) -> f64
+	constexpr auto operator""_rad(long double value) -> flt
 	{
-		return static_cast<f64>(value);
+		return static_cast<flt>(value);
 	}
 
-	constexpr auto operator""_rad(usize value) -> f64
+	constexpr auto operator""_rad(usize value) -> flt
 	{
-		return static_cast<f64>(value);
+		return static_cast<flt>(value);
 	}
 } // namespace literals
 } // namespace math

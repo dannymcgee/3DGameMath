@@ -4,5 +4,5 @@
 #include "math/geo/_aabb_impl.hpp"
 
 namespace math::geo {
-template <typename T> struct AABBox;
+struct AABBox;
 }

@@ -8,16 +8,15 @@
 namespace math {
 using namespace sized; // NOLINT
 
-template <usize D, typename T> struct Vector;
+template <usize D> struct Vector;
 
 
-template <typename T = f64>
 struct PolarCoords {
-	T radius;
-	T angle;
+	flt radius;
+	flt angle;
 
-	static constexpr auto from_cartesian(const Vector<2,T>& coords) -> PolarCoords;
-	static constexpr auto from_cartesian(T x, T y) -> PolarCoords;
+	static constexpr auto from_cartesian(const Vector<2>& coords) -> PolarCoords;
+	static constexpr auto from_cartesian(flt x, flt y) -> PolarCoords;
 
 	constexpr auto canonical() const -> PolarCoords;
 	void canonicalize();
@@ -26,14 +25,13 @@ struct PolarCoords {
 };
 
 
-template <typename T = f64>
 struct SphericalCoords {
-	T radius;
-	T heading;
-	T pitch;
+	flt radius;
+	flt heading;
+	flt pitch;
 
-	static constexpr auto from_cartesian(const Vector<3,T>& coords) -> SphericalCoords;
-	static constexpr auto from_cartesian(T x, T y, T z) -> SphericalCoords;
+	static constexpr auto from_cartesian(const Vector<3>& coords) -> SphericalCoords;
+	static constexpr auto from_cartesian(flt x, flt y, flt z) -> SphericalCoords;
 
 	constexpr auto canonical() const -> SphericalCoords;
 	void canonicalize();

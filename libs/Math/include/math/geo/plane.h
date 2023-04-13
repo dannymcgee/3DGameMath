@@ -4,5 +4,5 @@
 #include "math/geo/_plane_impl.hpp"
 
 namespace math::geo {
-template <typename T> struct Plane;
+struct Plane;
 }
