@@ -1,8 +1,18 @@
 #pragma once
 
-#include "math/geo/_sphere_decl.h"
-#include "math/geo/_sphere_impl.hpp"
+#include <sized.h>
 
-namespace math::geo {
-struct Sphere;
-}
+#include "math/vector.h"
+
+namespace math {
+using namespace sized; // NOLINT(*-using-namespace)
+
+namespace geo {
+
+struct Sphere {
+	Vec3 center;
+	flt radius = 0;
+};
+
+} // namespace geo
+} // namespace math

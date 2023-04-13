@@ -13,20 +13,13 @@ add_library(
 			"include/math/geo/_aabb_impl.hpp"
 
 			"include/math/geo/circle.h"
-			"include/math/geo/_circle_decl.h"
-			"include/math/geo/_circle_impl.hpp"
 
 			"include/math/geo/plane.h"
 			"include/math/geo/_plane_decl.h"
 			"include/math/geo/_plane_impl.hpp"
 
 			"include/math/geo/ray.h"
-			"include/math/geo/_ray_decl.h"
-			"include/math/geo/_ray_impl.hpp"
-
 			"include/math/geo/sphere.h"
-			"include/math/geo/_sphere_decl.h"
-			"include/math/geo/_sphere_impl.hpp"
 
 			"include/math/geo/tri.h"
 			"include/math/geo/_tri_decl.h"
