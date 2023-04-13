@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/_polar_decl.h"
+#include "math/polar.inl.h"
 
 #include <cmath>
 

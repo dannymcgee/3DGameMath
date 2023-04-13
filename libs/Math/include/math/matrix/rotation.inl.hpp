@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/matrix/_rotation_decl.h"
+#include "math/matrix/rotation.inl.h"
 
 #include <cmath>
 #include <numeric>

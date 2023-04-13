@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/_euler_decl.h"
+#include "math/euler.inl.h"
 
 #include "math/matrix/rotation.h"
 #include "math/quat.h"

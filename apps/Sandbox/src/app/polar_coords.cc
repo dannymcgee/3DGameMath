@@ -1,4 +1,3 @@
-#include "math/_polar_decl.h"
 #include <fmt/format.h>
 
 #include <math/literals.h>

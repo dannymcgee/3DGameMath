@@ -1,7 +1,7 @@
 #pragma once
 
-#include "math/_polar_decl.h"
-#include "math/_polar_impl.hpp"
+#include "math/polar.inl.h"
+#include "math/polar.inl.hpp"
 
 namespace math {
 struct PolarCoords;

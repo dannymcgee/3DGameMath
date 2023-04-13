@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/matrix/_transform_decl.h"
+#include "math/matrix/transform.inl.h"
 
 #include "math/matrix/rotation.h"
 #include "math/matrix/translation.h"

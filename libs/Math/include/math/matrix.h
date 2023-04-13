@@ -1,7 +1,7 @@
 #pragma once
 
-#include "math/_matrix_decl.h"
-#include "math/_matrix_impl.hpp"
+#include "math/matrix.inl.h"
+#include "math/matrix.inl.hpp"
 
 namespace math {
 template <usize R, usize C> class Matrix;

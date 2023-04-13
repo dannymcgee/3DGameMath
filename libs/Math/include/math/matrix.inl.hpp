@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/_matrix_decl.h"
+#include "math/matrix.inl.h"
 
 #include <fmt/format.h>
 #include <sized.h>

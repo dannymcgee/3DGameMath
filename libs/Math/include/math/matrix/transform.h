@@ -1,7 +1,7 @@
 #pragma once
 
-#include "math/matrix/_transform_decl.h"
-#include "math/matrix/_transform_impl.hpp"
+#include "math/matrix/transform.inl.h"
+#include "math/matrix/transform.inl.hpp"
 
 namespace math {
 class TransformMatrix;

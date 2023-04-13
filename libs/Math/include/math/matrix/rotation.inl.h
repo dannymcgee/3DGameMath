@@ -67,8 +67,8 @@ private:
 	static constexpr auto construct(flt angle, Axis axis) -> Super;
 	static constexpr auto construct(flt angle, const Vector<3>& axis) -> Super;
 
-	friend struct Euler;
-	friend struct Quat;
+	friend struct math::Euler;
+	friend struct math::Quat;
 };
 
-}
+} // namespace math

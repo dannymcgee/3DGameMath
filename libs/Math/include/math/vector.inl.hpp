@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/_vector_decl.h"
+#include "math/vector.inl.h"
 
 #include <cmath>
 #include <string>

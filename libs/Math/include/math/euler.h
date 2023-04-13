@@ -1,7 +1,7 @@
 #pragma once
 
-#include "math/_euler_decl.h"
-#include "math/_euler_impl.hpp"
+#include "math/euler.inl.h"
+#include "math/euler.inl.hpp"
 
 namespace math {
 struct Euler;

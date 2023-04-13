@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/_quat_decl.h"
+#include "math/quat.inl.h"
 
 #include <cmath>
 #include <utility>
