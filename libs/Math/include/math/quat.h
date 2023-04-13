@@ -1,8 +1,8 @@
 #pragma once
 
-#include "math/_quat_decl.h"
-#include "math/_quat_impl.hpp"
+#include "math/quat.inl.h"
+#include "math/quat.inl.hpp"
 
 namespace math {
-template <typename T> struct Quat;
+struct Quat;
 }

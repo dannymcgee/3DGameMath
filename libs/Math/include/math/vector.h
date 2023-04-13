@@ -1,11 +1,11 @@
 #pragma once
 
-#include "math/_vector_decl.h"
-#include "math/_vector_impl.hpp"
+#include "math/vector.inl.h"
+#include "math/vector.inl.hpp"
 
 
 namespace math {
-template <usize D, typename T> struct Vector;
+template <usize D> struct Vector;
 
 using Vec2 = Vector<2>;
 using Vec3 = Vector<3>;

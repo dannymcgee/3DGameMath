@@ -7,7 +7,7 @@
 namespace math {
 using namespace sized; // NOLINT(*-using-namespace)
 
-template <typename T = f64>
+template <typename T = flt>
 class Random {
 public:
 	Random(T range_start, T range_end)

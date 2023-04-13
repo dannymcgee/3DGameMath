@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/_polar_decl.h"
+#include "math/polar.inl.h"
 
 #include <cmath>
 
@@ -8,41 +8,39 @@
 
 #include "math/literals.h"
 #include "math/utility.h"
+#include "math/vector.h"
 
 
 namespace math {
 
 // PolarCoords =================================================================
 
-template <typename T>
-constexpr auto PolarCoords<T>::from_cartesian(const Vector<2,T>& coords) -> PolarCoords
+constexpr auto PolarCoords::from_cartesian(const Vector<2>& coords) -> PolarCoords
 {
 	auto [x,y] = coords;
 	return PolarCoords::from_cartesian(x, y);
 }
 
-template <typename T>
-constexpr auto PolarCoords<T>::from_cartesian(T x, T y) -> PolarCoords
+constexpr auto PolarCoords::from_cartesian(flt x, flt y) -> PolarCoords
 {
-	if (math::nearly_equal<T>(x, 0) && math::nearly_equal<T>(y, 0))
+	if (math::nearly_equal(x, 0) && math::nearly_equal(y, 0))
 		return { 0, 0 };
 
-	T radius = std::sqrt(x * x + y * y);
-	T angle = std::atan2(y, x);
+	flt radius = std::sqrt(x * x + y * y);
+	flt angle = std::atan2(y, x);
 
 	return { radius, angle };
 }
 
-template <typename T>
-constexpr auto PolarCoords<T>::canonical() const -> PolarCoords
+constexpr auto PolarCoords::canonical() const -> PolarCoords
 {
 	using namespace math::literals; // NOLINT
 
-	if (math::nearly_equal<T>(radius, 0))
+	if (math::nearly_equal(radius, 0))
 		return { 0, 0 };
 
-	T r = radius;
-	T theta = angle;
+	flt r = radius;
+	flt theta = angle;
 
 	if (r < 0) {
 		r = -r;
@@ -61,14 +59,12 @@ constexpr auto PolarCoords<T>::canonical() const -> PolarCoords
 	return { r, theta };
 }
 
-template <typename T>
-inline void PolarCoords<T>::canonicalize()
+inline void PolarCoords::canonicalize()
 {
 	*this = canonical();
 }
 
-template <typename T>
-auto PolarCoords<T>::to_string(usize precision) const -> std::string
+inline auto PolarCoords::to_string(usize precision) const -> std::string
 {
 	return ::fmt::format(
 		"({0:.{2}}, {1:.{2}}°)",
@@ -78,25 +74,23 @@ auto PolarCoords<T>::to_string(usize precision) const -> std::string
 
 // SphericalCoords =============================================================
 
-template <typename T>
-constexpr auto SphericalCoords<T>::from_cartesian(const Vector<3,T>& coords) -> SphericalCoords
+constexpr auto SphericalCoords::from_cartesian(const Vector<3>& coords) -> SphericalCoords
 {
 	auto [x,y,z] = coords;
 	return SphericalCoords::from_cartesian(x, y, z);
 }
 
-template <typename T>
-constexpr auto SphericalCoords<T>::from_cartesian(T x, T y, T z) -> SphericalCoords
+constexpr auto SphericalCoords::from_cartesian(flt x, flt y, flt z) -> SphericalCoords
 {
 	using namespace math::literals; // NOLINT
 
-	T radius = std::sqrt(x * x + y * y + z * z);
+	flt radius = std::sqrt(x * x + y * y + z * z);
 
-	if (math::nearly_equal<T>(radius, 0))
+	if (math::nearly_equal(radius, 0))
 		return { 0, 0, 0 };
 
-	T declination = std::asin(-y / radius);
-	T heading = math::nearly_equal<T>(declination, 90_deg, 0.0001)
+	flt declination = std::asin(-y / radius);
+	flt heading = math::nearly_equal(declination, 90_deg, 0.0001)
 		? 0
 		: std::atan2(x, z);
 
@@ -107,17 +101,16 @@ constexpr auto SphericalCoords<T>::from_cartesian(T x, T y, T z) -> SphericalCoo
 	};
 }
 
-template <typename T>
-constexpr auto SphericalCoords<T>::canonical() const -> SphericalCoords
+constexpr auto SphericalCoords::canonical() const -> SphericalCoords
 {
 	using namespace math::literals; // NOLINT
 
-	if (math::nearly_equal<T>(radius, 0))
+	if (math::nearly_equal(radius, 0))
 		return { 0, 0, 0 };
 
-	T r = radius;
-	T h = heading;
-	T p = pitch;
+	flt r = radius;
+	flt h = heading;
+	flt p = pitch;
 
 	// Clamp radius to positive
 	if (r < 0) {
@@ -147,7 +140,7 @@ constexpr auto SphericalCoords<T>::canonical() const -> SphericalCoords
 	}
 
 	// Check for gimbal lock
-	if (math::nearly_equal<T>(p, 90_deg, 0.0001))
+	if (math::nearly_equal(p, 90_deg, 0.0001))
 		return { r, 0, p };
 
 	// Wrap heading, avoiding math when possible to preserve precision
@@ -163,14 +156,12 @@ constexpr auto SphericalCoords<T>::canonical() const -> SphericalCoords
 	return { r, h, p };
 }
 
-template <typename T>
-inline void SphericalCoords<T>::canonicalize()
+inline void SphericalCoords::canonicalize()
 {
 	*this = canonical();
 }
 
-template <typename T>
-auto SphericalCoords<T>::to_string(usize precision) const -> std::string
+inline auto SphericalCoords::to_string(usize precision) const -> std::string
 {
 	return ::fmt::format(
 		"(r {0:.{3}}, h {1:.{3}}°, p {2:.{3}}°)",

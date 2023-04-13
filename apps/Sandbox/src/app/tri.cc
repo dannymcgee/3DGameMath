@@ -10,7 +10,7 @@ using namespace sized; // NOLINT
 using math::geo::Tri;
 using math::Vec3;
 
-void cart2bary_alt(const Tri<f64>& t, const Vec3& p)
+void cart2bary_alt(const Tri& t, const Vec3& p)
 {
 	Vec3 d1 = t.edge<3>();
 	Vec3 d2 = t.edge<1>();
@@ -60,7 +60,7 @@ void cart2bary_alt(const Tri<f64>& t, const Vec3& p)
 
 	f64 denom = v1 * u2 - v2 * u1;
 
-	if (math::nearly_equal<f64>(denom, 0))
+	if (math::nearly_equal(denom, 0))
 		std::exit(1);
 
 	f64 scale = 1.0 / denom;
@@ -76,7 +76,7 @@ void cart2bary_alt(const Tri<f64>& t, const Vec3& p)
 
 void tri()
 {
-	auto t = Tri<f64>{
+	auto t = Tri{
 		Vec3{ -1,  0, -0.5 },
 		Vec3{  0,  0,  1   },
 		Vec3{  1,  0, -0.5 },

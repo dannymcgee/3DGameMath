@@ -3,62 +3,45 @@ add_library(
 		"include/math/assert.h"
 
 		"include/math/euler.h"
-		"include/math/_euler_decl.h"
-		"include/math/_euler_impl.hpp"
+		"include/math/euler.inl.h"
+		"include/math/euler.inl.hpp"
 
 		"include/math/fmt.h"
 
-			"include/math/geo/aabb.h"
-			"include/math/geo/_aabb_decl.h"
-			"include/math/geo/_aabb_impl.hpp"
-
-			"include/math/geo/circle.h"
-			"include/math/geo/_circle_decl.h"
-			"include/math/geo/_circle_impl.hpp"
-
-			"include/math/geo/plane.h"
-			"include/math/geo/_plane_decl.h"
-			"include/math/geo/_plane_impl.hpp"
-
-			"include/math/geo/ray.h"
-			"include/math/geo/_ray_decl.h"
-			"include/math/geo/_ray_impl.hpp"
-
-			"include/math/geo/sphere.h"
-			"include/math/geo/_sphere_decl.h"
-			"include/math/geo/_sphere_impl.hpp"
-
-			"include/math/geo/tri.h"
-			"include/math/geo/_tri_decl.h"
-			"include/math/geo/_tri_impl.hpp"
+		"include/math/geo/aabb.h"
+		"include/math/geo/circle.h"
+		"include/math/geo/plane.h"
+		"include/math/geo/ray.h"
+		"include/math/geo/sphere.h"
+		"include/math/geo/tri.h"
 
 		"include/math/literals.h"
 
 		"include/math/matrix.h"
-		"include/math/_matrix_decl.h"
-		"include/math/_matrix_impl.hpp"
+		"include/math/matrix.inl.h"
+		"include/math/matrix.inl.hpp"
 
 			"include/math/matrix/rotation.h"
-			"include/math/matrix/_rotation_decl.h"
-			"include/math/matrix/_rotation_impl.hpp"
+			"include/math/matrix/rotation.inl.h"
+			"include/math/matrix/rotation.inl.hpp"
 
 			"include/math/matrix/scale.h"
 			"src/math/matrix/scale.cc"
 
 			"include/math/matrix/transform.h"
-			"include/math/matrix/_transform_decl.h"
-			"include/math/matrix/_transform_impl.hpp"
+			"include/math/matrix/transform.inl.h"
+			"include/math/matrix/transform.inl.hpp"
 
 			"include/math/matrix/translation.h"
 			"src/math/matrix/translation.cc"
 
 		"include/math/polar.h"
-		"include/math/_polar_decl.h"
-		"include/math/_polar_impl.hpp"
+		"include/math/polar.inl.h"
+		"include/math/polar.inl.hpp"
 
 		"include/math/quat.h"
-		"include/math/_quat_decl.h"
-		"include/math/_quat_impl.hpp"
+		"include/math/quat.inl.h"
+		"include/math/quat.inl.hpp"
 
 		"include/math/sfinae.h"
 		"include/math/spaces.h"
@@ -66,8 +49,8 @@ add_library(
 		"include/math/utility.h"
 
 		"include/math/vector.h"
-		"include/math/_vector_decl.h"
-		"include/math/_vector_impl.hpp"
+		"include/math/vector.inl.h"
+		"include/math/vector.inl.hpp"
 )
 
 target_include_directories(

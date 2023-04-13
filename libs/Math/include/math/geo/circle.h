@@ -1,12 +1,19 @@
 #pragma once
 
-#include "math/geo/_circle_decl.h"
-#include "math/geo/_circle_impl.hpp"
+#include <sized.h>
 
-namespace math::geo {
-template <typename T> struct Circle;
-}
+#include "math/vector.h"
 
 namespace math {
-using Circle = geo::Circle<f64>;
-}
+using namespace sized; // NOLINT(*-using-namespace)
+
+namespace geo {
+
+struct Circle {
+	Vec3 center;
+	Vec3 normal;
+	flt radius = 0;
+};
+
+} // namespace geo
+} // namespace math

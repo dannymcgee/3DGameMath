@@ -1,8 +1,8 @@
 #pragma once
 
-#include "math/matrix/_rotation_decl.h"
-#include "math/matrix/_rotation_impl.hpp"
+#include "math/matrix/rotation.inl.h"
+#include "math/matrix/rotation.inl.hpp"
 
 namespace math {
-template <typename T> class RotationMatrix;
+class RotationMatrix;
 }

@@ -32,162 +32,160 @@ using math::Mat4x3;
 TEST_CASE("math::Vector", "[vector]") {
 	using namespace sized; // NOLINT
 
-	SECTION("Vector<3, f32>") {
-		using Vec3 = math::Vector<3,f32>;  // NOLINT(clang-diagnostic-shadow)
-
-		static constexpr f32 epsilon_practical = 0.00001f;
+	SECTION("Vector<3>") {
+		static constexpr flt epsilon_practical = 0.00001;
 
 		SECTION("supports construction with initializer list") {
-			auto vec = Vec3{ 1.f, 2.f, 3.f };
+			auto vec = Vec3{ 1, 2, 3 };
 
-			CHECK(vec.x == 1.f);
-			CHECK(vec.y == 2.f);
-			CHECK(vec.z == 3.f);
+			CHECK(vec.x == 1);
+			CHECK(vec.y == 2);
+			CHECK(vec.z == 3);
 		}
 		SECTION("supports structured binding") {
-			auto [x,y,z] = Vec3{ 1.f, 2.f, 3.f };
+			auto [x,y,z] = Vec3{ 1, 2, 3 };
 
-			CHECK(x == 1.f);
-			CHECK(y == 2.f);
-			CHECK(z == 3.f);
+			CHECK(x == 1);
+			CHECK(y == 2);
+			CHECK(z == 3);
 		}
 		SECTION("has a ::Zero const static member") {
 			auto vec = Vec3::Zero;
 
-			CHECK(vec.x == 0.f);
-			CHECK(vec.y == 0.f);
-			CHECK(vec.z == 0.f);
+			CHECK(vec.x == 0);
+			CHECK(vec.y == 0);
+			CHECK(vec.z == 0);
 		}
 		SECTION("support unary negation operator") {
-			auto pos = Vec3{ 1.f, 2.f, 3.f };
+			auto pos = Vec3{ 1, 2, 3 };
 			auto neg = -pos;
 
-			CHECK_THAT(neg.x, WithinRel(-1.f));
-			CHECK_THAT(neg.y, WithinRel(-2.f));
-			CHECK_THAT(neg.z, WithinRel(-3.f));
+			CHECK_THAT(neg.x, WithinRel(-1_flt));
+			CHECK_THAT(neg.y, WithinRel(-2_flt));
+			CHECK_THAT(neg.z, WithinRel(-3_flt));
 		}
 		SECTION("supports Vec + Vec operator...") {
-			auto lhs = Vec3{ 1.f, 2.f, 3.f };
+			auto lhs = Vec3{ 1, 2, 3 };
 
 			SECTION("...with lvalue rhs") {
-				auto rhs = Vec3{ 1.f, 2.f, 3.f };
+				auto rhs = Vec3{ 1, 2, 3 };
 				auto result = lhs + rhs;
 
-				CHECK(result.x == 2.f);
-				CHECK(result.y == 4.f);
-				CHECK(result.z == 6.f);
+				CHECK(result.x == 2);
+				CHECK(result.y == 4);
+				CHECK(result.z == 6);
 			}
 			SECTION("...with rvalue rhs") {
-				auto result = lhs + Vec3{ 1.f, 2.f, 3.f };
+				auto result = lhs + Vec3{ 1, 2, 3 };
 
-				CHECK(result.x == 2.f);
-				CHECK(result.y == 4.f);
-				CHECK(result.z == 6.f);
+				CHECK(result.x == 2);
+				CHECK(result.y == 4);
+				CHECK(result.z == 6);
 			}
 		}
 		SECTION("supports Vec += Vec operator...") {
-			auto result = Vec3{ 1.f, 2.f, 3.f };
+			auto result = Vec3{ 1, 2, 3 };
 
 			SECTION("...with lvalue rhs") {
-				auto rhs = Vec3{ 1.f, 2.f, 3.f };
+				auto rhs = Vec3{ 1, 2, 3 };
 				result += rhs;
 
-				CHECK(result.x == 2.f);
-				CHECK(result.y == 4.f);
-				CHECK(result.z == 6.f);
+				CHECK(result.x == 2);
+				CHECK(result.y == 4);
+				CHECK(result.z == 6);
 			}
 			SECTION("...with rvalue rhs") {
-				result += Vec3{ 1.f, 2.f, 3.f };
+				result += Vec3{ 1, 2, 3 };
 
-				CHECK(result.x == 2.f);
-				CHECK(result.y == 4.f);
-				CHECK(result.z == 6.f);
+				CHECK(result.x == 2);
+				CHECK(result.y == 4);
+				CHECK(result.z == 6);
 			}
 		}
 		SECTION("supports Vec - Vec operator...") {
-			auto lhs = Vec3{ 1.f, 2.f, 3.f };
+			auto lhs = Vec3{ 1, 2, 3 };
 
 			SECTION("...with lvalue rhs") {
-				auto rhs = Vec3{ 3.f, 2.f, 1.f };
+				auto rhs = Vec3{ 3, 2, 1 };
 				auto result = lhs - rhs;
 
-				CHECK_THAT(result.x, WithinRel(-2.f));
-				CHECK(result.y == 0.f);
-				CHECK(result.z == 2.f);
+				CHECK_THAT(result.x, WithinRel(-2_flt));
+				CHECK(result.y == 0);
+				CHECK(result.z == 2);
 			}
 
 			SECTION("...with rvalue rhs") {
-				auto result = lhs - Vec3{ 3.f, 2.f, 1.f };
+				auto result = lhs - Vec3{ 3, 2, 1 };
 
-				CHECK_THAT(result.x, WithinRel(-2.f));
-				CHECK(result.y == 0.f);
-				CHECK(result.z == 2.f);
+				CHECK_THAT(result.x, WithinRel(-2_flt));
+				CHECK(result.y == 0);
+				CHECK(result.z == 2);
 			}
 		}
 		SECTION("supports Vec -= Vec operator...") {
-			auto result = Vec3{ 1.f, 2.f, 3.f };
+			auto result = Vec3{ 1, 2, 3 };
 
 			SECTION("...with lvalue rhs") {
-				auto rhs = Vec3{ 3.f, 2.f, 1.f };
+				auto rhs = Vec3{ 3, 2, 1 };
 				result -= rhs;
 
-				CHECK_THAT(result.x, WithinRel(-2.f));
-				CHECK(result.y == 0.f);
-				CHECK(result.z == 2.f);
+				CHECK_THAT(result.x, WithinRel(-2_flt));
+				CHECK(result.y == 0);
+				CHECK(result.z == 2);
 			}
 			SECTION("...with rvalue rhs") {
-				result -= Vec3{ 3.f, 2.f, 1.f };
+				result -= Vec3{ 3, 2, 1 };
 
-				CHECK_THAT(result.x, WithinRel(-2.f));
-				CHECK(result.y == 0.f);
-				CHECK(result.z == 2.f);
+				CHECK_THAT(result.x, WithinRel(-2_flt));
+				CHECK(result.y == 0);
+				CHECK(result.z == 2);
 			}
 		}
 		SECTION("supports Vec * f32 operator") {
-			auto lhs = Vec3{ 1.f, 2.f, 3.f };
-			auto result = lhs * 2.f;
+			auto lhs = Vec3{ 1, 2, 3 };
+			auto result = lhs * 2;
 
-			CHECK(result.x == 2.f);
-			CHECK(result.y == 4.f);
-			CHECK(result.z == 6.f);
+			CHECK(result.x == 2);
+			CHECK(result.y == 4);
+			CHECK(result.z == 6);
 		}
 		SECTION("supports Vec *= f32 operator") {
-			auto result = Vec3{ 1.f, 2.f, 3.f };
-			result *= 2.f;
+			auto result = Vec3{ 1, 2, 3 };
+			result *= 2;
 
-			CHECK(result.x == 2.f);
-			CHECK(result.y == 4.f);
-			CHECK(result.z == 6.f);
+			CHECK(result.x == 2);
+			CHECK(result.y == 4);
+			CHECK(result.z == 6);
 		}
 		SECTION("supports f32 * Vec operator...") {
-			auto lhs = 2.f;
+			flt lhs = 2;
 
 			SECTION("...with lvalue rhs") {
-				auto rhs = Vec3{ 1.f, 2.f, 3.f };
+				auto rhs = Vec3{ 1, 2, 3 };
 				auto result = lhs * rhs;
 
-				CHECK(result.x == 2.f);
-				CHECK(result.y == 4.f);
-				CHECK(result.z == 6.f);
+				CHECK(result.x == 2);
+				CHECK(result.y == 4);
+				CHECK(result.z == 6);
 			}
 			SECTION("...with rvalue rhs") {
-				auto result = lhs * Vec3{ 1.f, 2.f, 3.f };
+				auto result = lhs * Vec3{ 1, 2, 3 };
 
-				CHECK(result.x == 2.f);
-				CHECK(result.y == 4.f);
-				CHECK(result.z == 6.f);
+				CHECK(result.x == 2);
+				CHECK(result.y == 4);
+				CHECK(result.z == 6);
 			}
 		}
 		SECTION("supports Vec / f32 operator") {
-			auto lhs = Vec3{ 1.f, 2.f, 3.f };
-			auto result = lhs / 2.f;
+			auto lhs = Vec3{ 1, 2, 3 };
+			auto result = lhs / 2_flt;
 
-			CHECK(result.x == 0.5f);
-			CHECK(result.y == 1.f);
-			CHECK(result.z == 1.5f);
+			CHECK(result.x == 0.5);
+			CHECK(result.y == 1);
+			CHECK(result.z == 1.5);
 
 			SECTION("avoids NaN") {
-				auto imposibble = lhs / 0.f;
+				auto imposibble = lhs / 0_flt;
 
 				CHECK(!std::isnan(imposibble.x));
 				CHECK(!std::isnan(imposibble.y));
@@ -195,46 +193,46 @@ TEST_CASE("math::Vector", "[vector]") {
 			}
 		}
 		SECTION("supports Vec /= f32 operator") {
-			auto result = Vec3{ 1.f, 2.f, 3.f };
-			result /= 2.f;
+			auto result = Vec3{ 1, 2, 3 };
+			result /= 2_flt;
 
-			CHECK(result.x == 0.5f);
-			CHECK(result.y == 1.f);
-			CHECK(result.z == 1.5f);
+			CHECK(result.x == 0.5);
+			CHECK(result.y == 1);
+			CHECK(result.z == 1.5);
 		}
 		SECTION("supports Vec == Vec operator...") {
-			auto lhs = Vec3{ 1.f, 2.f, 3.f };
+			auto lhs = Vec3{ 1, 2, 3 };
 
 			SECTION("...with lvalue rhs") {
-				auto rhs = Vec3{ 1.f, 2.f, 3.f };
+				auto rhs = Vec3{ 1, 2, 3 };
 				auto result = lhs == rhs;
 
 				CHECK(result == true);
 			}
 			SECTION("... with rvalue rhs") {
-				auto result = lhs == Vec3{ 1.f, 2.f, 3.f };
+				auto result = lhs == Vec3{ 1, 2, 3 };
 
 				CHECK(result == true);
 			}
 		}
 		SECTION("supports Vec != Vec operator...") {
-			auto lhs = Vec3{ 1.f, 2.f, 3.f };
+			auto lhs = Vec3{ 1, 2, 3 };
 
 			SECTION("...with lvalue rhs") {
-				auto rhs = Vec3{ 1.1f, 2.1f, 3.1f };
+				auto rhs = Vec3{ 1.1, 2.1, 3.1 };
 				auto result = lhs != rhs;
 
 				CHECK(result == true);
 			}
 			SECTION("...with rvalue rhs") {
-				auto result = lhs != Vec3{ 1.1f, 2.1f, 3.1f };
+				auto result = lhs != Vec3{ 1.1, 2.1, 3.1 };
 
 				CHECK(result == true);
 			}
 		}
 		SECTION("can calculate the vector length") {
-			auto vec = Vec3{ 1.5f, 2.25f, 3.34f };
-			auto expected = 4.29745f;
+			auto vec = Vec3{ 1.5, 2.25, 3.34 };
+			auto expected = 4.29745;
 
 			auto length = vec.length();
 			auto magnitude = vec.magnitude();
@@ -243,18 +241,18 @@ TEST_CASE("math::Vector", "[vector]") {
 			CHECK_THAT(magnitude, WithinRel(expected, epsilon_practical));
 
 			// Unit vector length == 1
-			auto up = Vec3{ 0.f, 1.f, 0.f };
-			CHECK(up.length() == 1.f);
+			auto up = Vec3{ 0, 1, 0 };
+			CHECK(up.length() == 1);
 
 			// Zero Vector length == 0
-			CHECK(Vec3::Zero.length() == 0.f);
+			CHECK(Vec3::Zero.length() == 0);
 
 			// Vector length is always non-negative
-			CHECK(Vec3{ -1.f, -2.f, -3.f }.length() > 0.f);
+			CHECK(Vec3{ -1, -2, -3 }.length() > 0);
 		}
 		SECTION("can calculate its unit-length direction") {
-			auto vec = Vec3{ 12.f, -5.f, 0.f };
-			auto expected = Vec3{ 0.92308f, -0.38462f, 0.f };
+			auto vec = Vec3{ 12, -5, 0 };
+			auto expected = Vec3{ 0.92308f, -0.38462f, 0 };
 
 			// `Unit()`
 			auto unit = vec.unit();
@@ -295,13 +293,13 @@ TEST_CASE("math::Vector", "[vector]") {
 			}
 		}
 		SECTION("can calculate the length and direction as a single operation") {
-			auto vec = Vec3{ 0.f, 10.f, 0.f };
+			auto vec = Vec3{ 0, 10, 0 };
 			auto [length, direction] = vec.length_and_direction();
 
-			CHECK_THAT(length, WithinRel(10.f));
-			CHECK_THAT(direction.x, WithinRel(0.f));
-			CHECK_THAT(direction.y, WithinRel(1.f));
-			CHECK_THAT(direction.z, WithinRel(0.f));
+			CHECK_THAT(length, WithinRel(10_flt));
+			CHECK_THAT(direction.x, WithinRel(0_flt));
+			CHECK_THAT(direction.y, WithinRel(1_flt));
+			CHECK_THAT(direction.z, WithinRel(0_flt));
 		}
 		SECTION("can calculate the distance to another point") {
 			auto expected = 2.828427f;
@@ -349,13 +347,13 @@ TEST_CASE("math::Vector", "[vector]") {
 			}
 		}
 		SECTION("can calculate the dot-product with another vector") {
-			auto vec1 = Vec3{ 3.f, -2.f, 7.f };
-			auto vec2 = Vec3{ 0.f, 4.f, -1.f };
-			auto expected = -15.f;
+			auto vec1 = Vec3{ 3, -2, 7 };
+			auto vec2 = Vec3{ 0, 4, -1 };
+			flt expected = -15;
 
 			SECTION("rvalue rhs") {
-				CHECK_THAT(vec1.dot({ 0.f, 4.f, -1.f }), WithinRel(expected));
-				CHECK_THAT((vec1 | Vec3{ 0.f, 4.f, -1.f }), WithinRel(expected));
+				CHECK_THAT(vec1.dot({ 0, 4, -1 }), WithinRel(expected));
+				CHECK_THAT((vec1 | Vec3{ 0, 4, -1 }), WithinRel(expected));
 			}
 			SECTION("lvalue rhs") {
 				CHECK_THAT(vec1.dot(vec2), WithinRel(expected));
@@ -363,12 +361,12 @@ TEST_CASE("math::Vector", "[vector]") {
 			}
 		}
 		SECTION("can calculate the cross-product with another vector") {
-			auto vec1 = Vec3{ 1.f, 3.f, 4.f };
-			auto vec2 = Vec3{ 2.f, -5.f, 8.f };
-			auto expected = Vec3{ 44.f, 0.f, -11.f };
+			auto vec1 = Vec3{ 1, 3, 4 };
+			auto vec2 = Vec3{ 2, -5, 8 };
+			auto expected = Vec3{ 44, 0, -11 };
 
 			SECTION("named method with rvalue arg") {
-				auto result = vec1.cross({ 2.f, -5.f, 8.f });
+				auto result = vec1.cross({ 2, -5, 8 });
 
 				CHECK_THAT(result.x, WithinRel(expected.x));
 				CHECK_THAT(result.y, WithinRel(expected.y));
@@ -382,7 +380,7 @@ TEST_CASE("math::Vector", "[vector]") {
 				CHECK_THAT(result.z, WithinRel(expected.z));
 			}
 			SECTION("^ operator with rvalue rhs") {
-				auto result = vec1 ^ Vec3{ 2.f, -5.f, 8.f };
+				auto result = vec1 ^ Vec3{ 2, -5, 8 };
 
 				CHECK_THAT(result.x, WithinRel(expected.x));
 				CHECK_THAT(result.y, WithinRel(expected.y));
@@ -397,7 +395,7 @@ TEST_CASE("math::Vector", "[vector]") {
 			}
 			SECTION("^= operator with rvalue rhs") {
 				auto result = vec1;
-				result ^= Vec3{ 2.f, -5.f, 8.f };
+				result ^= Vec3{ 2, -5, 8 };
 
 				CHECK_THAT(result.x, WithinRel(expected.x));
 				CHECK_THAT(result.y, WithinRel(expected.y));
@@ -497,15 +495,15 @@ TEST_CASE("math::Matrix<R,C,T>", "[matrix]") {
 			auto id = mat * (*inverted);
 
 			CHECK_THAT(id.m11, WithinRel(1.0));
-			CHECK_THAT(id.m12, WithinAbs(0.0, std::numeric_limits<f64>::epsilon()));
-			CHECK_THAT(id.m13, WithinAbs(0.0, std::numeric_limits<f64>::epsilon()));
+			CHECK_THAT(id.m12, WithinAbs(0.0, std::numeric_limits<flt>::epsilon()));
+			CHECK_THAT(id.m13, WithinAbs(0.0, std::numeric_limits<flt>::epsilon()));
 
-			CHECK_THAT(id.m21, WithinAbs(0.0, std::numeric_limits<f64>::epsilon()));
+			CHECK_THAT(id.m21, WithinAbs(0.0, std::numeric_limits<flt>::epsilon()));
 			CHECK_THAT(id.m22, WithinRel(1.0));
-			CHECK_THAT(id.m23, WithinAbs(0.0, std::numeric_limits<f64>::epsilon()));
+			CHECK_THAT(id.m23, WithinAbs(0.0, std::numeric_limits<flt>::epsilon()));
 
-			CHECK_THAT(id.m31, WithinAbs(0.0, std::numeric_limits<f64>::epsilon()));
-			CHECK_THAT(id.m32, WithinAbs(0.0, std::numeric_limits<f64>::epsilon()));
+			CHECK_THAT(id.m31, WithinAbs(0.0, std::numeric_limits<flt>::epsilon()));
+			CHECK_THAT(id.m32, WithinAbs(0.0, std::numeric_limits<flt>::epsilon()));
 			CHECK_THAT(id.m33, WithinRel(1.0));
 		}
 	}
@@ -542,23 +540,23 @@ TEST_CASE("math::Matrix<R,C,T>", "[matrix]") {
 			auto id = mat * (*inverted);
 
 			CHECK_THAT(id.m11, WithinRel(1.0));
-			CHECK_THAT(id.m12, WithinAbs(0.0, std::numeric_limits<f64>::epsilon()));
-			CHECK_THAT(id.m13, WithinAbs(0.0, std::numeric_limits<f64>::epsilon()));
-			CHECK_THAT(id.m14, WithinAbs(0.0, std::numeric_limits<f64>::epsilon()));
+			CHECK_THAT(id.m12, WithinAbs(0.0, std::numeric_limits<flt>::epsilon()));
+			CHECK_THAT(id.m13, WithinAbs(0.0, std::numeric_limits<flt>::epsilon()));
+			CHECK_THAT(id.m14, WithinAbs(0.0, std::numeric_limits<flt>::epsilon()));
 
-			CHECK_THAT(id.m21, WithinAbs(0.0, std::numeric_limits<f64>::epsilon()));
+			CHECK_THAT(id.m21, WithinAbs(0.0, std::numeric_limits<flt>::epsilon()));
 			CHECK_THAT(id.m22, WithinRel(1.0));
-			CHECK_THAT(id.m23, WithinAbs(0.0, std::numeric_limits<f64>::epsilon()));
-			CHECK_THAT(id.m24, WithinAbs(0.0, std::numeric_limits<f64>::epsilon()));
+			CHECK_THAT(id.m23, WithinAbs(0.0, std::numeric_limits<flt>::epsilon()));
+			CHECK_THAT(id.m24, WithinAbs(0.0, std::numeric_limits<flt>::epsilon()));
 
-			CHECK_THAT(id.m31, WithinAbs(0.0, std::numeric_limits<f64>::epsilon()));
-			CHECK_THAT(id.m32, WithinAbs(0.0, std::numeric_limits<f64>::epsilon()));
+			CHECK_THAT(id.m31, WithinAbs(0.0, std::numeric_limits<flt>::epsilon()));
+			CHECK_THAT(id.m32, WithinAbs(0.0, std::numeric_limits<flt>::epsilon()));
 			CHECK_THAT(id.m33, WithinRel(1.0));
-			CHECK_THAT(id.m34, WithinAbs(0.0, std::numeric_limits<f64>::epsilon()));
+			CHECK_THAT(id.m34, WithinAbs(0.0, std::numeric_limits<flt>::epsilon()));
 
-			CHECK_THAT(id.m41, WithinAbs(0.0, std::numeric_limits<f64>::epsilon()));
-			CHECK_THAT(id.m42, WithinAbs(0.0, std::numeric_limits<f64>::epsilon()));
-			CHECK_THAT(id.m43, WithinAbs(0.0, std::numeric_limits<f64>::epsilon()));
+			CHECK_THAT(id.m41, WithinAbs(0.0, std::numeric_limits<flt>::epsilon()));
+			CHECK_THAT(id.m42, WithinAbs(0.0, std::numeric_limits<flt>::epsilon()));
+			CHECK_THAT(id.m43, WithinAbs(0.0, std::numeric_limits<flt>::epsilon()));
 			CHECK_THAT(id.m44, WithinRel(1.0));
 		}
 	}
@@ -628,8 +626,8 @@ TEST_CASE("math::Matrix<R,C,T>", "[matrix]") {
 				{ 10, 11, 12 },
 			};
 
-			SECTION("...Mat * f64") {
-				auto result = mat * 2.0;
+			SECTION("...Mat * flt") {
+				auto result = mat * 2_flt;
 
 				CHECK_THAT(result.m11, WithinRel(2.0));
 				CHECK_THAT(result.m12, WithinRel(4.0));
@@ -647,8 +645,8 @@ TEST_CASE("math::Matrix<R,C,T>", "[matrix]") {
 				CHECK_THAT(result.m42, WithinRel(22.0));
 				CHECK_THAT(result.m43, WithinRel(24.0));
 			}
-			SECTION("...f64 * Mat") {
-				auto result = 2.0 * mat;
+			SECTION("...flt * Mat") {
+				auto result = 2_flt * mat;
 
 				CHECK_THAT(result.m11, WithinRel(2.0));
 				CHECK_THAT(result.m12, WithinRel(4.0));
@@ -666,9 +664,9 @@ TEST_CASE("math::Matrix<R,C,T>", "[matrix]") {
 				CHECK_THAT(result.m42, WithinRel(22.0));
 				CHECK_THAT(result.m43, WithinRel(24.0));
 			}
-			SECTION("...Mat *= f64") {
+			SECTION("...Mat *= flt") {
 				auto result = mat;
-				result *= 2.0;
+				result *= 2_flt;
 
 				CHECK_THAT(result.m11, WithinRel(2.0));
 				CHECK_THAT(result.m12, WithinRel(4.0));
@@ -724,11 +722,11 @@ TEST_CASE("Orientation", "[orientation]") {
 
 	using math::Axis;
 	using math::Space;
-	using Euler = math::Euler<f64>;
-	using Quat = math::Quat<f64>;
-	using RotationMatrix = math::RotationMatrix<f64>;
+	using math::Euler;
+	using math::Quat;
+	using math::RotationMatrix;
 
-	constexpr f64 epsilon = 1e-13;
+	constexpr flt epsilon = 1e-13;
 
 	SECTION("Euler Angles") {
 		auto euler = Euler{
@@ -933,9 +931,9 @@ TEST_CASE("Orientation", "[orientation]") {
 
 TEST_CASE("Geometric Primitives", "[geoprim]") {
 	using namespace sized;
-	using Circle = math::geo::Circle<f64>;
-	using Plane = math::geo::Plane<f64>;
-	using Tri = math::geo::Tri<f64>;
+	using math::geo::Circle;
+	using math::geo::Plane;
+	using math::geo::Tri;
 
 	SECTION("Triangle") {
 		auto t = Tri{

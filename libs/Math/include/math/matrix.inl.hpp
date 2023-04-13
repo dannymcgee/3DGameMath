@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/_matrix_decl.h"
+#include "math/matrix.inl.h"
 
 #include <fmt/format.h>
 #include <sized.h>
@@ -25,8 +25,8 @@ using namespace sized; // NOLINT
 
 // Constructors ----------------------------------------------------------------
 
-template <usize R, usize C, typename T>
-constexpr Matrix<R,C,T>::Matrix(std::initializer_list<Row> rows)
+template <usize R, usize C>
+constexpr Matrix<R,C>::Matrix(std::initializer_list<Row> rows)
 	: Super()
 {
 	ASSERT(rows.size() > 0 && rows.size() <= R,
@@ -40,12 +40,12 @@ constexpr Matrix<R,C,T>::Matrix(std::initializer_list<Row> rows)
 	}
 }
 
-template <usize R, usize C, typename T>
-constexpr auto Matrix<R,C,T>::identity() -> Matrix<R,C,T>
+template <usize R, usize C>
+constexpr auto Matrix<R,C>::identity() -> Matrix<R,C>
 {
 	static_assert(R == C, "Identity matrix must be square");
 
-	Matrix<R,C,T> result;
+	Matrix<R,C> result;
 	for (usize r = 0; r < R; ++r)
 		for (usize c = 0; c < C; ++c)
 			result[r][c] = r == c ? 1 : 0;
@@ -56,26 +56,26 @@ constexpr auto Matrix<R,C,T>::identity() -> Matrix<R,C,T>
 
 // Iterator support ------------------------------------------------------------
 
-template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::begin() -> detail::RawIterator<T>
+template <usize R, usize C>
+inline auto Matrix<R,C>::begin() -> detail::RawIterator<flt>
 {
 	return m_data[0].begin();
 }
 
-template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::begin() const -> detail::RawConstIterator<T>
+template <usize R, usize C>
+inline auto Matrix<R,C>::begin() const -> detail::RawConstIterator<flt>
 {
 	return m_data[0].begin();
 }
 
-template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::end() -> detail::RawIterator<T>
+template <usize R, usize C>
+inline auto Matrix<R,C>::end() -> detail::RawIterator<flt>
 {
 	return m_data[R-1].end();
 }
 
-template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::end() const -> detail::RawConstIterator<T>
+template <usize R, usize C>
+inline auto Matrix<R,C>::end() const -> detail::RawConstIterator<flt>
 {
 	return m_data[R-1].end();
 }
@@ -83,53 +83,53 @@ inline auto Matrix<R,C,T>::end() const -> detail::RawConstIterator<T>
 
 // Member access ---------------------------------------------------------------
 
-template <usize R, usize C, typename T>
+template <usize R, usize C>
 template <usize Index2D>
-inline auto Matrix<R,C,T>::m() const -> T
+inline auto Matrix<R,C>::m() const -> flt
 {
 	VALIDATE_INDEX_2D(Index2D, R, C);
 	return m_data[EXPAND_INDEX_2D_SUBSCRIPT(Index2D)];
 }
 
-template <usize R, usize C, typename T>
+template <usize R, usize C>
 template <usize Index2D>
-inline auto Matrix<R,C,T>::m() -> T&
+inline auto Matrix<R,C>::m() -> flt&
 {
 	VALIDATE_INDEX_2D(Index2D, R, C);
 	return m_data[EXPAND_INDEX_2D_SUBSCRIPT(Index2D)];
 }
 
-template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::m(usize r, usize c) const -> T
+template <usize R, usize C>
+inline auto Matrix<R,C>::m(usize r, usize c) const -> flt
 {
 	return m_data[r-1][c-1];
 }
 
-template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::m(usize r, usize c) -> T&
+template <usize R, usize C>
+inline auto Matrix<R,C>::m(usize r, usize c) -> flt&
 {
 	return m_data[r-1][c-1];
 }
 
-template <usize R, usize C, typename T>
+template <usize R, usize C>
 template <usize Index>
-inline auto Matrix<R,C,T>::row() const -> const Row&
+inline auto Matrix<R,C>::row() const -> const Row&
 {
 	static_assert(Index > 0 && Index <= R);
 	return m_data[Index - 1];
 }
 
-template <usize R, usize C, typename T>
+template <usize R, usize C>
 template <usize Index>
-inline auto Matrix<R,C,T>::row() -> Row&
+inline auto Matrix<R,C>::row() -> Row&
 {
 	static_assert(Index > 0 && Index <= R);
 	return m_data[Index - 1];
 }
 
-template <usize R, usize C, typename T>
+template <usize R, usize C>
 template <usize Index>
-inline auto Matrix<R,C,T>::col() const -> Col
+inline auto Matrix<R,C>::col() const -> Col
 {
 	static_assert(Index > 0 && Index <= C);
 
@@ -140,20 +140,20 @@ inline auto Matrix<R,C,T>::col() const -> Col
 	return result;
 }
 
-template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::row(usize idx) const -> const Row&
+template <usize R, usize C>
+inline auto Matrix<R,C>::row(usize idx) const -> const Row&
 {
 	return m_data[idx-1];
 }
 
-template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::row(usize idx) -> Row&
+template <usize R, usize C>
+inline auto Matrix<R,C>::row(usize idx) -> Row&
 {
 	return m_data[idx-1];
 }
 
-template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::col(usize idx) const -> Col
+template <usize R, usize C>
+inline auto Matrix<R,C>::col(usize idx) const -> Col
 {
 	Col result;
 	for (usize r = 0; r < R; ++r)
@@ -162,14 +162,14 @@ inline auto Matrix<R,C,T>::col(usize idx) const -> Col
 	return result;
 }
 
-template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::operator[](usize idx) -> Row&
+template <usize R, usize C>
+inline auto Matrix<R,C>::operator[](usize idx) -> Row&
 {
 	return m_data[idx];
 }
 
-template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::operator[](usize idx) const -> const Row&
+template <usize R, usize C>
+inline auto Matrix<R,C>::operator[](usize idx) const -> const Row&
 {
 	return m_data[idx];
 }
@@ -177,10 +177,10 @@ inline auto Matrix<R,C,T>::operator[](usize idx) const -> const Row&
 
 // Matrix transposition --------------------------------------------------------
 
-template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::transpose() const -> Matrix<C,R,T>
+template <usize R, usize C>
+inline auto Matrix<R,C>::transpose() const -> Matrix<C,R>
 {
-	Matrix<C,R,T> result;
+	Matrix<C,R> result;
 	for (usize r = 0; r < C; ++r)
 		for (usize c = 0; c < R; ++c)
 			result[r][c] = m_data[c][r];
@@ -191,8 +191,8 @@ inline auto Matrix<R,C,T>::transpose() const -> Matrix<C,R,T>
 
 // Scalar multiplication -------------------------------------------------------
 
-template <usize R, usize C, typename T>
-constexpr auto Matrix<R,C,T>::operator*(T value) const -> Matrix
+template <usize R, usize C>
+constexpr auto Matrix<R,C>::operator*(flt value) const -> Matrix
 {
 	auto result = *this;
 	for (usize r = 0; r < R; ++r)
@@ -202,8 +202,8 @@ constexpr auto Matrix<R,C,T>::operator*(T value) const -> Matrix
 	return result;
 }
 
-template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::operator*=(T value) -> Matrix&
+template <usize R, usize C>
+inline auto Matrix<R,C>::operator*=(flt value) -> Matrix&
 {
 	for (usize r = 0; r < R; ++r)
 		for (usize c = 0; c < C; ++c)
@@ -213,8 +213,8 @@ inline auto Matrix<R,C,T>::operator*=(T value) -> Matrix&
 }
 } // namespace math
 
-template <sized::usize R, sized::usize C, typename T>
-constexpr auto operator*(T lhs, const math::Matrix<R,C,T>& rhs) -> math::Matrix<R,C,T>
+template <sized::usize R, sized::usize C>
+constexpr auto operator*(sized::flt lhs, const math::Matrix<R,C>& rhs) -> math::Matrix<R,C>
 {
 	return rhs * lhs;
 }
@@ -222,13 +222,13 @@ constexpr auto operator*(T lhs, const math::Matrix<R,C,T>& rhs) -> math::Matrix<
 
 // Matrix multiplication -------------------------------------------------------
 
-template <sized::usize R, sized::usize N, sized::usize C, typename T>
+template <sized::usize R, sized::usize N, sized::usize C>
 inline auto operator*(
-	const math::Matrix<R,N,T>& lhs,
-	const math::Matrix<N,C,T>& rhs
-) -> math::Matrix<R,C,T>
+	const math::Matrix<R,N>& lhs,
+	const math::Matrix<N,C>& rhs
+) -> math::Matrix<R,C>
 {
-	math::Matrix<R,C,T> result;
+	math::Matrix<R,C> result;
 	auto rhs_cols = rhs.transpose();
 
 	for (sized::usize r = 0; r < R; ++r)
@@ -251,14 +251,14 @@ inline auto operator*(
  *
  * @return The result, as a row-vector.
  */
-template <sized::usize R, sized::usize C, typename T>
+template <sized::usize R, sized::usize C>
 inline auto operator*(
-	const math::Vector<R,T>& lhs,
+	const math::Vector<R>& lhs,
 	//    math::Matrix<1,R,T>& lhs,
-	const math::Matrix<R,C,T>& rhs
-) -> math::Vector<C,T>
+	const math::Matrix<R,C>& rhs
+) -> math::Vector<C>
 {
-	math::Vector<C,T> result;
+	math::Vector<C> result;
 	auto rhs_cols = rhs.transpose();
 
 	for (sized::usize c = 0; c < C; ++c)
@@ -280,14 +280,14 @@ inline auto operator*(
  *
  * @return The result, as a column-vector.
  */
-template <sized::usize R, sized::usize C, typename T>
+template <sized::usize R, sized::usize C>
 inline auto operator*(
-	const math::Matrix<R,C,T>& lhs,
+	const math::Matrix<R,C>& lhs,
 	//    math::Matrix<C,1,T>& rhs,
-	const math::Vector<C,T>& rhs
-) -> math::Vector<R,T>
+	const math::Vector<C>& rhs
+) -> math::Vector<R>
 {
-	math::Vector<R,T> result;
+	math::Vector<R> result;
 
 	for (sized::usize r = 0; r < R; ++r)
 		result[r] = lhs[r] | rhs;
@@ -302,35 +302,23 @@ namespace math {
 
 // TODO: Why can't I partially specialize for `<typename T> Mat<2,2,T>`, etc.??
 template <>
-inline auto Matrix<2,2,f64>::determinant() const -> f64
+inline auto Matrix<2,2>::determinant() const -> flt
 {
 	return m11 * m22 - m12 * m21;
 }
 
 template <>
-inline auto Matrix<2,2,f32>::determinant() const -> f32
-{
-	return m11 * m22 - m12 * m21;
-}
-
-template <>
-inline auto Matrix<3,3,f64>::determinant() const -> f64
+inline auto Matrix<3,3>::determinant() const -> flt
 {
 	return (row<1>() ^ row<2>()) | row<3>();
 }
 
-template <>
-inline auto Matrix<3,3,f32>::determinant() const -> f32
-{
-	return (row<1>() ^ row<2>()) | row<3>();
-}
-
-template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::determinant() const -> T
+template <usize R, usize C>
+inline auto Matrix<R,C>::determinant() const -> flt
 {
 	static_assert(R == C, "Determinant can only be calculated for square matrices");
 
-	T result = 0;
+	flt result = 0;
 
 	constexpr usize r = 1;
 	for (usize c = 1; c <= C; ++c)
@@ -340,18 +328,18 @@ inline auto Matrix<R,C,T>::determinant() const -> T
 }
 
 
-template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::cofactor(usize r, usize c) const -> T
+template <usize R, usize C>
+inline auto Matrix<R,C>::cofactor(usize r, usize c) const -> flt
 {
-	T factor = ((r + c) % 2) ? -1 : 1;
+	flt factor = ((r + c) % 2) ? -1 : 1;
 	return minor(r, c) * factor;
 }
 
 
-template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::minor(const usize row, const usize col) const -> T
+template <usize R, usize C>
+inline auto Matrix<R,C>::minor(const usize row, const usize col) const -> flt
 {
-	Matrix<R-1, C-1, T> submat;
+	Matrix<R-1, C-1> submat;
 
 	for (usize r = 1; r <= R; ++r) {
 		if (r == row) continue;
@@ -373,7 +361,7 @@ inline auto Matrix<R,C,T>::minor(const usize row, const usize col) const -> T
 // Inversion -------------------------------------------------------------------
 
 template <>
-inline auto Matrix<2,2,f32>::inverse(f32 determinant) const -> Matrix
+inline auto Matrix<2,2>::inverse(flt determinant) const -> Matrix
 {
 	return (1 / determinant) * Matrix{
 		{  m22, -m12 },
@@ -382,18 +370,9 @@ inline auto Matrix<2,2,f32>::inverse(f32 determinant) const -> Matrix
 }
 
 template <>
-inline auto Matrix<2,2,f64>::inverse(f64 determinant) const -> Matrix
+inline auto Matrix<2,2>::inverse() const -> std::optional<Matrix>
 {
-	return (1 / determinant) * Matrix{
-		{  m22, -m12 },
-		{ -m21,  m11 },
-	};
-}
-
-template <>
-inline auto Matrix<2,2,f32>::inverse() const -> std::optional<Matrix>
-{
-	f32 determinant;
+	flt determinant;
 	if (!is_invertible(determinant))
 		return {};
 
@@ -401,64 +380,44 @@ inline auto Matrix<2,2,f32>::inverse() const -> std::optional<Matrix>
 }
 
 template <>
-inline auto Matrix<2,2,f64>::inverse() const -> std::optional<Matrix>
+inline auto Matrix<3,3>::inverse() const -> std::optional<Matrix>
 {
-	f64 determinant;
+	flt determinant;
 	if (!is_invertible(determinant))
 		return {};
 
 	return inverse(determinant);
 }
 
-template <>
-inline auto Matrix<3,3,f32>::inverse() const -> std::optional<Matrix>
-{
-	f32 determinant;
-	if (!is_invertible(determinant))
-		return {};
-
-	return inverse(determinant);
-}
-
-template <>
-inline auto Matrix<3,3,f64>::inverse() const -> std::optional<Matrix>
-{
-	f64 determinant;
-	if (!is_invertible(determinant))
-		return {};
-
-	return inverse(determinant);
-}
-
-template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::inverse() const -> std::optional<Matrix<C,R,T>>
+template <usize R, usize C>
+inline auto Matrix<R,C>::inverse() const -> std::optional<Matrix<C,R>>
 {
 	{
-		Matrix<C,R,T> transposed;
+		Matrix<C,R> transposed;
 		if (is_orthogonal(transposed))
 			return transposed;
 	}
 
-	T determinant;
+	flt determinant;
 	if (!is_invertible(determinant))
 		return {};
 
 	return inverse(determinant);
 }
 
-template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::inverse(T determinant) const -> Matrix<C,R,T>
+template <usize R, usize C>
+inline auto Matrix<R,C>::inverse(flt determinant) const -> Matrix<C,R>
 {
-	ASSERT(!math::nearly_equal<T>(determinant, 0),
+	ASSERT(!math::nearly_equal(determinant, 0),
 		"Cannot invert a matrix whose determinant is zero {}", ' ');
 
 	return (1 / determinant) * adjoint();
 }
 
-template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::adjoint() const -> Matrix<C,R,T>
+template <usize R, usize C>
+inline auto Matrix<R,C>::adjoint() const -> Matrix<C,R>
 {
-	Matrix<C,R,T> result;
+	Matrix<C,R> result;
 
 	for (usize r = 1; r <= R; ++r)
 		for (usize c = 1; c <= C; ++c)
@@ -470,21 +429,8 @@ inline auto Matrix<R,C,T>::adjoint() const -> Matrix<C,R,T>
 
 // Orthogonalize ---------------------------------------------------------------
 
-// FIXME: These methods are not really working as expected
 template <>
-inline void Matrix<3,3,f64>::orthogonalize()
-{
-	row<1>().normalize();
-
-	row<2>() -= (row<2>() | row<1>()) / (row<1>() | row<1>()) * row<1>();
-	row<2>().normalize();
-
-	row<3>() = (row<1>() ^ row<2>());
-}
-
-// FIXME: These methods are not really working as expected
-template <>
-inline void Matrix<3,3,f32>::orthogonalize()
+inline void Matrix<3,3>::orthogonalize()
 {
 	row<1>().normalize();
 
@@ -495,8 +441,8 @@ inline void Matrix<3,3,f32>::orthogonalize()
 }
 
 // ReSharper disable once CppMemberFunctionMayBeStatic
-template <usize R, usize C, typename T>
-inline void Matrix<R,C,T>::orthogonalize()
+template <usize R, usize C>
+inline void Matrix<R,C>::orthogonalize()
 {
 	static_assert(R == 3 && C == 3,
 		"Orthogonalization is only supported for 3x3 square matrices");
@@ -505,22 +451,22 @@ inline void Matrix<R,C,T>::orthogonalize()
 
 // Queries ---------------------------------------------------------------------
 
-template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::is_invertible(T& out_determinant) const -> bool
+template <usize R, usize C>
+inline auto Matrix<R,C>::is_invertible(flt& out_determinant) const -> bool
 {
 	out_determinant = determinant();
-	return !math::nearly_equal<T>(out_determinant, 0);
+	return !math::nearly_equal(out_determinant, 0);
 }
 
-template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::is_orthogonal(Matrix<C,R,T>& out_transposed, T tolerance) const -> bool
+template <usize R, usize C>
+inline auto Matrix<R,C>::is_orthogonal(Matrix<C,R>& out_transposed, flt tolerance) const -> bool
 {
 	out_transposed = transpose();
 	return ((*this) * out_transposed).is_identity(tolerance);
 }
 
-template <usize R, usize C, typename T>
-inline auto Matrix<R,C,T>::is_orthogonal(T tolerance) const -> bool
+template <usize R, usize C>
+inline auto Matrix<R,C>::is_orthogonal(flt tolerance) const -> bool
 {
 	// TODO: Multiplying by the transpose is computationally redundant, since
 	// the * operator transposes the RHS to dot the LHS rows by its columns.
@@ -529,13 +475,13 @@ inline auto Matrix<R,C,T>::is_orthogonal(T tolerance) const -> bool
 	return ((*this) * transpose()).is_identity(tolerance);
 }
 
-template <usize R, usize C, typename T>
-constexpr auto Matrix<R,C,T>::is_identity(T tolerance) const -> bool
+template <usize R, usize C>
+constexpr auto Matrix<R,C>::is_identity(flt tolerance) const -> bool
 {
 	for (usize r = 0; r < R; ++r)
 		for (usize c = 0; c < C; ++c)
-			if (r != c && !math::nearly_equal<T>(m_data[r][c], 0, tolerance)
-				|| r == c && !math::nearly_equal<T>(m_data[r][c], 1, tolerance))
+			if (r != c && !math::nearly_equal(m_data[r][c], 0, tolerance)
+				|| r == c && !math::nearly_equal(m_data[r][c], 1, tolerance))
 
 				return false;
 
@@ -545,8 +491,8 @@ constexpr auto Matrix<R,C,T>::is_identity(T tolerance) const -> bool
 
 // Misc / Utility --------------------------------------------------------------
 
-template <usize R, usize C, typename T>
-auto Matrix<R,C,T>::to_string(usize precision) const -> std::string
+template <usize R, usize C>
+auto Matrix<R,C>::to_string(usize precision) const -> std::string
 {
 	auto formatter = fmt::AlignedValues(begin(), end(), precision);
 

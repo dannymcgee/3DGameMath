@@ -13,8 +13,8 @@ using math::RotationMatrix;
 
 void print_error(const Mat3x3& lhs, const Mat3x3& rhs, const AlignedValues& formatter)
 {
-	auto print_row = [&](const Vec3& row) -> f64 {
-		f64 avg = (std::abs(row.x) + std::abs(row.y) + std::abs(row.z)) / 3.0;
+	auto print_row = [&](const Vec3& row) -> flt {
+		flt avg = (std::abs(row.x) + std::abs(row.y) + std::abs(row.z)) / 3.0;
 		fmt::print("{}   ~{:.5}\n", row.to_string(formatter), avg);
 
 		return avg;
@@ -22,9 +22,9 @@ void print_error(const Mat3x3& lhs, const Mat3x3& rhs, const AlignedValues& form
 
 	fmt::print("\n");
 
-	f64 avg1 = print_row(rhs.row<1>() - lhs.row<1>());
-	f64 avg2 = print_row(rhs.row<2>() - lhs.row<2>());
-	f64 avg3 = print_row(rhs.row<3>() - lhs.row<3>());
+	flt avg1 = print_row(rhs.row<1>() - lhs.row<1>());
+	flt avg2 = print_row(rhs.row<2>() - lhs.row<2>());
+	flt avg3 = print_row(rhs.row<3>() - lhs.row<3>());
 
 	fmt::print("Avg overall error: ~{}\n\n", (avg1 + avg2 + avg3) / 3.0);
 }

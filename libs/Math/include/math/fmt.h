@@ -37,12 +37,10 @@ public:
 	AlignedValues(Iter begin, Iter end, usize precision);
 
 	/** Format a value to a `std::string`. */
-	template <typename T>
-	inline auto format(T value) const -> std::string;
+	inline auto format(flt value) const -> std::string;
 
 	/** Print a value to `stdout`. */
-	template <typename T>
-	inline void print(T value) const;
+	inline void print(flt value) const;
 
 	inline void debug() const
 	{
@@ -58,7 +56,7 @@ private:
 	std::string m_fmt_string;
 	usize m_width = 0;
 	usize m_precision = 0;
-	f64 m_tolerance = std::numeric_limits<f64>::epsilon();
+	f64 m_tolerance = std::numeric_limits<flt>::epsilon();
 };
 
 
@@ -103,19 +101,17 @@ AlignedValues::AlignedValues(Iter begin, Iter end, usize precision)
 		: "{0:>{1}.{2}f}";
 }
 
-template <typename T>
-inline auto AlignedValues::format(T value) const -> std::string
+inline auto AlignedValues::format(flt value) const -> std::string
 {
-	if (math::nearly_equal<T>(value, 0, m_tolerance))
+	if (math::nearly_equal(value, 0, m_tolerance))
 		value = 0;
 
 	return ::fmt::format(m_fmt_string, value, m_width, m_precision);
 }
 
-template <typename T>
-inline void AlignedValues::print(T value) const
+inline void AlignedValues::print(flt value) const
 {
-	if (math::nearly_equal<T>(value, 0, m_tolerance))
+	if (math::nearly_equal(value, 0, m_tolerance))
 		value = 0;
 
 	::fmt::print(m_fmt_string, value, m_width, m_precision);

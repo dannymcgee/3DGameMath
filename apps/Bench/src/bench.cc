@@ -23,45 +23,30 @@ using math::Mat2x2;
 using math::Mat3x3;
 using math::Mat4x4;
 
-using RotationMatrix = math::RotationMatrix<f64>;
-using Euler = math::Euler<f64>;
-using Quat = math::Quat<f64>;
+using math::RotationMatrix;
+using math::Euler;
+using math::Quat;
 using math::Axis;
 using math::Space;
 
 using math::Vec2;
 using math::Vec3;
 using math::Vec4;
-using Vec3f = math::Vector<3,f32>;
 
 using math::geo::Tri;
 
 
 // Constructor (sanity check)
-static void BM_Ctor_f32(State& state)
-{
-	for (auto _ : state)
-		DoNotOptimize(Vec3f{ 1, 2, 3 });
-}
-static void BM_Ctor_f64(State& state)
+static void BM_Ctor(State& state)
 {
 	for (auto _ : state)
 		DoNotOptimize(Vec3{ 1, 2, 3 });
 }
-BENCHMARK(BM_Ctor_f32);
-BENCHMARK(BM_Ctor_f64);
+BENCHMARK(BM_Ctor);
 
 
 // Cross-Product
-static void BM_CrossProduct_f32(State& state)
-{
-	auto a = Vec3f{ 1.f, 3.f, 4.f };
-	auto b = Vec3f{ 2.f, -5.f, 8.f };
-
-	for (auto _ : state)
-		DoNotOptimize(a.cross(b));
-}
-static void BM_CrossProduct_f64(State& state)
+static void BM_CrossProduct(State& state)
 {
 	auto a = Vec3{ 1.0, 3.0, 4.0 };
 	auto b = Vec3{ 2.0, -5.0, 8.0 };
@@ -69,71 +54,41 @@ static void BM_CrossProduct_f64(State& state)
 	for (auto _ : state)
 		DoNotOptimize(a.cross(b));
 }
-BENCHMARK(BM_CrossProduct_f32);
-BENCHMARK(BM_CrossProduct_f64);
+BENCHMARK(BM_CrossProduct);
 
 
 // Length
-static void BM_Length_f32(State& state)
-{
-	auto vec = Vec3f{ 1.f, 2.f, 3.f };
-	for (auto _ : state)
-		DoNotOptimize(vec.length());
-}
-static void BM_Length_f64(State& state)
+static void BM_Length(State& state)
 {
 	auto vec = Vec3{ 1.0, 2.0, 3.0 };
 	for (auto _ : state)
 		DoNotOptimize(vec.length());
 }
-BENCHMARK(BM_Length_f32);
-BENCHMARK(BM_Length_f64);
+BENCHMARK(BM_Length);
 
 
 // Normal
-static void BM_Normal_f32(State& state)
-{
-	auto vec = Vec3f{ 1.f, 2.f, 3.f };
-	for (auto _ : state)
-		DoNotOptimize(vec.normal());
-}
-static void BM_Normal_f64(State& state)
+static void BM_Normal(State& state)
 {
 	auto vec = Vec3{ 1.0, 2.0, 3.0 };
 	for (auto _ : state)
 		DoNotOptimize(vec.normal());
 }
-BENCHMARK(BM_Normal_f32);
-BENCHMARK(BM_Normal_f64);
+BENCHMARK(BM_Normal);
 
 
 // Length and Direction
-static void BM_LengthAndDirection_f32(State& state)
+static void BM_LengthAndDirection(State& state)
 {
-	auto vec = Vec3f{ 1.f, 2.f, 3.f };
+	auto vec = Vec3{ 1.0, 2.0, 3.0 };
 	for (auto _ : state)
 		DoNotOptimize(vec.length_and_direction());
 }
-static void BM_LengthAndDirection_f64(State& state)
-{
-	auto vec = Vec3f{ 1.0, 2.0, 3.0 };
-	for (auto _ : state)
-		DoNotOptimize(vec.length_and_direction());
-}
-BENCHMARK(BM_LengthAndDirection_f32);
-BENCHMARK(BM_LengthAndDirection_f64);
+BENCHMARK(BM_LengthAndDirection);
 
 
 // Distance
-static void BM_Distance_f32(State& state)
-{
-	auto a = Vec3f{ 1.f, 3.f, 4.f };
-	auto b = Vec3f{ 2.f, -5.f, 8.f };
-
-	for (auto _ : state)
-		DoNotOptimize(Vec3f::dist(a, b));
-}
-static void BM_Distance_f64(State& state)
+static void BM_Distance(State& state)
 {
 	auto a = Vec3{ 1.0, 3.0, 4.0 };
 	auto b = Vec3{ 2.0, -5.0, 8.0 };
@@ -141,20 +96,11 @@ static void BM_Distance_f64(State& state)
 	for (auto _ : state)
 		DoNotOptimize(Vec3::dist(a, b));
 }
-BENCHMARK(BM_Distance_f32);
-BENCHMARK(BM_Distance_f64);
+BENCHMARK(BM_Distance);
 
 
 // Dot-Product
-static void BM_DotProduct_f32(State& state)
-{
-	auto a = Vec3f{ 1.f, 3.f, 4.f };
-	auto b = Vec3f{ 2.f, -5.f, 8.f };
-
-	for (auto _ : state)
-		DoNotOptimize(a.dot(b));
-}
-static void BM_DotProduct_f64(State& state)
+static void BM_DotProduct(State& state)
 {
 	auto a = Vec3{ 1.0, 3.0, 4.0 };
 	auto b = Vec3{ 2.0, -5.0, 8.0 };
@@ -162,8 +108,7 @@ static void BM_DotProduct_f64(State& state)
 	for (auto _ : state)
 		DoNotOptimize(a.dot(b));
 }
-BENCHMARK(BM_DotProduct_f32);
-BENCHMARK(BM_DotProduct_f64);
+BENCHMARK(BM_DotProduct);
 
 
 // Matrix Constructors
@@ -375,13 +320,13 @@ static void BM_Max_Recursive(State& state)
 {
 	using namespace math::literals;
 	auto m = RotationMatrix(45_deg, Vec3{ -0.25, 0.5, 0.33 }.normal());
-	f64 w = m.m11 + m.m22 + m.m33;
-	f64 x = m.m11 - m.m22 - m.m33;
-	f64 y = m.m22 - m.m11 - m.m33;
-	f64 z = m.m33 - m.m11 - m.m22;
+	flt w = m.m11 + m.m22 + m.m33;
+	flt x = m.m11 - m.m22 - m.m33;
+	flt y = m.m22 - m.m11 - m.m33;
+	flt z = m.m33 - m.m11 - m.m22;
 
 	for (auto _ : state) {
-		f64 largest = std::max(w, std::max(x, std::max(y, z)));
+		flt largest = std::max(w, std::max(x, std::max(y, z)));
 		DoNotOptimize(largest);
 	}
 }
@@ -389,13 +334,13 @@ static void BM_Max_InitList(State& state)
 {
 	using namespace math::literals;
 	auto m = RotationMatrix(45_deg, Vec3{ -0.25, 0.5, 0.33 }.normal());
-	f64 w = m.m11 + m.m22 + m.m33;
-	f64 x = m.m11 - m.m22 - m.m33;
-	f64 y = m.m22 - m.m11 - m.m33;
-	f64 z = m.m33 - m.m11 - m.m22;
+	flt w = m.m11 + m.m22 + m.m33;
+	flt x = m.m11 - m.m22 - m.m33;
+	flt y = m.m22 - m.m11 - m.m33;
+	flt z = m.m33 - m.m11 - m.m22;
 
 	for (auto _ : state) {
-		f64 largest = std::max({ w, x, y, z });
+		flt largest = std::max({ w, x, y, z });
 		DoNotOptimize(largest);
 	}
 }
@@ -456,13 +401,13 @@ static void BM_Euler2Quat_Expanded(State& state)
 	auto euler = Euler{ 45_deg, -15_deg, 3.3_deg };
 
 	for (auto _ : state) {
-		f64 cos_y2 = std::cos(euler.yaw * 0.5);
-		f64 cos_p2 = std::cos(euler.pitch * 0.5);
-		f64 cos_r2 = std::cos(euler.roll * 0.5);
+		flt cos_y2 = std::cos(euler.yaw * 0.5);
+		flt cos_p2 = std::cos(euler.pitch * 0.5);
+		flt cos_r2 = std::cos(euler.roll * 0.5);
 
-		f64 sin_y2 = std::sin(euler.yaw * 0.5);
-		f64 sin_p2 = std::sin(euler.pitch * 0.5);
-		f64 sin_r2 = std::sin(euler.roll * 0.5);
+		flt sin_y2 = std::sin(euler.yaw * 0.5);
+		flt sin_p2 = std::sin(euler.pitch * 0.5);
+		flt sin_r2 = std::sin(euler.roll * 0.5);
 
 		auto result = Quat{
 			 cos_y2*cos_p2*cos_r2 + sin_y2*sin_p2*sin_r2,
@@ -480,7 +425,7 @@ BENCHMARK(BM_Euler2Quat_Expanded);
 
 static void BM_Cart2Bary_eq1(State& state)
 {
-	auto t = Tri<f64>{
+	auto t = Tri{
 		Vec3{ -1,  0, -0.5 },
 		Vec3{  0,  0,  1   },
 		Vec3{  1,  0, -0.5 },
@@ -494,8 +439,8 @@ static void BM_Cart2Bary_eq1(State& state)
 		Vec3 d2 = t.edge<1>();
 		Vec3 n = d1 ^ d2;
 
-		f64 u1, u2, u3, u4;
-		f64 v1, v2, v3, v4;
+		flt u1, u2, u3, u4;
+		flt v1, v2, v3, v4;
 
 		if (std::abs(n.x) >= std::abs(n.y)
 			&& std::abs(n.x) >= std::abs(n.z))
@@ -536,12 +481,12 @@ static void BM_Cart2Bary_eq1(State& state)
 			v4 = p.y - t.v3.y;
 		}
 
-		f64 denom = v1 * u2 - v2 * u1;
-		f64 scale = 1.0 / denom;
+		flt denom = v1 * u2 - v2 * u1;
+		flt scale = 1.0 / denom;
 
-		f64 x = (v4 * u2 - v2 * u4) * scale;
-		f64 y = (v1 * u3 - v3 * u1) * scale;
-		f64 z = 1.0 - x - y;
+		flt x = (v4 * u2 - v2 * u4) * scale;
+		flt y = (v1 * u3 - v3 * u1) * scale;
+		flt z = 1.0 - x - y;
 
 		result = Vec3{ x, y, z };
 
@@ -550,7 +495,7 @@ static void BM_Cart2Bary_eq1(State& state)
 }
 static void BM_Cart2Bary_eq2(State& state)
 {
-	auto t = Tri<f64>{
+	auto t = Tri{
 		Vec3{ -1,  0, -0.5 },
 		Vec3{  0,  0,  1   },
 		Vec3{  1,  0, -0.5 },
@@ -571,12 +516,12 @@ static void BM_Cart2Bary_eq2(State& state)
 		Vec3 e1_x_e2 = e1 ^ e2;
 		Vec3 n = e1_x_e2.normal();
 
-		f64 at  = (e1_x_e2 | n);
-		f64 at1 = ((e1 ^ d3) | n);
-		f64 at2 = ((e2 ^ d1) | n);
-		f64 at3 = ((e3 ^ d2) | n);
+		flt at  = (e1_x_e2 | n);
+		flt at1 = ((e1 ^ d3) | n);
+		flt at2 = ((e2 ^ d1) | n);
+		flt at3 = ((e3 ^ d2) | n);
 
-		f64 scale = 1 / at;
+		flt scale = 1 / at;
 
 		result = Vec3{
 			scale * at1,

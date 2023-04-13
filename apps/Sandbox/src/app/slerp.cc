@@ -13,11 +13,11 @@ using math::Quat;
 void slerp()
 {
 	f64 t = 0;
-	auto start = Quat<f64>::angle_axis(90_deg, Vec3::up());
-	auto end = Quat<f64>::angle_axis(270_deg, Vec3::up());
+	auto start = Quat::angle_axis(90_deg, Vec3::up());
+	auto end = Quat::angle_axis(270_deg, Vec3::up());
 
 	while (t <= 1) {
-		auto state = Quat<f64>::slerp(start, end, t);
+		auto state = Quat::slerp(start, end, t);
 		auto [angle,axis] = state.angle_axis();
 		fmt::print("{:>7.3f}°, {}   |   {}\n",
 			math::rad2deg(angle),

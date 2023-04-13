@@ -9,8 +9,8 @@ namespace math {
 using namespace sized; // NOLINT(*-using-namespace)
 
 // Forward declarations
-template <typename T> struct Euler;
-template <typename T> struct Quat;
+struct Euler;
+struct Quat;
 
 
 enum class Axis : u8 {
@@ -20,12 +20,11 @@ enum class Axis : u8 {
 	Forward = Z,
 };
 
-template <typename T = f64>
-class RotationMatrix : public Matrix<3,3,T> {
+class RotationMatrix : public Matrix<3,3> {
 private:
-	using Super = Matrix<3,3,T>;
-	using Base = detail::Matrix<3,3,T>;
-	using Row = Vector<3,T>;
+	using Super = Matrix<3,3>;
+	using Base = detail::Matrix<3,3>;
+	using Row = Vector<3>;
 
 public:
 	using Base::m11;
@@ -40,9 +39,9 @@ public:
 
 	// Constructors
 	/** Construct a rotation matrix from an angle and a cardinal axis */
-	RotationMatrix(T angle, Axis axis);
+	constexpr RotationMatrix(flt angle, Axis axis);
 	/** Construct a rotation matrix from an angle and an arbitrary axis */
-	RotationMatrix(T angle, const Vector<3,T>& axis);
+	constexpr RotationMatrix(flt angle, const Vector<3>& axis);
 
 	// Operations
 	/** Get the inverse of the matrix (equivalent to transpose) */
@@ -54,9 +53,9 @@ public:
 
 	// Conversion
 	/** Convert to Euler axes */
-	auto euler() const -> Euler<T>;
+	auto euler() const -> Euler;
 	/** Convert to a quaternion */
-	auto quat() const -> Quat<T>;
+	auto quat() const -> Quat;
 
 private:
 	// Not every Mat3x3 is a valid RotationMatrix, so we'll keep these private
@@ -65,11 +64,11 @@ private:
 	constexpr RotationMatrix(Super&& super); // NOLINT(*-explicit-constructor)
 
 	// Constructor helpers
-	static constexpr auto construct(T angle, Axis axis) -> Super;
-	static constexpr auto construct(T angle, const Vector<3,T>& axis) -> Super;
+	static constexpr auto construct(flt angle, Axis axis) -> Super;
+	static constexpr auto construct(flt angle, const Vector<3>& axis) -> Super;
 
-	friend Euler<T>;
-	friend Quat<T>;
+	friend struct math::Euler;
+	friend struct math::Quat;
 };
 
-}
+} // namespace math

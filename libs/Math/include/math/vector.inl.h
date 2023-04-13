@@ -11,8 +11,8 @@
 namespace math {
 using namespace sized; // NOLINT(*-using-namespace)
 
-template <typename T> struct PolarCoords;
-template <typename T> struct SphericalCoords;
+struct PolarCoords;
+struct SphericalCoords;
 
 namespace detail {
 
@@ -21,35 +21,35 @@ namespace detail {
  * template instances without needing to redeclare all methods for every
  * specialization.
  */
-template <usize D, typename T = f64>
+template <usize D>
 struct Vector {
 // NOLINTBEGIN(*-pro-type-member-init, *-avoid-c-arrays)
 	union {
-		T components[D];
+		flt components[D];
 	};
 };
 
-template <typename T>
-struct Vector<2, T> {
+template <>
+struct Vector<2> {
 	union {
-		T components[2] { 0, 0 };
-		struct { T x, y; };
+		flt components[2] { 0, 0 };
+		struct { flt x, y; };
 	};
 };
 
-template <typename T>
-struct Vector<3, T> {
+template <>
+struct Vector<3> {
 	union {
-		T components[3] { 0, 0, 0 };
-		struct { T x, y, z; };
+		flt components[3] { 0, 0, 0 };
+		struct { flt x, y, z; };
 	};
 };
 
-template <typename T>
-struct Vector<4, T> {
+template <>
+struct Vector<4> {
 	union {
-		T components[4] { 0, 0, 0, 0 };
-		struct { T x, y, z, w; };
+		flt components[4] { 0, 0, 0, 0 };
+		struct { flt x, y, z, w; };
 	};
 // NOLINTEND(*-pro-type-member-init, *-avoid-c-arrays)
 };
@@ -65,16 +65,16 @@ struct Vector<4, T> {
  * @tparam D The dimensionality of the vector. Full support for `2`, `3`, or `4`.
  * @tparam T The scalar type of the components. Full support for `float` or `double`.
  */
-template <usize D, typename T = f64>
-struct Vector : public detail::Vector<D,T> {
+template <usize D>
+struct Vector : public detail::Vector<D> {
 private:
-	using detail::Vector<D,T>::components;
+	using detail::Vector<D>::components;
 
 public:
 	static const Vector Zero;
 
 	/** Create a vector where all components have the same value. */
-	static constexpr auto all(T value) -> Vector;
+	static constexpr auto all(flt value) -> Vector;
 
 	static constexpr auto unit_x() -> Vector;
 	static constexpr auto unit_y() -> Vector;
@@ -86,13 +86,13 @@ public:
 	static constexpr auto forward() -> Vector;
 
 	/** Convert polar to cartesian coordinates. */
-	static constexpr auto from_polar(T radius, T angle) -> Vector;
+	static constexpr auto from_polar(flt radius, flt angle) -> Vector;
 	/** Convert polar to cartesian coordinates. */
-	static constexpr auto from_polar(const PolarCoords<T>& coords) -> Vector;
+	static constexpr auto from_polar(const PolarCoords& coords) -> Vector;
 	/** Convert polar to cartesian coordinates. */
-	static constexpr auto from_polar(T radius, T heading, T pitch) -> Vector;
+	static constexpr auto from_polar(flt radius, flt heading, flt pitch) -> Vector;
 	/** Convert polar to cartesian coordinates. */
-	static constexpr auto from_polar(const SphericalCoords<T>& coords) -> Vector;
+	static constexpr auto from_polar(const SphericalCoords& coords) -> Vector;
 
 	// Structured binding support
 	template <usize Index> inline auto get() &       { return components[Index]; }
@@ -101,15 +101,15 @@ public:
 	template <usize Index> inline auto get() const&& { return components[Index]; }
 
 	// Iterator support
-	auto begin() -> detail::RawIterator<T>;
-	auto begin() const -> detail::RawConstIterator<T>;
+	auto begin() -> detail::RawIterator<flt>;
+	auto begin() const -> detail::RawConstIterator<flt>;
 
-	auto end() -> detail::RawIterator<T>;
-	auto end() const -> detail::RawConstIterator<T>;
+	auto end() -> detail::RawIterator<flt>;
+	auto end() const -> detail::RawConstIterator<flt>;
 
 	// Subscript operator
-	auto operator[](usize idx) -> T&;
-	auto operator[](usize idx) const -> T;
+	auto operator[](usize idx) -> flt&;
+	auto operator[](usize idx) const -> flt;
 
 	// Unary negation
 	auto operator-() const -> Vector;
@@ -123,12 +123,12 @@ public:
 	auto operator-=(const Vector& other) -> Vector&;
 
 	// Scalar multiplication
-	auto operator*(T magnitude) const -> Vector;
-	auto operator*=(T magnitude) -> Vector&;
+	auto operator*(flt magnitude) const -> Vector;
+	auto operator*=(flt magnitude) -> Vector&;
 
 	// Scalar division
-	auto operator/(T magnitude) const -> Vector;
-	auto operator/=(T magnitude) -> Vector&;
+	auto operator/(flt magnitude) const -> Vector;
+	auto operator/=(flt magnitude) -> Vector&;
 
 	// Equality comparison
 	auto operator==(const Vector& other) const -> bool;
@@ -137,11 +137,11 @@ public:
 	auto operator!=(const Vector& other) const -> bool;
 
 	/** Calculate the length (magnitude) of the vector. */
-	auto length() const -> T;
+	auto length() const -> flt;
 	/** Calculate the length (magnitude) of the vector. */
-	auto magnitude() const -> T;
+	auto magnitude() const -> flt;
 	/** Sum of the squares of each component. */
-	auto sq_length() const -> T;
+	auto sq_length() const -> flt;
 
 	/** Calculate the unit-length direction of the vector. */
 	auto unit() const -> Vector;
@@ -156,17 +156,17 @@ public:
 	 * Calculate the magnitude and unit-length direction of the vector in a
 	 * single operation.
 	 */
-	auto length_and_direction() const -> std::tuple<T, Vector>;
+	auto length_and_direction() const -> std::tuple<flt, Vector>;
 
 	/** Calculate the distance between two points. */
-	auto dist(const Vector& other) const -> T;
+	auto dist(const Vector& other) const -> flt;
 	/** Calculate the distance between two points. */
-	static auto dist(const Vector& lhs, const Vector& rhs) -> T;
+	static auto dist(const Vector& lhs, const Vector& rhs) -> flt;
 
 	/** Calculate the dot-product of two vectors. */
-	auto dot(const Vector& other) const -> T;
+	auto dot(const Vector& other) const -> flt;
 	/** Calculate the dot-product of two vectors. */
-	auto operator|(const Vector& other) const -> T;
+	auto operator|(const Vector& other) const -> flt;
 
 	/** Calculate the cross-product of two vectors. */
 	auto cross(const Vector& other) const -> Vector;
@@ -184,3 +184,28 @@ private:
 };
 
 } // namespace math
+
+// Structured binding support --------------------------------------------------
+
+namespace std {
+
+// NOLINTBEGIN(cert-dcl58-cpp):
+
+// I believe cert-dcl58-cpp here is a spurious warning due to limitations of the
+// clang-tidy parser. This is just a template specialization with a user-defined
+// type, which is normally permitted by the linter -- but because our type
+// is templated, the parser is unable to correctly identify what we're doing.
+
+template <size_t D>
+struct tuple_size<::math::Vector<D>> {
+	static constexpr size_t value = D;
+};
+
+template <size_t Index, size_t D>
+struct tuple_element<Index, ::math::Vector<D>> {
+	static_assert(Index < D, "Index out of range");
+	using type = sized::flt;
+};
+
+// NOLINTEND(cert-dcl58-cpp)
+}

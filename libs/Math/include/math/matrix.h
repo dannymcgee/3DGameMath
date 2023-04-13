@@ -1,10 +1,10 @@
 #pragma once
 
-#include "math/_matrix_decl.h"
-#include "math/_matrix_impl.hpp"
+#include "math/matrix.inl.h"
+#include "math/matrix.inl.hpp"
 
 namespace math {
-template <usize R, usize C, typename T> class Matrix;
+template <usize R, usize C> class Matrix;
 
 using Mat2x2 = Matrix<2,2>;
 using Mat3x3 = Matrix<3,3>;
