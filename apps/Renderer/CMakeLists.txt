@@ -1,5 +1,6 @@
 find_package(OpenGL REQUIRED)
 
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/external/glew-2.1.0")
 add_definitions(-DGLEW_STATIC)
 set(GLEW_USE_STATIC_LIBS ON)
 set(GLEW_VERBOSE ON)
