@@ -5,29 +5,6 @@
 
 #include "gl.hpp"
 
-const auto vert_src = R"(
-#version 330 core
-
-layout(location = 0)
-in vec4 position;
-
-void main()
-{
-	gl_Position = position;
-}
-)";
-
-const auto frag_src = R"(
-#version 330 core
-
-layout(location = 0)
-out vec4 color;
-
-void main()
-{
-	color = vec4(1, 0, 0, 1);
-}
-)";
 
 auto main() -> int
 {
@@ -73,10 +50,7 @@ auto main() -> int
 		.size = 2,
 	});
 
-	u32 vert_shader = gl::compile_shader(Shader::Vertex, vert_src);
-	u32 frag_shader = gl::compile_shader(Shader::Fragment, frag_src);
-	u32 program = gl::link_program(vert_shader, frag_shader);
-
+	u32 program = gl::make_program(PROJECT_SOURCE_DIR"/res/shaders/hello.shader");
 	gl::use_program(program);
 
 	while (!glfwWindowShouldClose(window)) {

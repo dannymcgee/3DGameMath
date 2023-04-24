@@ -1,6 +1,10 @@
 #pragma once
 
+#include <filesystem>
+#include <fstream>
+#include <regex>
 #include <string>
+#include <unordered_map>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -14,6 +18,7 @@
  */
 namespace gl {
 using namespace sized;
+namespace fs = std::filesystem;
 
 enum class Target : GLenum {
 	/** Vertex attributes */
@@ -159,6 +164,7 @@ enum class Scalar : GLenum {
 };
 
 enum class Shader : GLenum {
+	_none = 0,
 	Compute = GL_COMPUTE_SHADER,
 	Vertex = GL_VERTEX_SHADER,
 	TessControl = GL_TESS_CONTROL_SHADER,
@@ -183,6 +189,7 @@ inline auto shader_type_name(Shader type) -> std::string {
 		case Shader::TessEval: return "tesselation evaluation shader";
 		case Shader::Geometry: return "geometry shader";
 		case Shader::Fragment: return "fragment shader";
+		default: return "unknown shader";
 	}
 }
 
@@ -539,6 +546,71 @@ inline auto link_program(Args... shaders) -> u32 {
 	gl::validate_program(program);
 
 	for (auto shader : { shaders... })
+		gl::delete_shader(shader);
+
+	return program;
+}
+
+static auto shader_type(const std::string& keyword) -> Shader {
+	if (keyword == "vertex") return Shader::Vertex;
+	if (keyword == "fragment") return Shader::Fragment;
+	if (keyword == "compute") return Shader::Compute;
+	if (keyword == "tessc") return Shader::TessControl;
+	if (keyword == "tesse") return Shader::TessEval;
+	if (keyword == "geometry") return Shader::Geometry;
+	return Shader::_none;
+}
+
+inline auto parse_shaders(const fs::path& file_path) -> std::unordered_map<Shader, std::string> {
+	std::unordered_map<Shader, std::string> result;
+	const auto shader_block_pattern = std::regex(R"(#shader (\S+))");
+	auto file = std::ifstream(file_path);
+
+	std::string line;
+	std::smatch matches;
+
+	auto current_type = Shader::_none;
+	std::string current_src;
+
+	while (std::getline(file, line)) {
+		if (std::regex_match(line, matches, shader_block_pattern)) {
+			if (!current_src.empty() && current_type != Shader::_none)
+				result.emplace(current_type, current_src);
+
+			current_type = gl::shader_type(matches.str(1));
+			current_src.clear();
+		}
+		else if (current_type != Shader::_none) {
+			current_src.append(line);
+			current_src.push_back('\n');
+		}
+	}
+
+	if (!current_src.empty() && current_type != Shader::_none)
+		result.emplace(current_type, current_src);
+
+	return result;
+}
+
+inline auto make_program(const fs::path& shader_path) -> u32 {
+	u32 program = gl::create_program();
+	auto sources = gl::parse_shaders(shader_path);
+
+	std::vector<u32> shaders;
+	shaders.reserve(sources.size());
+
+	for (auto [type, source] : sources) {
+		u32 shader = gl::compile_shader(type, source);
+		gl::attach_shader(program, shader);
+		shaders.push_back(shader);
+	}
+
+	gl::link_program(program);
+	// TODO: Handle link errors
+	gl::validate_program(program);
+	// TODO: Handle validation errors?
+
+	for (u32 shader : shaders)
 		gl::delete_shader(shader);
 
 	return program;

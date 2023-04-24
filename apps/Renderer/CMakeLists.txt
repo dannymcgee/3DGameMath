@@ -5,6 +5,8 @@ set(GLEW_USE_STATIC_LIBS ON)
 set(GLEW_VERBOSE ON)
 find_package(GLEW REQUIRED)
 
+file(TO_CMAKE_PATH "${CMAKE_CURRENT_SOURCE_DIR}" RENDERER_SOURCE_DIR)
+add_definitions(-DPROJECT_SOURCE_DIR="${RENDERER_SOURCE_DIR}")
 add_executable(Renderer "src/main.cc")
 
 target_link_libraries(
