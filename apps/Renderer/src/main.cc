@@ -5,6 +5,29 @@
 
 #include "gl.hpp"
 
+const auto vert_src = R"(
+#version 330 core
+
+layout(location = 0)
+in vec4 position;
+
+void main()
+{
+	gl_Position = position;
+}
+)";
+
+const auto frag_src = R"(
+#version 330 core
+
+layout(location = 0)
+out vec4 color;
+
+void main()
+{
+	color = vec4(1, 0, 0, 1);
+}
+)";
 
 auto main() -> int
 {
@@ -13,6 +36,7 @@ auto main() -> int
 	using gl::Info;
 	using gl::Mask;
 	using gl::Scalar;
+	using gl::Shader;
 	using gl::Target;
 	using gl::Usage;
 
@@ -49,6 +73,12 @@ auto main() -> int
 		.size = 2,
 	});
 
+	u32 vert_shader = gl::compile_shader(Shader::Vertex, vert_src);
+	u32 frag_shader = gl::compile_shader(Shader::Fragment, frag_src);
+	u32 program = gl::link_program(vert_shader, frag_shader);
+
+	gl::use_program(program);
+
 	while (!glfwWindowShouldClose(window)) {
 		gl::clear(Mask::ColorBuffer);
 		gl::draw_arrays(DrawMode::Triangles, 0, 3);
@@ -56,6 +86,9 @@ auto main() -> int
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
+
+	gl::delete_program(program);
+	gl::delete_buffer(position_buffer);
 
 	glfwTerminate();
 
