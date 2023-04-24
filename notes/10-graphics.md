@@ -165,3 +165,57 @@ The whole equation governs a balance of radiance at a single surface point **x**
 * -**&omega;**<sub>in</sub> &middot; **n** &mdash; The Lambert factor
 	- More light can be reflected when **&omega;**<sub>in</sub> is more perpendicular to the surface
 	- The dot product peaks at 1 in the perpendicular direction and trails off to zero as the angle of incidence becomes more glancing
+
+### [U of U | Intro to Graphics](https://www.youtube.com/playlist?list=PLplnkTzzqsZTfYh4UbhLGpI5kGd5oW_Hh)
+
+#### Gamma Correction
+
+> **c**<sub>out</sub> = **c**<sub>in</sub><sup>&gamma;</sup> = **c**<sub>desired</sub><sup>1/&gamma;</sup><br>
+> sRGB: &gamma; &approx; 2.2
+
+#### Color Blending
+
+##### Alpha (Standard)
+
+> **c** = &alpha;<sub>f</sub> **c**<sub>f</sub> + ( 1 - &alpha;<sub>f</sub> ) **c**<sub>b</sub><br>
+> &nbsp;&nbsp; = _lerp_( **c**<sub>f</sub> , **c**<sub>b</sub> , &alpha;<sub>f</sub> )
+>
+> where<br>
+> _<sub>f</sub> = foreground<br>
+> _<sub>b</sub> = background
+
+if &alpha;<sub>b</sub> &ne; 1:<br>
+> **c** = ( &alpha;<sub>f</sub> **c**<sub>f</sub> + ( 1 - &alpha;<sub>f</sub> ) &alpha;<sub>b</sub> **c**<sub>b</sub> ) / &alpha;<br>
+> &alpha; = &alpha;<sub>f</sub> + ( 1 - &alpha;<sub>f</sub> ) &alpha;<sub>b</sub>
+
+##### Additive
+> **c** = &alpha;<sub>f</sub> **c**<sub>f</sub> + **c**<sub>b</sub>
+
+##### Difference
+> **c** = | &alpha;<sub>f</sub> **c**<sub>f</sub> - **c**<sub>b</sub> |
+
+##### Multiply
+> **c** = &alpha;<sub>f</sub> ( **c**<sub>f</sub> &middot; **c**<sub>b</sub> ) + ( 1 - &alpha;<sub>f</sub> ) **c**<sub>b</sub>
+
+##### Screen
+> **c** = 1 - ( 1 - **c**<sub>f</sub> ) ( 1 - **c**<sub>b</sub> )
+
+#### 2D Transformation
+
+#### Rotation
+> [ *x'* , *y'* ] = *x* [ cos &theta; , -sin &theta; ] + *y* [ sin &theta; , cos &theta; ]<br>
+
+```cpp
+auto Vec2::rotate(flt theta) const -> Vec2
+{
+	return (*this) * Mat2x2{
+		{ cos(theta), -sin(theta) },
+		{ sin(theta),  cos(theta) },
+	};
+	// OR:
+	return Mat2x2{
+		{  cos(theta), sin(theta) },
+		{ -sin(theta), cos(theta) },
+	} * (*this);
+}
+```
