@@ -8,7 +8,10 @@ find_package(GLEW REQUIRED)
 
 file(TO_CMAKE_PATH "${CMAKE_CURRENT_SOURCE_DIR}" RENDERER_SOURCE_DIR)
 add_definitions(-DPROJECT_SOURCE_DIR="${RENDERER_SOURCE_DIR}")
+
 add_executable(Renderer "src/main.cc")
+
+target_include_directories(Renderer PRIVATE "src")
 
 target_link_libraries(
 	Renderer

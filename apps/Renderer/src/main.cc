@@ -3,7 +3,7 @@
 #include <fmt/format.h>
 #include <sized.h>
 
-#include "gl.hpp"
+#include "api/gl/gl.h"
 
 
 auto main() -> int
