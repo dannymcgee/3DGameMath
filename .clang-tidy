@@ -12,6 +12,7 @@ Checks: >
   -*-avoid-c-arrays,
   -*-braces-around-statements,
   -*-readability-todo,
+  -*-using-namespace,
   -bugprone-easily-swappable-parameters,
   -cert-err58-cpp,
   -cppcoreguidelines-avoid-magic-numbers,
