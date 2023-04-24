@@ -1,23 +1,25 @@
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <fmt/format.h>
 
 
 auto main() -> int
 {
 	if (!glfwInit())
-		return -1;
+		return 1;
 
-	// Create a windowed mode window and its OpenGL context
 	auto* window = glfwCreateWindow(1280, 960, "Hello Triangle", nullptr, nullptr);
-	if (!window) {
-		glfwTerminate();
-
-		return -1;
-	}
+	if (!window)
+		return 1;
 
 	glfwMakeContextCurrent(window);
 
+	if (glewInit() != GLEW_OK)
+		return 1;
+
+	fmt::print("OpenGL {}\n", reinterpret_cast<const char*>(glGetString(GL_VERSION)));
+
 	while (!glfwWindowShouldClose(window)) {
-		// Render here
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glBegin(GL_TRIANGLES);

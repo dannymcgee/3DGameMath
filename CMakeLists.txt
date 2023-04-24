@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.25)
 project(
 	3DMathPrimer
 		VERSION 0.1.0
-		LANGUAGES CXX
+		LANGUAGES C CXX
 )
 
 set(CMAKE_CXX_STANDARD 17)
