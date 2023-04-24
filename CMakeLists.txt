@@ -12,9 +12,10 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-# set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
-
 include(FetchContent)
+
+
+# fmt --------------------------------------------------------------------------
 
 FetchContent_Declare(
 	fmt
@@ -26,6 +27,9 @@ set_target_properties(
 	fmt PROPERTIES
 		FOLDER "External"
 )
+
+
+# Catch2 -----------------------------------------------------------------------
 
 FetchContent_Declare(
 	Catch2
@@ -42,6 +46,9 @@ set_target_properties(
 		FOLDER "External"
 )
 
+
+# benchmark --------------------------------------------------------------------
+
 set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "Disable benchmark tests" FORCE)
 FetchContent_Declare(
 	benchmark
@@ -57,6 +64,21 @@ set_target_properties(
 	benchmark_main PROPERTIES
 		FOLDER "External"
 )
+
+
+# GLFW -------------------------------------------------------------------------
+
+FetchContent_Declare(
+	glfw
+	GIT_REPOSITORY https://github.com/glfw/glfw.git
+	GIT_TAG 3.3.8
+)
+FetchContent_MakeAvailable(glfw)
+set_target_properties(
+	glfw PROPERTIES
+		FOLDER "External"
+)
+
 
 add_subdirectory("libs/Sized")
 add_subdirectory("libs/Math")

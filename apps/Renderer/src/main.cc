@@ -1,17 +1,29 @@
-#include <iostream>
-#include <string>
-
-#include <fmt/format.h>
+#include <GLFW/glfw3.h>
 
 
 auto main() -> int
 {
-	std::cout << "What's your name? ";
+	if (!glfwInit())
+		return -1;
 
-	std::string name;
-	std::getline(std::cin, name);
+	// Create a windowed mode window and its OpenGL context
+	auto* window = glfwCreateWindow(1920, 1080, "Hello OpenGL", nullptr, nullptr);
+	if (!window) {
+		glfwTerminate();
 
-	fmt::print("Hello, {}!\n", name);
+		return -1;
+	}
+
+	glfwMakeContextCurrent(window);
+
+	while (!glfwWindowShouldClose(window)) {
+		// Render here
+		glClear(GL_COLOR_BUFFER_BIT);
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+	}
+
+	glfwTerminate();
 
 	return 0;
 }

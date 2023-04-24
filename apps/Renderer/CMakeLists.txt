@@ -1,9 +1,13 @@
+find_package(OpenGL REQUIRED)
+
 add_executable(Renderer "src/main.cc")
 
 target_link_libraries(
 	Renderer
 		PRIVATE
 			fmt::fmt
+			glfw
+			opengl32
 			Sized
 			Math
 )
