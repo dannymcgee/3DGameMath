@@ -181,7 +181,16 @@ enum class ShaderParam : GLenum {
 	SourceLength = GL_SHADER_SOURCE_LENGTH,
 };
 
-inline auto shader_type_name(Shader type) -> std::string {
+enum class Result : GLenum {
+	OK = GLEW_OK,
+	NoGLVersion = GLEW_ERROR_NO_GL_VERSION,
+	GLVersion10Only = GLEW_ERROR_GL_VERSION_10_ONLY,
+	GLXVersion11Only = GLEW_ERROR_GLX_VERSION_11_ONLY,
+	NoGLXDisplay = GLEW_ERROR_NO_GLX_DISPLAY,
+};
+
+inline auto shader_type_name(Shader type) -> std::string
+{
 	switch (type) {
 		case Shader::Compute: return "compute shader";
 		case Shader::Vertex: return "vertex shader";
@@ -194,7 +203,8 @@ inline auto shader_type_name(Shader type) -> std::string {
 }
 
 /** @see `gen_buffers` */
-inline auto gen_buffer() -> u32 {
+inline auto gen_buffer() -> u32
+{
 	u32 result;
 	glGenBuffers(1, &result);
 
@@ -211,7 +221,8 @@ inline auto gen_buffer() -> u32 {
  *
  * @see https://docs.gl/gl4/glGenBuffers
  */
-inline void gen_buffers(i32 n, u32* out_buffers) {
+inline void gen_buffers(i32 n, u32* out_buffers)
+{
 	glGenBuffers(n, out_buffers);
 }
 
@@ -223,7 +234,8 @@ inline void gen_buffers(i32 n, u32* out_buffers) {
  *
  * @see https://docs.gl/gl4/glBindBuffer
  */
-inline void bind_buffer(Target target, u32 buffer) {
+inline void bind_buffer(Target target, u32 buffer)
+{
 	glBindBuffer(static_cast<GLenum>(target), buffer);
 }
 
@@ -243,7 +255,8 @@ inline void bind_buffer(Target target, u32 buffer) {
  *
  * @see https://docs.gl/gl4/glBufferData
  */
-inline void buffer_data(Target target, i32 size, void* data, Usage usage) {
+inline void buffer_data(Target target, i32 size, void* data, Usage usage)
+{
 	glBufferData(static_cast<GLenum>(target), size, data, static_cast<GLenum>(usage));
 }
 
@@ -256,7 +269,8 @@ inline void buffer_data(Target target, i32 size, void* data, Usage usage) {
  *
  * @see https://docs.gl/gl4/glClear
  */
-inline void clear(u32 mask) {
+inline void clear(u32 mask)
+{
 	glClear(mask);
 }
 
@@ -269,7 +283,8 @@ inline void clear(u32 mask) {
  *
  * @see https://docs.gl/gl4/glDrawArrays
  */
-inline void draw_arrays(DrawMode mode, i32 first, i32 count) {
+inline void draw_arrays(DrawMode mode, i32 first, i32 count)
+{
 	glDrawArrays(static_cast<GLenum>(mode), first, count);
 }
 
@@ -277,7 +292,8 @@ inline void draw_arrays(DrawMode mode, i32 first, i32 count) {
  * @brief return a string describing the current GL connection
  * @param name
  */
-inline auto get_string(Info name) -> char const* {
+inline auto get_string(Info name) -> char const*
+{
 	return reinterpret_cast<const char*>(glGetString(static_cast<GLenum>(name)));
 }
 
@@ -286,7 +302,8 @@ inline auto get_string(Info name) -> char const* {
  * @param name
  * @param index Specifies the index of the string to return.
  */
-inline auto get_string(Info name, u32 index) -> char const* {
+inline auto get_string(Info name, u32 index) -> char const*
+{
 	return reinterpret_cast<const char*>(glGetStringi(static_cast<GLenum>(name), index));
 }
 
@@ -328,7 +345,8 @@ struct VertexAttribParams {
  * @param index Specifies the index of the generic vertex attribute to be modified.
  * @param params Additional options.
  */
-inline void vertex_attrib_pointer(u32 index, const VertexAttribParams& params = {}) {
+inline void vertex_attrib_pointer(u32 index, const VertexAttribParams& params = {})
+{
 	glVertexAttribPointer(
 		index,
 		params.size,
@@ -346,7 +364,8 @@ inline void vertex_attrib_pointer(u32 index, const VertexAttribParams& params = 
  * Points to a null terminated string containing the name of the attribute
  * variable whose location is to be queried.
  */
-inline auto get_attrib_location(u32 program, const char* name) -> i32 {
+inline auto get_attrib_location(u32 program, const char* name) -> i32
+{
 	return glGetAttribLocation(program, name);
 }
 
@@ -354,7 +373,8 @@ inline auto get_attrib_location(u32 program, const char* name) -> i32 {
  * @brief Enable a generic vertex attribute array
  * @param index Specifies the index of the generic vertex attribute.
  */
-inline void enable_vertex_attrib_array(u32 index) {
+inline void enable_vertex_attrib_array(u32 index)
+{
 	glEnableVertexAttribArray(index);
 }
 
@@ -362,23 +382,18 @@ inline void enable_vertex_attrib_array(u32 index) {
  * @brief Disable a generic vertex attribute array
  * @param index Specifies the index of the generic vertex attribute.
  */
-inline void disable_vertex_attrib_array(u32 index) {
+inline void disable_vertex_attrib_array(u32 index)
+{
 	glDisableVertexAttribArray(index);
 }
 
-enum class Result : GLenum {
-	OK = GLEW_OK,
-	NoGLVersion = GLEW_ERROR_NO_GL_VERSION,
-	GLVersion10Only = GLEW_ERROR_GL_VERSION_10_ONLY,
-	GLXVersion11Only = GLEW_ERROR_GLX_VERSION_11_ONLY,
-	NoGLXDisplay = GLEW_ERROR_NO_GLX_DISPLAY,
-};
-
-inline auto create_program() -> u32 {
+inline auto create_program() -> u32
+{
 	return glCreateProgram();
 }
 
-inline auto create_shader(Shader type) -> u32 {
+inline auto create_shader(Shader type) -> u32
+{
 	return glCreateShader(static_cast<GLenum>(type));
 }
 
@@ -401,12 +416,13 @@ inline auto create_shader(Shader type) -> u32 {
  *
  * @see https://docs.gl/gl4/glShaderSource
  */
-inline void shader_source(u32 shader, i32 count, const char** sources, const i32* length) {
+inline void shader_source(u32 shader, i32 count, const char** sources, const i32* length)
+{
 	glShaderSource(shader, count, sources, length);
 }
 
-
-inline void shader_source(u32 shader, const char* source) {
+inline void shader_source(u32 shader, const char* source)
+{
 	gl::shader_source(shader, 1, &source, nullptr);
 }
 
@@ -428,7 +444,8 @@ inline void shader_source(u32 shader, const char* source) {
  *
  * @see https://docs.gl/gl4/glGetShaderInfoLog
  */
-inline void get_shader_info_log(u32 shader, i32 max_length, i32* out_length, char* out_result) {
+inline void get_shader_info_log(u32 shader, i32 max_length, i32* out_length, char* out_result)
+{
 	glGetShaderInfoLog(shader, max_length, out_length, out_result);
 }
 
@@ -441,18 +458,21 @@ inline void get_shader_info_log(u32 shader, i32 max_length, i32* out_length, cha
  *
  * @see https://docs.gl/gl4/glGetShader
  */
-inline void get_shader(u32 shader, ShaderParam param, i32* out_params) {
+inline void get_shader(u32 shader, ShaderParam param, i32* out_params)
+{
 	glGetShaderiv(shader, static_cast<GLenum>(param), out_params);
 }
 
-inline auto get_shader_compile_status(u32 shader) -> bool {
+inline auto get_shader_compile_status(u32 shader) -> bool
+{
 	i32 result;
 	gl::get_shader(shader, ShaderParam::CompileStatus, &result);
 
 	return result == GL_TRUE;
 }
 
-inline auto get_shader_info_log_length(u32 shader) -> i32 {
+inline auto get_shader_info_log_length(u32 shader) -> i32
+{
 	i32 result;
 	gl::get_shader(shader, ShaderParam::InfoLogLength, &result);
 
@@ -462,7 +482,8 @@ inline auto get_shader_info_log_length(u32 shader) -> i32 {
 /**
  * @brief Determines if a name corresponds to a shader object
  */
-inline auto is_shader(u32 name) -> bool {
+inline auto is_shader(u32 name) -> bool
+{
 	return glIsShader(name);
 }
 
@@ -471,15 +492,18 @@ inline auto is_shader(u32 name) -> bool {
  * @param shader Specifies the shader object to be compiled.
  * @see https://docs.gl/gl4/glCompileShader
  */
-inline void compile_shader(u32 shader) {
+inline void compile_shader(u32 shader)
+{
 	glCompileShader(shader);
 }
 
-inline void attach_shader(u32 program, u32 shader) {
+inline void attach_shader(u32 program, u32 shader)
+{
 	glAttachShader(program, shader);
 }
 
-inline void link_program(u32 program) {
+inline void link_program(u32 program)
+{
 	glLinkProgram(program);
 }
 
@@ -488,31 +512,38 @@ inline void link_program(u32 program) {
  * @param program Specifies the handle of the program object to be validated.
  * @see https://docs.gl/gl4/glValidateProgram
  */
-inline void validate_program(u32 program) {
+inline void validate_program(u32 program)
+{
 	glValidateProgram(program);
 }
 
-inline void delete_shader(u32 shader) {
+inline void delete_shader(u32 shader)
+{
 	glDeleteShader(shader);
 }
 
-inline void use_program(u32 program) {
+inline void use_program(u32 program)
+{
 	glUseProgram(program);
 }
 
-inline void delete_program(u32 program) {
+inline void delete_program(u32 program)
+{
 	glDeleteProgram(program);
 }
 
-inline void delete_buffers(i32 n, const u32* buffers) {
+inline void delete_buffers(i32 n, const u32* buffers)
+{
 	glDeleteBuffers(n, buffers);
 }
 
-inline void delete_buffer(u32 buffer) {
+inline void delete_buffer(u32 buffer)
+{
 	glDeleteBuffers(1, &buffer);
 }
 
-inline auto compile_shader(Shader type, const char* source) -> u32 {
+inline auto compile_shader(Shader type, const char* source) -> u32
+{
 	u32 shader = gl::create_shader(type);
 
 	gl::shader_source(shader, source);
@@ -530,12 +561,14 @@ inline auto compile_shader(Shader type, const char* source) -> u32 {
 	return shader;
 }
 
-inline auto compile_shader(Shader type, const std::string& source) -> u32 {
+inline auto compile_shader(Shader type, const std::string& source) -> u32
+{
 	return compile_shader(type, source.c_str());
 }
 
 template <typename... Args>
-inline auto link_program(Args... shaders) -> u32 {
+inline auto link_program(Args... shaders) -> u32
+{
 	u32 program = gl::create_program();
 
 	for (auto shader : { shaders... })
@@ -551,7 +584,8 @@ inline auto link_program(Args... shaders) -> u32 {
 	return program;
 }
 
-static auto shader_type(const std::string& keyword) -> Shader {
+static auto shader_type(const std::string& keyword) -> Shader
+{
 	if (keyword == "vertex") return Shader::Vertex;
 	if (keyword == "fragment") return Shader::Fragment;
 	if (keyword == "compute") return Shader::Compute;
@@ -561,7 +595,8 @@ static auto shader_type(const std::string& keyword) -> Shader {
 	return Shader::_none;
 }
 
-inline auto parse_shaders(const fs::path& file_path) -> std::unordered_map<Shader, std::string> {
+inline auto parse_shaders(const fs::path& file_path) -> std::unordered_map<Shader, std::string>
+{
 	std::unordered_map<Shader, std::string> result;
 	const auto shader_block_pattern = std::regex(R"(#shader (\S+))");
 	auto file = std::ifstream(file_path);
@@ -592,7 +627,8 @@ inline auto parse_shaders(const fs::path& file_path) -> std::unordered_map<Shade
 	return result;
 }
 
-inline auto make_program(const fs::path& shader_path) -> u32 {
+inline auto make_program(const fs::path& shader_path) -> u32
+{
 	u32 program = gl::create_program();
 	auto sources = gl::parse_shaders(shader_path);
 
@@ -624,11 +660,13 @@ inline auto make_program(const fs::path& shader_path) -> u32 {
  *
  * @see https://glew.sourceforge.net/basic.html
  */
-inline auto init() -> Result {
+inline auto init() -> Result
+{
 	return static_cast<Result>(glewInit());
 }
 
-inline auto get_error_string(Result result) -> char const* {
+inline auto get_error_string(Result result) -> char const*
+{
 	return reinterpret_cast<const char*>(glewGetErrorString(static_cast<GLenum>(result)));
 }
 
