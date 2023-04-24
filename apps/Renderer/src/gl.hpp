@@ -163,6 +163,16 @@ enum class Scalar : GLenum {
 	fixed = Fixed,
 };
 
+enum class Unsigned : GLenum {
+	Byte = GL_UNSIGNED_BYTE,
+	Short = GL_UNSIGNED_SHORT,
+	Int = GL_UNSIGNED_INT,
+
+	u8 = Byte,
+	u16 = Short,
+	u32 = Int,
+};
+
 enum class Shader : GLenum {
 	_none = 0,
 	Compute = GL_COMPUTE_SHADER,
@@ -286,6 +296,74 @@ inline void clear(u32 mask)
 inline void draw_arrays(DrawMode mode, i32 first, i32 count)
 {
 	glDrawArrays(static_cast<GLenum>(mode), first, count);
+}
+
+/**
+ * @brief render primitives from array data
+ *
+ * @tparam Unsigned Specifies the type of the values in `indices`.
+ *
+ * @param mode Specifies what kind of primitives to render.
+ * @param count Specifies the number of elements to be rendered.
+ *
+ * @param indices
+ * Specifies an offset of the first index in the array in the data store of the
+ * buffer currently bound to the `gl::BufferTarget::ElementArray` target.
+ *
+ * @see https://docs.gl/gl4/glDrawElements
+ */
+template <typename Unsigned>
+inline void draw_elements(DrawMode mode, i32 count, const Unsigned* indices);
+/**
+ * @brief render primitives from array data
+ *
+ * @param mode Specifies what kind of primitives to render.
+ * @param count Specifies the number of elements to be rendered.
+ *
+ * @param indices
+ * Specifies an offset of the first index in the array in the data store of the
+ * buffer currently bound to the `gl::BufferTarget::ElementArray` target.
+ *
+ * @see https://docs.gl/gl4/glDrawElements
+ */
+template <>
+inline void draw_elements(DrawMode mode, i32 count, const u8* indices)
+{
+	glDrawElements(static_cast<GLenum>(mode), count, GL_UNSIGNED_BYTE, indices);
+}
+/**
+ * @brief render primitives from array data
+ *
+ * @param mode Specifies what kind of primitives to render.
+ * @param count Specifies the number of elements to be rendered.
+ *
+ * @param indices
+ * Specifies an offset of the first index in the array in the data store of the
+ * buffer currently bound to the `gl::BufferTarget::ElementArray` target.
+ *
+ * @see https://docs.gl/gl4/glDrawElements
+ */
+template <>
+inline void draw_elements(DrawMode mode, i32 count, const u16* indices)
+{
+	glDrawElements(static_cast<GLenum>(mode), count, GL_UNSIGNED_SHORT, indices);
+}
+/**
+ * @brief render primitives from array data
+ *
+ * @param mode Specifies what kind of primitives to render.
+ * @param count Specifies the number of elements to be rendered.
+ *
+ * @param indices
+ * Specifies an offset of the first index in the array in the data store of the
+ * buffer currently bound to the `gl::BufferTarget::ElementArray` target.
+ *
+ * @see https://docs.gl/gl4/glDrawElements
+ */
+template <>
+inline void draw_elements(DrawMode mode, i32 count, const u32* indices)
+{
+	glDrawElements(static_cast<GLenum>(mode), count, GL_UNSIGNED_INT, indices);
 }
 
 /**
@@ -555,7 +633,10 @@ inline auto compile_shader(Shader type, const char* source) -> u32
 		char* message = &message_buffer[0];
 		gl::get_shader_info_log(shader, log_length, nullptr, message);
 
-		fmt::print("Error compiling {}:\n   {}\n", gl::shader_type_name(type), message);
+		fmt::print("\nError compiling {}:\n{}\n{}\n",
+			gl::shader_type_name(type),
+			std::string(40, '-'),
+			message);
 	}
 
 	return shader;

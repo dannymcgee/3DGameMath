@@ -35,11 +35,11 @@ auto main() -> int
 	fmt::print("OpenGL {}\n", gl::get_string(Info::Version));
 
 	f32 positions[] {
-		-0.5f, -0.5f,
-		 0.0f,  0.5f,
-		 0.5f, -0.5f,
+		-1.f,  1.f,
+		 1.f,  1.f,
+		 1.f, -1.f,
+		-1.f, -1.f,
 	};
-
 	u32 position_buffer = gl::gen_buffer();
 	gl::bind_buffer(Target::Array, position_buffer);
 	gl::buffer_data(Target::Array, sizeof(positions), &positions, Usage::StaticDraw);
@@ -50,12 +50,33 @@ auto main() -> int
 		.size = 2,
 	});
 
+	f32 colors[] {
+		1, 0, 0,
+		0, 1, 0,
+		0, 0, 1,
+		1, 0, 1,
+	};
+	u32 color_buffer = gl::gen_buffer();
+	gl::bind_buffer(Target::Array, color_buffer);
+	gl::buffer_data(Target::Array, sizeof(colors), &colors, Usage::StaticDraw);
+
+	gl::enable_vertex_attrib_array(1);
+	gl::vertex_attrib_pointer(1, {
+		.type = Scalar::f32,
+		.size = 3,
+	});
+
+	u32 indices[] { 0, 1, 2, 0, 2, 3 };
+	u32 index_buffer = gl::gen_buffer();
+	gl::bind_buffer(Target::ElementArray, index_buffer);
+	gl::buffer_data(Target::ElementArray, sizeof(indices), &indices, Usage::StaticDraw);
+
 	u32 program = gl::make_program(PROJECT_SOURCE_DIR"/res/shaders/hello.shader");
 	gl::use_program(program);
 
 	while (!glfwWindowShouldClose(window)) {
 		gl::clear(Mask::ColorBuffer);
-		gl::draw_arrays(DrawMode::Triangles, 0, 3);
+		gl::draw_elements<u32>(DrawMode::Triangles, 6, nullptr);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -63,6 +84,8 @@ auto main() -> int
 
 	gl::delete_program(program);
 	gl::delete_buffer(position_buffer);
+	gl::delete_buffer(color_buffer);
+	gl::delete_buffer(index_buffer);
 
 	glfwTerminate();
 
