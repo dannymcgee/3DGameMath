@@ -434,6 +434,143 @@ inline void vertex_attrib_pointer(u32 index, const VertexAttribParams& params = 
 		params.offset);
 }
 
+struct VertexAttribTmplParams {
+	/**
+	 * specifies whether fixed-point data values should be normalized (`true`)
+	 * or converted directly as fixed-point values (`false`) when they are
+	 * accessed.
+	 */
+	bool normalized = false;
+	/**
+	 * Specifies the byte offset between consecutive generic vertex attributes.
+	 * If stride is 0, the generic vertex attributes are understood to be tightly
+	 * packed in the array. The initial value is 0.
+	 */
+	i32 stride = 0;
+	/**
+	 * Specifies the offset of the first component of the first generic vertex
+	 * attribute in the array in the data store of the buffer currently bound to
+	 * the `gl::Target::Array` target. The initial value is 0.
+	 */
+	const void* offset = 0; // NOLINT
+};
+
+template <GLenum Type>
+inline void vertex_attrib_pointer(u32 index, i32 size, const VertexAttribTmplParams& params = {})
+{
+	glVertexAttribPointer(
+		index,
+		size,
+		Type,
+		params.normalized,
+		params.stride,
+		params.offset);
+}
+
+template <Scalar Type>
+inline void vertex_attrib_pointer(u32 index, i32 size, const VertexAttribTmplParams& params = {})
+{
+	glVertexAttribPointer(
+		index,
+		size,
+		static_cast<GLenum>(Type),
+		params.normalized,
+		params.stride,
+		params.offset);
+}
+
+template <typename T>
+inline void vertex_attrib_pointer(u32 index, i32 size, const VertexAttribTmplParams& params = {});
+
+template <>
+inline void vertex_attrib_pointer<i8>(u32 index, i32 size, const VertexAttribTmplParams& params)
+{
+	glVertexAttribPointer(
+		index,
+		size,
+		GL_BYTE,
+		params.normalized,
+		params.stride,
+		params.offset);
+}
+template <>
+inline void vertex_attrib_pointer<u8>(u32 index, i32 size, const VertexAttribTmplParams& params)
+{
+	glVertexAttribPointer(
+		index,
+		size,
+		GL_UNSIGNED_BYTE,
+		params.normalized,
+		params.stride,
+		params.offset);
+}
+template <>
+inline void vertex_attrib_pointer<i16>(u32 index, i32 size, const VertexAttribTmplParams& params)
+{
+	glVertexAttribPointer(
+		index,
+		size,
+		GL_SHORT,
+		params.normalized,
+		params.stride,
+		params.offset);
+}
+template <>
+inline void vertex_attrib_pointer<u16>(u32 index, i32 size, const VertexAttribTmplParams& params)
+{
+	glVertexAttribPointer(
+		index,
+		size,
+		GL_UNSIGNED_SHORT,
+		params.normalized,
+		params.stride,
+		params.offset);
+}
+template <>
+inline void vertex_attrib_pointer<i32>(u32 index, i32 size, const VertexAttribTmplParams& params)
+{
+	glVertexAttribPointer(
+		index,
+		size,
+		GL_INT,
+		params.normalized,
+		params.stride,
+		params.offset);
+}
+template <>
+inline void vertex_attrib_pointer<u32>(u32 index, i32 size, const VertexAttribTmplParams& params)
+{
+	glVertexAttribPointer(
+		index,
+		size,
+		GL_UNSIGNED_INT,
+		params.normalized,
+		params.stride,
+		params.offset);
+}
+template <>
+inline void vertex_attrib_pointer<f32>(u32 index, i32 size, const VertexAttribTmplParams& params)
+{
+	glVertexAttribPointer(
+		index,
+		size,
+		GL_FLOAT,
+		params.normalized,
+		params.stride,
+		params.offset);
+}
+template <>
+inline void vertex_attrib_pointer<f64>(u32 index, i32 size, const VertexAttribTmplParams& params)
+{
+	glVertexAttribPointer(
+		index,
+		size,
+		GL_DOUBLE,
+		params.normalized,
+		params.stride,
+		params.offset);
+}
+
 /**
  * @brief Returns the location of an attribute variable
  *

@@ -45,10 +45,7 @@ auto main() -> int
 	gl::buffer_data(Target::Array, sizeof(positions), &positions, Usage::StaticDraw);
 
 	gl::enable_vertex_attrib_array(0);
-	gl::vertex_attrib_pointer(0, {
-		.type = Scalar::f32,
-		.size = 2,
-	});
+	gl::vertex_attrib_pointer<f32>(0, 2);
 
 	f32 colors[] {
 		1, 0, 0,
@@ -61,10 +58,7 @@ auto main() -> int
 	gl::buffer_data(Target::Array, sizeof(colors), &colors, Usage::StaticDraw);
 
 	gl::enable_vertex_attrib_array(1);
-	gl::vertex_attrib_pointer(1, {
-		.type = Scalar::f32,
-		.size = 3,
-	});
+	gl::vertex_attrib_pointer<f32>(1, 3);
 
 	u32 indices[] { 0, 1, 2, 0, 2, 3 };
 	u32 index_buffer = gl::gen_buffer();
