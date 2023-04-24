@@ -223,10 +223,7 @@ constexpr auto operator*(sized::flt lhs, const math::Matrix<R,C>& rhs) -> math::
 // Matrix multiplication -------------------------------------------------------
 
 template <sized::usize R, sized::usize N, sized::usize C>
-inline auto operator*(
-	const math::Matrix<R,N>& lhs,
-	const math::Matrix<N,C>& rhs
-) -> math::Matrix<R,C>
+inline auto operator*(const math::Matrix<R,N>& lhs, const math::Matrix<N,C>& rhs) -> math::Matrix<R,C>
 {
 	math::Matrix<R,C> result;
 	auto rhs_cols = rhs.transpose();
@@ -252,11 +249,7 @@ inline auto operator*(
  * @return The result, as a row-vector.
  */
 template <sized::usize R, sized::usize C>
-inline auto operator*(
-	const math::Vector<R>& lhs,
-	//    math::Matrix<1,R,T>& lhs,
-	const math::Matrix<R,C>& rhs
-) -> math::Vector<C>
+inline auto operator*(const math::Vector<R>& lhs, const math::Matrix<R,C>& rhs) -> math::Vector<C>
 {
 	math::Vector<C> result;
 	auto rhs_cols = rhs.transpose();
@@ -281,11 +274,7 @@ inline auto operator*(
  * @return The result, as a column-vector.
  */
 template <sized::usize R, sized::usize C>
-inline auto operator*(
-	const math::Matrix<R,C>& lhs,
-	//    math::Matrix<C,1,T>& rhs,
-	const math::Vector<C>& rhs
-) -> math::Vector<R>
+inline auto operator*(const math::Matrix<R,C>& lhs, const math::Vector<C>& rhs) -> math::Vector<R>
 {
 	math::Vector<R> result;
 
@@ -478,13 +467,15 @@ inline auto Matrix<R,C>::is_orthogonal(flt tolerance) const -> bool
 template <usize R, usize C>
 constexpr auto Matrix<R,C>::is_identity(flt tolerance) const -> bool
 {
-	for (usize r = 0; r < R; ++r)
-		for (usize c = 0; c < C; ++c)
+	for (usize r = 0; r < R; ++r) {
+		for (usize c = 0; c < C; ++c) {
 			if (r != c && !math::nearly_equal(m_data[r][c], 0, tolerance)
 				|| r == c && !math::nearly_equal(m_data[r][c], 1, tolerance))
-
+			{
 				return false;
-
+			}
+		}
+	}
 	return true;
 }
 

@@ -16,7 +16,7 @@ private:
 	using Row = Vec3;
 
 public:
-	explicit ScaleMatrix(f64 scale);
+	explicit ScaleMatrix(flt scale);
 	explicit ScaleMatrix(const Vec3& scale);
 
 private:

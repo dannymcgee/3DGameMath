@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 #include <sized.h>
 
 #include "math/matrix.h"
@@ -12,17 +10,11 @@ using namespace sized; // NOLINT(*-using-namespace)
 
 class RotationMatrix;
 class TranslationMatrix;
-class Quat;
-class Euler;
+struct Quat;
+struct Euler;
 
 
-class TransformMatrix : public Matrix<4,4> {
-private:
-	using Mat3x3 = Matrix<3,3>;
-	using Mat4x4 = Matrix<4,4>;
-	using Vec3 = Vector<3>;
-	using Vec4 = Vector<4>;
-
+class TransformMatrix : public Mat4x4 {
 public:
 	using Super = Mat4x4;
 

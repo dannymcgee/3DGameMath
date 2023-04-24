@@ -13,6 +13,7 @@
 namespace math {
 using namespace sized; // NOLINT(*-using-namespace)
 
+// NOLINTBEGIN(cppcoreguidelines-pro-type-member-init)
 namespace detail {
 
 template <usize Rows, usize Cols>
@@ -123,6 +124,7 @@ public:
 };
 
 } // namespace detail
+// NOLINTEND(cppcoreguidelines-pro-type-member-init)
 
 template <usize Rows, usize Cols>
 class Matrix : public detail::Matrix<Rows,Cols> {

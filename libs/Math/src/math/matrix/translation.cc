@@ -3,7 +3,7 @@
 
 namespace math {
 
-TranslationMatrix::TranslationMatrix(f64 x, f64 y, f64 z)
+TranslationMatrix::TranslationMatrix(flt x, flt y, flt z)
 	: Super{
 		{ 1, 0, 0, 0 },
 		{ 0, 1, 0, 0 },

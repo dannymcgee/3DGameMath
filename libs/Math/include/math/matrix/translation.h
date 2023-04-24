@@ -15,7 +15,7 @@ private:
 	using Row = Vec4;
 
 public:
-	TranslationMatrix(f64 x, f64 y, f64 z);
+	TranslationMatrix(flt x, flt y, flt z);
 	explicit TranslationMatrix(const Vec3& delta);
 };
 

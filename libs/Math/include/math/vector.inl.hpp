@@ -78,27 +78,25 @@ constexpr auto Vector<D>::forward() -> Vector
 	return Vector{ 0, 0, 1 };
 }
 
-template <usize D>
-constexpr auto Vector<D>::from_polar(flt radius, flt angle) -> Vector
+template <>
+constexpr auto Vector<2>::from_polar(flt radius, flt angle) -> Vector
 {
-	static_assert(D == 2, "Polar coordinates are only supported by 2-Dimensional vectors");
 	return {
 		radius * std::cos(angle),
 		radius * std::sin(angle),
 	};
 }
 
-template <usize D>
-constexpr auto Vector<D>::from_polar(const PolarCoords& coords) -> Vector
+template <>
+constexpr auto Vector<2>::from_polar(const PolarCoords& coords) -> Vector
 {
 	auto [radius, angle] = coords;
 	return Vector::from_polar(radius, angle);
 }
 
-template <usize D>
-constexpr auto Vector<D>::from_polar(flt radius, flt heading, flt pitch) -> Vector
+template <>
+constexpr auto Vector<3>::from_polar(flt radius, flt heading, flt pitch) -> Vector
 {
-	static_assert(D == 3, "Polar coordinates are only supported by 2-Dimensional vectors");
 	return {
 		radius * std::cos(pitch) * std::sin(heading),
 		-radius * std::sin(pitch),
@@ -106,11 +104,11 @@ constexpr auto Vector<D>::from_polar(flt radius, flt heading, flt pitch) -> Vect
 	};
 }
 
-template <usize D>
-constexpr auto Vector<D>::from_polar(const SphericalCoords& coords) -> Vector
+template <>
+constexpr auto Vector<3>::from_polar(const SphericalCoords& coords) -> Vector
 {
-	auto [radius, heading, declination] = coords;
-	return Vector::from_polar(radius, heading, declination);
+	auto [radius, heading, pitch] = coords;
+	return Vector::from_polar(radius, heading, pitch);
 }
 
 

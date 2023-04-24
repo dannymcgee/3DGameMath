@@ -19,7 +19,7 @@ constexpr RotationMatrix::RotationMatrix(flt angle, Axis axis)
 	: Super(RotationMatrix::construct(angle, axis))
 {}
 
-constexpr RotationMatrix::RotationMatrix(flt angle, const Vector<3>& axis)
+constexpr RotationMatrix::RotationMatrix(flt angle, const Vec3& axis)
 	: Super(RotationMatrix::construct(angle, axis))
 {}
 
@@ -62,7 +62,7 @@ constexpr auto RotationMatrix::construct(flt angle, Axis axis) -> Super
 	return Super{};
 }
 
-constexpr auto RotationMatrix::construct(flt angle, const Vector<3>& axis) -> Super
+constexpr auto RotationMatrix::construct(flt angle, const Vec3& axis) -> Super
 {
 	flt cos_theta = std::cos(angle);
 	flt sin_theta = std::sin(angle);
@@ -166,6 +166,7 @@ inline auto RotationMatrix::quat() const -> Quat
 	flt largest_val = std::sqrt(largest_raw + 1) * 0.5;
 	flt scale = 0.25 / largest_val;
 
+	// NOLINTBEGIN(clang-diagnostic-float-equal)
 	if (largest_raw == w_raw)
 		return Quat{
 			largest_val,
@@ -197,6 +198,7 @@ inline auto RotationMatrix::quat() const -> Quat
 			(m23 + m32) * scale,
 			largest_val,
 		};
+	// NOLINTEND(clang-diagnostic-float-equal)
 
 	ASSERT(false, "Value {} not in set: [ {}, {}, {}, {} ]",
 		largest_raw, w_raw, x_raw, y_raw, z_raw);

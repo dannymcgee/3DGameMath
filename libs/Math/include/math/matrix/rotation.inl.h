@@ -24,7 +24,7 @@ class RotationMatrix : public Matrix<3,3> {
 private:
 	using Super = Matrix<3,3>;
 	using Base = detail::Matrix<3,3>;
-	using Row = Vector<3>;
+	using Row = Vec3;
 
 public:
 	using Base::m11;
@@ -41,7 +41,7 @@ public:
 	/** Construct a rotation matrix from an angle and a cardinal axis */
 	constexpr RotationMatrix(flt angle, Axis axis);
 	/** Construct a rotation matrix from an angle and an arbitrary axis */
-	constexpr RotationMatrix(flt angle, const Vector<3>& axis);
+	constexpr RotationMatrix(flt angle, const Vec3& axis);
 
 	// Operations
 	/** Get the inverse of the matrix (equivalent to transpose) */
@@ -65,7 +65,7 @@ private:
 
 	// Constructor helpers
 	static constexpr auto construct(flt angle, Axis axis) -> Super;
-	static constexpr auto construct(flt angle, const Vector<3>& axis) -> Super;
+	static constexpr auto construct(flt angle, const Vec3& axis) -> Super;
 
 	friend struct math::Euler;
 	friend struct math::Quat;
