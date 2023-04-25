@@ -10,6 +10,7 @@
 #include "api/gl/attributes.h"
 #include "api/gl/shader.h"
 #include "api/gl/types.h"
+#include "api/gl/uniforms.h"
 
 
 /**

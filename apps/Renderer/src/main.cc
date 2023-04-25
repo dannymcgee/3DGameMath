@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include <fmt/format.h>
+#include <math/vector.h>
 #include <sized.h>
 
 #include "api/gl/gl.h"
@@ -16,6 +17,7 @@ auto main() -> int
 	using gl::Shader;
 	using gl::Target;
 	using gl::Usage;
+	using math::Vec4;
 
 	if (!glfwInit())
 		return 1;
@@ -25,6 +27,7 @@ auto main() -> int
 		return 1;
 
 	glfwMakeContextCurrent(window);
+	glfwSwapInterval(1);
 
 	auto result = gl::init();
 	if (result != gl::Result::OK) {
@@ -68,9 +71,22 @@ auto main() -> int
 	u32 program = gl::make_program(PROJECT_SOURCE_DIR"/res/shaders/hello.shader");
 	gl::use_program(program);
 
+	Vec4 u_color = { 0.2, 0.3, 0.8, 1.0 };
+	i32 location = gl::get_uniform_location(program, "u_color");
+
+	f32 increment = 0.01;
 	while (!glfwWindowShouldClose(window)) {
 		gl::clear(Mask::ColorBuffer);
+
+		gl::uniform(location, u_color);
 		gl::draw_elements<u32>(DrawMode::Triangles, 6, nullptr);
+
+		if (u_color.x > 1)
+			increment = -0.01;
+		else if (u_color.x < 0)
+			increment = 0.01;
+
+		u_color.x += increment;
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
