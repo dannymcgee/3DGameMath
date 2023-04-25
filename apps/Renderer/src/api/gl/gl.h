@@ -91,7 +91,7 @@ inline void bind_buffer(Target target, u32 buffer)
  *
  * @see https://docs.gl/gl4/glBufferData
  */
-inline void buffer_data(Target target, i32 size, void* data, Usage usage)
+inline void buffer_data(Target target, i32 size, const void* data, Usage usage)
 {
 	glBufferData(static_cast<GLenum>(target), size, data, static_cast<GLenum>(usage));
 }

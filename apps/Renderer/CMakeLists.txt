@@ -10,7 +10,10 @@ file(TO_CMAKE_PATH "${CMAKE_CURRENT_SOURCE_DIR}" RENDERER_SOURCE_DIR)
 add_definitions(-DPROJECT_SOURCE_DIR="${RENDERER_SOURCE_DIR}")
 add_definitions(-DFLOAT_PRECISION=32)
 
-add_executable(Renderer "src/main.cc")
+add_executable(Renderer
+	"src/main.cc"
+	"src/index_buffer.cc"
+	"src/vertex_buffer.cc")
 
 target_include_directories(Renderer PRIVATE "src")
 
