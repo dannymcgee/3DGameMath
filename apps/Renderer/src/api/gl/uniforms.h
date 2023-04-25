@@ -19,6 +19,7 @@ using math::Vec2;
 using math::Vec3;
 using math::Vec4;
 
+
 inline auto get_uniform_location(u32 program, const char* name) -> i32
 {
 	return glGetUniformLocation(program, name);

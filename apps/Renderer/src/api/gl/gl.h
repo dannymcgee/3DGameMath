@@ -20,6 +20,23 @@
 namespace gl {
 using namespace sized;
 
+inline auto gen_vertex_array() -> u32
+{
+	u32 result;
+	glGenVertexArrays(1, &result);
+
+	return result;
+}
+
+inline void gen_vertex_arrays(i32 n, u32 out_buffers[])
+{
+	glGenVertexArrays(n, out_buffers);
+}
+
+inline void bind_vertex_array(u32 vertex_array)
+{
+	glBindVertexArray(vertex_array);
+}
 
 /** @see `gen_buffers` */
 inline auto gen_buffer() -> u32
@@ -40,7 +57,7 @@ inline auto gen_buffer() -> u32
  *
  * @see https://docs.gl/gl4/glGenBuffers
  */
-inline void gen_buffers(i32 n, u32* out_buffers)
+inline void gen_buffers(i32 n, u32 out_buffers[])
 {
 	glGenBuffers(n, out_buffers);
 }
@@ -122,7 +139,7 @@ inline void draw_arrays(DrawMode mode, i32 first, i32 count)
  * @see https://docs.gl/gl4/glDrawElements
  */
 template <typename Unsigned>
-inline void draw_elements(DrawMode mode, i32 count, const Unsigned* indices);
+inline void draw_elements(DrawMode mode, i32 count, const Unsigned indices[]);
 /**
  * @brief render primitives from array data
  *
@@ -136,7 +153,7 @@ inline void draw_elements(DrawMode mode, i32 count, const Unsigned* indices);
  * @see https://docs.gl/gl4/glDrawElements
  */
 template <>
-inline void draw_elements(DrawMode mode, i32 count, const u8* indices)
+inline void draw_elements(DrawMode mode, i32 count, const u8 indices[])
 {
 	glDrawElements(static_cast<GLenum>(mode), count, GL_UNSIGNED_BYTE, indices);
 }
@@ -153,7 +170,7 @@ inline void draw_elements(DrawMode mode, i32 count, const u8* indices)
  * @see https://docs.gl/gl4/glDrawElements
  */
 template <>
-inline void draw_elements(DrawMode mode, i32 count, const u16* indices)
+inline void draw_elements(DrawMode mode, i32 count, const u16 indices[])
 {
 	glDrawElements(static_cast<GLenum>(mode), count, GL_UNSIGNED_SHORT, indices);
 }
@@ -170,7 +187,7 @@ inline void draw_elements(DrawMode mode, i32 count, const u16* indices)
  * @see https://docs.gl/gl4/glDrawElements
  */
 template <>
-inline void draw_elements(DrawMode mode, i32 count, const u32* indices)
+inline void draw_elements(DrawMode mode, i32 count, const u32 indices[])
 {
 	glDrawElements(static_cast<GLenum>(mode), count, GL_UNSIGNED_INT, indices);
 }
@@ -194,7 +211,7 @@ inline auto get_string(Info name, u32 index) -> char const*
 	return reinterpret_cast<const char*>(glGetStringi(static_cast<GLenum>(name), index));
 }
 
-inline void delete_buffers(i32 n, const u32* buffers)
+inline void delete_buffers(i32 n, const u32 buffers[])
 {
 	glDeleteBuffers(n, buffers);
 }
