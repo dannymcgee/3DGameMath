@@ -78,6 +78,14 @@ struct VertexAttribTmplParams {
 	const void* offset = 0; // NOLINT
 };
 
+/**
+ * @brief define an array of generic vertex attribute data
+ *
+ * @param index Specifies the index of the generic vertex attribute to be modified.
+ * @param size Specifies the number of components per generic vertex attribute. Must be 1, 2, 3, 4.
+ *
+ * @see https://docs.gl/gl4/glVertexAttribPointer
+ */
 template <GLenum Type>
 inline void vertex_attrib_pointer(u32 index, i32 size, const VertexAttribTmplParams& params = {})
 {
@@ -89,7 +97,14 @@ inline void vertex_attrib_pointer(u32 index, i32 size, const VertexAttribTmplPar
 		params.stride,
 		params.offset);
 }
-
+/**
+ * @brief define an array of generic vertex attribute data
+ *
+ * @param index Specifies the index of the generic vertex attribute to be modified.
+ * @param size Specifies the number of components per generic vertex attribute. Must be 1, 2, 3, 4.
+ *
+ * @see https://docs.gl/gl4/glVertexAttribPointer
+ */
 template <Scalar Type>
 inline void vertex_attrib_pointer(u32 index, i32 size, const VertexAttribTmplParams& params = {})
 {
@@ -101,7 +116,14 @@ inline void vertex_attrib_pointer(u32 index, i32 size, const VertexAttribTmplPar
 		params.stride,
 		params.offset);
 }
-
+/**
+ * @brief define an array of generic vertex attribute data
+ *
+ * @param index Specifies the index of the generic vertex attribute to be modified.
+ * @param size Specifies the number of components per generic vertex attribute. Must be 1, 2, 3, 4.
+ *
+ * @see https://docs.gl/gl4/glVertexAttribPointer
+ */
 template <typename T>
 inline void vertex_attrib_pointer(u32 index, i32 size, const VertexAttribTmplParams& params = {});
 
@@ -116,6 +138,14 @@ inline void vertex_attrib_pointer<i8>(u32 index, i32 size, const VertexAttribTmp
 		params.stride,
 		params.offset);
 }
+/**
+ * @brief define an array of generic vertex attribute data
+ *
+ * @param index Specifies the index of the generic vertex attribute to be modified.
+ * @param size Specifies the number of components per generic vertex attribute. Must be 1, 2, 3, 4.
+ *
+ * @see https://docs.gl/gl4/glVertexAttribPointer
+ */
 template <>
 inline void vertex_attrib_pointer<u8>(u32 index, i32 size, const VertexAttribTmplParams& params)
 {
@@ -127,6 +157,14 @@ inline void vertex_attrib_pointer<u8>(u32 index, i32 size, const VertexAttribTmp
 		params.stride,
 		params.offset);
 }
+/**
+ * @brief define an array of generic vertex attribute data
+ *
+ * @param index Specifies the index of the generic vertex attribute to be modified.
+ * @param size Specifies the number of components per generic vertex attribute. Must be 1, 2, 3, 4.
+ *
+ * @see https://docs.gl/gl4/glVertexAttribPointer
+ */
 template <>
 inline void vertex_attrib_pointer<i16>(u32 index, i32 size, const VertexAttribTmplParams& params)
 {
@@ -138,6 +176,14 @@ inline void vertex_attrib_pointer<i16>(u32 index, i32 size, const VertexAttribTm
 		params.stride,
 		params.offset);
 }
+/**
+ * @brief define an array of generic vertex attribute data
+ *
+ * @param index Specifies the index of the generic vertex attribute to be modified.
+ * @param size Specifies the number of components per generic vertex attribute. Must be 1, 2, 3, 4.
+ *
+ * @see https://docs.gl/gl4/glVertexAttribPointer
+ */
 template <>
 inline void vertex_attrib_pointer<u16>(u32 index, i32 size, const VertexAttribTmplParams& params)
 {
@@ -149,6 +195,14 @@ inline void vertex_attrib_pointer<u16>(u32 index, i32 size, const VertexAttribTm
 		params.stride,
 		params.offset);
 }
+/**
+ * @brief define an array of generic vertex attribute data
+ *
+ * @param index Specifies the index of the generic vertex attribute to be modified.
+ * @param size Specifies the number of components per generic vertex attribute. Must be 1, 2, 3, 4.
+ *
+ * @see https://docs.gl/gl4/glVertexAttribPointer
+ */
 template <>
 inline void vertex_attrib_pointer<i32>(u32 index, i32 size, const VertexAttribTmplParams& params)
 {
@@ -160,6 +214,14 @@ inline void vertex_attrib_pointer<i32>(u32 index, i32 size, const VertexAttribTm
 		params.stride,
 		params.offset);
 }
+/**
+ * @brief define an array of generic vertex attribute data
+ *
+ * @param index Specifies the index of the generic vertex attribute to be modified.
+ * @param size Specifies the number of components per generic vertex attribute. Must be 1, 2, 3, 4.
+ *
+ * @see https://docs.gl/gl4/glVertexAttribPointer
+ */
 template <>
 inline void vertex_attrib_pointer<u32>(u32 index, i32 size, const VertexAttribTmplParams& params)
 {
@@ -171,6 +233,14 @@ inline void vertex_attrib_pointer<u32>(u32 index, i32 size, const VertexAttribTm
 		params.stride,
 		params.offset);
 }
+/**
+ * @brief define an array of generic vertex attribute data
+ *
+ * @param index Specifies the index of the generic vertex attribute to be modified.
+ * @param size Specifies the number of components per generic vertex attribute. Must be 1, 2, 3, 4.
+ *
+ * @see https://docs.gl/gl4/glVertexAttribPointer
+ */
 template <>
 inline void vertex_attrib_pointer<f32>(u32 index, i32 size, const VertexAttribTmplParams& params)
 {
@@ -182,6 +252,14 @@ inline void vertex_attrib_pointer<f32>(u32 index, i32 size, const VertexAttribTm
 		params.stride,
 		params.offset);
 }
+/**
+ * @brief define an array of generic vertex attribute data
+ *
+ * @param index Specifies the index of the generic vertex attribute to be modified.
+ * @param size Specifies the number of components per generic vertex attribute. Must be 1, 2, 3, 4.
+ *
+ * @see https://docs.gl/gl4/glVertexAttribPointer
+ */
 template <>
 inline void vertex_attrib_pointer<f64>(u32 index, i32 size, const VertexAttribTmplParams& params)
 {

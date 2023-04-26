@@ -13,6 +13,7 @@ add_definitions(-DFLOAT_PRECISION=32)
 add_executable(Renderer
 	"src/main.cc"
 	"src/index_buffer.cc"
+	"src/vertex_array.cc"
 	"src/vertex_buffer.cc")
 
 target_include_directories(Renderer PRIVATE "src")

@@ -38,6 +38,16 @@ inline void bind_vertex_array(u32 vertex_array)
 	glBindVertexArray(vertex_array);
 }
 
+inline void delete_vertex_arrays(i32 n, const u32 arrays[])
+{
+	glDeleteVertexArrays(n, arrays);
+}
+
+inline void delete_vertex_array(u32 array)
+{
+	glDeleteVertexArrays(1, &array);
+}
+
 /** @see `gen_buffers` */
 inline auto gen_buffer() -> u32
 {

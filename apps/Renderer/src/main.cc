@@ -6,6 +6,7 @@
 
 #include "api/gl/gl.h"
 #include "index_buffer.h"
+#include "vertex_array.h"
 #include "vertex_buffer.h"
 
 
@@ -46,26 +47,28 @@ auto main() -> int
 
 	fmt::print("OpenGL {}\n", gl::get_string(Info::Version));
 
-	{
-		// Create vertex array
-		u32 vert_array = gl::gen_vertex_array();
-		gl::bind_vertex_array(vert_array);
+	f32 positions[] {
+		-1.f,  1.f,
+		 1.f,  1.f,
+		 1.f, -1.f,
+		-1.f, -1.f,
+	};
 
-		// Set vertex positions
-		f32 positions[] {
-			-1.f,  1.f,
-			 1.f,  1.f,
-			 1.f, -1.f,
-			-1.f, -1.f,
-		};
+	constexpr u32 index_count = 6;
+	u32 indices[index_count] { 0, 1, 2, 0, 2, 3 };
+
+	{
+		// Setup vertex array
+		auto vertex_array = VertexArray();
 		auto vertex_buffer = VertexBuffer(&positions, sizeof(positions));
-		gl::enable_vertex_attrib_array(0);
-		gl::vertex_attrib_pointer<f32>(0, 2);
+		auto layout = VertexBufferLayout{{
+			.type = Scalar::f32,
+			.count = 2,
+		}};
+		vertex_array.add_buffer(vertex_buffer, layout);
 
 		// Setup index buffer
-		constexpr u32 index_count = 6;
-		u32 indices[index_count] { 0, 1, 2, 0, 2, 3 };
-		auto index_buffer = IndexBuffer(&indices[0], index_count);
+		auto index_buffer = IndexBuffer(indices, index_count);
 
 		// Compile and link the program
 		u32 program = gl::make_program(PROJECT_SOURCE_DIR"/res/shaders/hello.shader");
@@ -91,7 +94,7 @@ auto main() -> int
 			gl::uniform(location, u_color);
 
 			// Bind vertex array
-			gl::bind_vertex_array(vert_array);
+			vertex_array.bind();
 
 			// Bind and draw index buffer
 			index_buffer.bind();

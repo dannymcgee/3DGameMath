@@ -24,3 +24,12 @@ void VertexBuffer::unbind() const
 {
 	gl::bind_buffer(gl::Target::Array, 0);
 }
+
+
+VertexBufferLayout::VertexBufferLayout(std::initializer_list<VertexBufferElement> elements)
+{
+	for (const auto& element : elements) {
+		m_elements.push_back(element);
+		m_stride += element.count * gl::size_of(element.type);
+	}
+}

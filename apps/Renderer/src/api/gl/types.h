@@ -1,6 +1,7 @@
 #pragma once
 
 #include <GL/glew.h>
+#include <math/assert.h>
 #include <sized.h>
 
 
@@ -149,6 +150,48 @@ enum class Scalar : GLenum {
 	f64 = Double,
 	fixed = Fixed,
 };
+
+template <typename T>
+auto type() -> Scalar;
+
+template <> inline auto type<i8>() -> Scalar { return Scalar::i8; }
+template <> inline auto type<u8>() -> Scalar { return Scalar::u8; }
+template <> inline auto type<i16>() -> Scalar { return Scalar::i16; }
+template <> inline auto type<u16>() -> Scalar { return Scalar::u16; }
+template <> inline auto type<i32>() -> Scalar { return Scalar::i32; }
+template <> inline auto type<u32>() -> Scalar { return Scalar::u32; }
+template <> inline auto type<f32>() -> Scalar { return Scalar::f32; }
+template <> inline auto type<f64>() -> Scalar { return Scalar::f64; }
+
+template <Scalar T>
+auto size() -> usize;
+
+template <> inline auto size<Scalar::i8>()  -> usize { return sizeof(i8); }
+template <> inline auto size<Scalar::u8>()  -> usize { return sizeof(u8); }
+template <> inline auto size<Scalar::i16>() -> usize { return sizeof(i16); }
+template <> inline auto size<Scalar::u16>() -> usize { return sizeof(u16); }
+template <> inline auto size<Scalar::i32>() -> usize { return sizeof(i32); }
+template <> inline auto size<Scalar::u32>() -> usize { return sizeof(u32); }
+template <> inline auto size<Scalar::f32>() -> usize { return sizeof(f32); }
+template <> inline auto size<Scalar::f64>() -> usize { return sizeof(f64); }
+
+inline auto size_of(Scalar type) -> usize
+{
+	switch (type) {
+		case Scalar::i8: return sizeof(i8);
+		case Scalar::u8: return sizeof(u8);
+		case Scalar::i16: return sizeof(i16);
+		case Scalar::u16: return sizeof(u16);
+		case Scalar::i32: return sizeof(i32);
+		case Scalar::u32: return sizeof(u32);
+		case Scalar::f32: return sizeof(f32);
+		case Scalar::f64: return sizeof(f64);
+		default: {
+			ASSERT(false, "gl::size_of not implemented for type: {:x}", static_cast<GLenum>(type));
+			return 0;
+		}
+	}
+}
 
 enum class Unsigned : GLenum {
 	Byte = GL_UNSIGNED_BYTE,
